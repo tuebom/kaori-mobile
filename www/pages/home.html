@@ -1,0 +1,315 @@
+<template>
+  <!-- Page, data-name contains page name which can be used in callbacks -->
+    <div class="page" data-name="home">
+        
+        <!-- Top Navbar -->
+        <div class="navbar">
+          <div class="navbar-inner">
+            <!-- <div class="left">
+              <a href="#" class="link icon-only panel-open" data-panel="left">
+                <i class="icon f7-icons ios-only">menu</i>
+                <i class="icon material-icons md-only">menu</i>
+              </a>
+            </div> -->
+            <div class="title sliding"><img class="responsive" src="img/logo.png" /></div>
+            <div class="right">
+              <!-- <a href="/chat/" data-view=".view-main" class="link icon-only">
+                <i class="icon f7-icons ios-only">chat</i>
+                <i class="icon material-icons md-only">chat</i>
+              </a> -->
+              <a href="/cart/" data-view=".view-main" class="link icon-only">
+                <i class="icon f7-icons ios-only">shopping_cart<span class="badge color-red"></span></i>
+                <i class="icon material-icons md-only">shopping_cart<span class="badge color-red"></span></i>
+              </a>
+              <a href="/cust-svc/" class="link icon-only">
+                <i class="icon f7-icons ios-only">chat</i>
+                <i class="icon material-icons md-only">chat</i>
+              </a>
+              <a href="#" class="link icon-only popover-open" data-popover=".popover-more">
+                <i class="icon f7-icons ios-only">more_vert</i>
+                <i class="icon material-icons md-only">more_vert</i>
+              </a>
+            </div>
+            <div class="subnavbar">
+              <div class="title" style="width: 100%; font-size: 16px;">
+                <a href="/search/">
+                  <div class="search">
+                    <span class="searchButton"><i class="fa fa-search"></i></span>
+                    <div class="searchTerm">Cari..</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Toolbar-->
+        <!-- <div class="toolbar toolbar-bottom-md no-shadow">
+            <a href="/akun/" class="link">
+              <i class="icon f7-icons ios-only">account_balance_wallet</i>&nbsp;&nbsp;<span class="saldo"></span>
+              <i class="icon material-icons md-only">account_balance_wallet</i>&nbsp;&nbsp;<span class="saldo"></span>
+            </a>
+            <a href="#" class="link popup-open" data-popup="#transfer-bonus">
+              <i class="icon f7-icons ios-only">redeem</i>&nbsp;&nbsp;<span class="bonus"></span>
+              <i class="icon material-icons md-only">redeem</i>&nbsp;&nbsp;<span class="bonus"></span>
+            </a>
+          </div>
+        </div> -->
+                
+        <!-- Scrollable page content-->
+        <!-- demo-swiper -->
+        <div class="page-content">
+          <div class="block header">
+            <div data-pagination='{"el": ".swiper-pagination"}' class="swiper-container swiper-init dashboard">
+              <div class="swiper-pagination dashboard"></div>
+              <div class="swiper-wrapper">
+                {{#each banner}}
+                <div class="swiper-slide"><img class="lazy header" src="{{../$root.endpoint}}upload/mobile-banner/{{img}}" /></div>
+                {{/each}}
+              </div>
+            </div>
+          </div>
+          
+          <!-- <div class="row no-gutter">
+            {{#each data}}
+            <div class="col-50 tablet-33 category">
+              <div class="card">
+                <div class="card-content">
+                  <a href="/category/{{kdgol}}/{{nama}}" class="item-link">
+                    <img class="responsive-card" src="{{../$root.endpoint}}upload/products/{{img}}" />
+                    <div class="card-content-inner">{{nama}}</div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            {{/each}}
+          </div> -->
+
+          <div class="row no-gutter">
+            <div class="col-33  tablet-33">
+              <div class="card">
+                <div class="card-content">
+                  <a href="/opsi-belanja/" class="btn item-link">
+                    <img class="responsive-card" src="img/belanja.png" />
+                    <div class="card-content-inner">Belanja</div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-33  tablet-33">
+              <div class="card">
+                <div class="card-content">
+                  <a href="/transfer-saldo/" class="btn item-link">
+                    <img class="responsive-card" src="img/transfer.png" />
+                    <div class="card-content-inner">Transfer</div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-33  tablet-33">
+              <div class="card">
+                <div class="card-content">
+                  <a href="/opsi-topup/" class="btn item-link">
+                    <img class="responsive-card" src="img/topup.png" />
+                    <div class="card-content-inner">Topup</div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="row no-gutter">
+            <!-- Each "cell" has col-[widht in percents] class -->
+            <div class="col-33  tablet-33">
+              <div class="card">
+                <div class="card-content">
+                  <a href="/pulsa/" class="btn item-link">
+                    <img class="responsive-card" src="img/pulsa.png" />
+                    <div class="card-content-inner">Pulsa</div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-33  tablet-33">
+              <div class="card">
+                <div class="card-content">
+                  <a href="/data/" class="btn item-link">
+                    <img class="responsive-card" src="img/data.png" />
+                    <div class="card-content-inner">Paket Data</div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-33  tablet-33">
+              <div class="card">
+                <div class="card-content">
+                  <a href="/token/" class="btn item-link">
+                    <img class="responsive-card" src="img/pln.png" />
+                    <div class="card-content-inner">Token PLN</div>
+                  </a>
+                </div>
+              </div>
+            </div>
+        </div>                 
+
+        <!-- <div class="row no-gutter">
+            <div class="col-33  tablet-33">
+              <div class="card">
+                <div class="card-content">
+                  <a href="/gopay/" class="btn item-link">
+                    <img class="responsive-card" src="img/gopay.png" />
+                    <div class="card-content-inner">GOPAY</div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-33  tablet-33">
+              <div class="card">
+                <div class="card-content">
+                  <a href="/ovo/" class="btn item-link">
+                    <img class="responsive-card" src="img/ovo.png" />
+                    <div class="card-content-inner">OVO</div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-33  tablet-33">
+              <div class="card">
+                <div class="card-content">
+                  <a href="/dana/" class="btn item-link">
+                    <img class="responsive-card" src="img/dana.png" />
+                    <div class="card-content-inner">DANA</div>
+                  </a>
+                </div>
+              </div>
+            </div>
+        </div> -->
+
+        <!-- <div class="row no-gutter">
+            <div class="col-33  tablet-33">
+              <div class="card">
+                <div class="card-content">
+                  <a href="/sms/" class="btn item-link">
+                    <img class="responsive-card" src="img/sms.png" />
+                    <div class="card-content-inner">Paket SMS</div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-33  tablet-33">
+              <div class="card">
+                <div class="card-content">
+                  <a href="/telpon/" class="btn item-link">
+                    <img class="responsive-card" src="img/telpon.png" />
+                    <div class="card-content-inner">Pkt Nelpon</div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-33  tablet-33">
+              <div class="card">
+                <div class="card-content">
+                  <a href="/hinet/" class="btn item-link">
+                    <img class="responsive-card" src="img/hinet.png" />
+                    <div class="card-content-inner">Internet</div>
+                  </a>
+                </div>
+              </div>
+            </div>
+        </div> -->
+
+        <div class="row no-gutter">
+          <!-- <div class="col-33  tablet-33">
+            <div class="card">
+              <div class="card-content">
+                <a href="/topup-saldo/" class="btn item-link">
+                  <img class="responsive-card" src="img/transfer.png" />
+                  <div class="card-content-inner">Topup Saldo</div>
+                </a>
+              </div>
+            </div>
+          </div> -->
+          <div class="col-33  tablet-33">
+            <div class="card">
+              <div class="card-content">
+                <a href="/histori-trx/" class="btn item-link">
+                  <img class="responsive-card" src="img/histori.png" />
+                  <div class="card-content-inner">Histori</div>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="col-33  tablet-33">
+            <div class="card">
+              <div class="card-content">
+                <a href="/cek-harga/" class="btn item-link">
+                  <img class="responsive-card" src="img/harga.png" />
+                  <div class="card-content-inner">Cek Harga</div>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="col-33  tablet-33">
+            <div class="card">
+              <div class="card-content">
+                <a href="/daftar/" class="btn item-link">
+                  <img class="responsive-card" src="img/daftar.png" />
+                  <div class="card-content-inner">Pendaftaran</div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        </div>
+    </div>
+</template>
+<script>
+  return {
+        
+    // Page Events
+    on: {
+      
+      pageBeforeIn: function (event, page) {
+        
+        if (app.data.bLogedIn) {
+
+          app.request.get( app.data.endpoint + 'api/v1/cart/total_items', function(res) {
+                    
+            var data = JSON.parse(res);
+            
+            if (data.status)
+            {
+              app.data.total_items = data.totqty;
+              if (app.data.total_items > 0) {
+                $$('.badge').text(data.totqty);
+                $$('.badge').css("display", "block");
+              }
+            } else {
+              $$('.badge').css("display", "none");
+              app.data.total_items = 0;
+            }
+          });
+        }
+      },
+      
+      pageInit: function(e, page) {
+                
+        // Note: gunakan selecter secara lengkap untuk menghindari error
+        var cmp = $$('.swiper-container.swiper-init.dashboard');
+        // console.log(cmp.swiper)
+
+        if (cmp.swiper === undefined) {
+          
+          var swiper = app.swiper.create('.swiper-container.swiper-init.dashboard', {
+              speed: 400,
+              loop: true,
+              spaceBetween: 100
+          });
+
+          swiper.autoplay.start();
+        }
+
+      }
+    }
+  }
+</script>

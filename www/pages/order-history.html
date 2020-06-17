@@ -1,0 +1,38 @@
+<template>
+  <div class="page">
+    <div class="navbar">
+      <div class="navbar-inner sliding">
+        <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="ios-only">Back</span>
+          </a>
+        </div>
+        <div class="title">Histori Order</div>
+      </div>
+    </div>
+    
+    <div class="page-content">
+        
+      {{#each data}}
+      <div class="card status">
+        <div class="card-header"><span><b>Order #{{id}}</b></span><span>{{tglinput}}</span></div>
+        {{#each detail}}
+        <div class="card-footer top">
+          <img class="cart lazy" src="../../{{$root.endpoint}}upload/products/{{img}}" />
+          <div class="product-name">{{nama}}</div>
+          <div>x {{qty}}</div>
+        </div>
+        <div class="card-footer">
+          <img class="cart lazy" src="img/none.png" />
+          <div>@Rp{{hjual}}</div>
+          <div>Disc. {{disc}}%</div>
+          <div>Rp{{jumlah}}</div>
+        </div>
+        {{/each}}
+      </div>
+      {{/each}}
+
+    </div>
+  </div>
+</template>

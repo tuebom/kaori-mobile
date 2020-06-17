@@ -1,0 +1,53 @@
+<template>
+  <div class="page" data-name="cust-svc">
+    <div class="navbar">
+      <div class="navbar-inner sliding">
+        <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="ios-only">Back</span>
+          </a>
+        </div>
+        <div class="title">Customer Service</div>
+      </div>
+    </div>
+    <div class="page-content">
+      <div class="block" style="margin-top: 10px">
+      <!-- <form class="cust-svc form-ajax-submit">
+      <div class="content-block"><a href="#" class="button button-raised button-fill larger btnKirim">Kirim</a></div>
+      </form> -->
+      <!-- <div class="block-title">Customer Service (Whatsapp &amp; SMS)</div> -->
+      <div class="list no-hairlines-md">
+        <ul>
+          {{#each data}}
+          <li>
+            <a class="link external" href="https://wa.me/{{phone}}" target="_system">
+              <div class="item-content">
+                <div class="item-media"><img class="material-icons" src="img/whatsapp.png"></div>
+                <div class="item-inner">
+                  <div class="item-title-row">
+                    <div class="item-title">{{display}}</div>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </li>
+          {{/each}}
+          <!-- <li>
+            <a class="link external" href="https://api.whatsapp.com/send?phone=6289502554695" target="_system">
+              <div class="item-content">
+                <div class="item-media"><img class="material-icons" src="img/whatsapp.png"></div>
+                <div class="item-inner">
+                  <div class="item-title-row">
+                    <div class="item-title">0895 0255 4695</div>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </li> -->
+        </ul>
+      </div>
+    </div>
+    </div>
+  </div>
+</template>

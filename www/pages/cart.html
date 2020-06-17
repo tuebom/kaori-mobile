@@ -1,0 +1,183 @@
+<template>
+  <div class="page">
+    <div class="navbar">
+      <div class="navbar-inner sliding">
+        <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="ios-only">Back</span>
+          </a>
+        </div>
+        <div class="title">Cart</div>
+      </div>
+    </div>
+    
+    <div class="page-content">
+        
+      {{#js_if "app.data.tot_equipment > 0"}}
+      <div class="card item-cart equipment">
+        
+        <div class="card-header">
+          <div class="product-name"><b>Equipment Items</b></div>
+        </div>
+        {{#each equipment}}
+        <div class="card-footer top">
+          <!-- data used to remove item -->
+          <input type="hidden" class="item-code"  value="{{barcode}}" />
+          <input type="hidden" class="item-qty"   value="{{qty}}" />
+          <input type="hidden" class="item-price" value="{{price}}" />
+          
+          <img class="cart lazy" src="{{$root.endpoint}}upload/products/{{img}}" />
+          <div class="product-name item">{{nama}}</div>
+          <div>x {{qty}}</div>
+          <div class="delete"><a href="#" class="link icon-only btn-delete"><i class="material-icons remove-item">delete</i></a></div>
+        </div>
+        <div class="card-footer bottom">
+          <img class="cart lazy" src="img/none.png" />
+          <div>@Rp{{hargaf}}</div>
+          <div>Disc. {{disc}}%</div>
+          <div>Rp{{jumlah.toLocaleString('ID')}}</div>
+        </div>
+        {{/each}}
+        <!-- total equipment -->
+        <div class="card-footer total">
+          <div class="product-name">Total:</div>
+          <div class="product-price total">Rp{{$root.tot_equipment.toLocaleString('ID')}}</div>
+        </div>
+        <div class="card-footer">
+          <a href="#" @click="doRequest" class="button button-raised button-fill larger btn-inquiry">Request Quotation</a>
+        </div>
+      </div>
+      {{/js_if}}
+
+      {{#js_if "app.data.tot_utensil > 0"}}
+      <div class="card item-cart">
+        
+        <div class="card-header">
+          <div class="product-name"><b>Utensil Items</b></div>
+        </div>
+        {{#each utensil}}
+        <div class="card-footer top">
+          <!-- data used to remove item -->
+          <input type="hidden" class="item-code"  value="{{barcode}}" />
+          <input type="hidden" class="item-qty"   value="{{qty}}" />
+          <input type="hidden" class="item-price" value="{{net}}" />
+          
+          <img class="cart lazy" src="{{$root.endpoint}}upload/products/{{img}}" />
+          <div class="product-name item">{{nama}}</div>
+          <span>x {{qty}}</span>
+          <div class="delete"><a href="#" class="link icon-only btn-delete"><i class="material-icons remove-item">delete</i></a></div>
+        </div>
+        <div class="card-footer bottom">
+          <img class="cart lazy" src="img/none.png" />
+          <div>@Rp{{hargaf}}</div>
+          <div>Disc. {{disc}}%</div>
+          <div>Rp{{jumlah.toLocaleString('ID')}}</div>
+        </div>
+        {{/each}}
+        
+        <!-- total utensil -->
+        <div class="card-footer total">
+          <div class="product-name">Total:</div>
+          <div class="product-price total">Rp{{$root.tot_utensil.toLocaleString('ID')}}</div>
+        </div>
+        <div class="card-footer">
+          <a href="#" @click="doCheckout" class="button button-raised button-fill larger btn-checkout">Proceed to checkout</a>
+        </div>
+      </div>
+      {{/js_if}}
+    </div>
+  </div>
+</template>
+<script>
+  return {
+    // Component Methods
+    methods: {
+      
+      doRequest: function (e) {
+        
+        app.request.post(app.data.endpoint + 'mail-order/1', {}, function (res) {
+                
+          var data = JSON.parse(res);
+            
+          if (data.status)
+          {
+            app.data.total_items = data.totqty;
+            $$('.badge').text(data.totqty);
+
+            // back to main page
+            // var view = app.views.current;
+            // view.router.back(view.history[0], { force: true });
+          
+            // hide equipment panel
+            $$('.card.item-cart.equipment').css("display", "none");
+
+            app.dialog.alert('Thank you! Your inquiry already sent.');
+          }
+          else
+          {
+            app.dialog.alert('Fail to send inquiry!');
+          }
+
+          // app.router.navigate('/', {
+          //   reloadCurrent: true,
+          //   ignoreCache: true,
+          // });
+        });
+      },
+
+      doCheckout: function (e) {
+        
+        // open checkout page
+        app.router.navigate('/checkout/', {
+          reloadCurrent: true,
+          ignoreCache: true,
+        });
+
+      }
+    },
+        
+    // Page Events
+    on: {
+      
+      pageInit: function(e, page) {
+        
+        $$('.btn-delete').on('click', function (e) {
+
+          var card  = $$(this).parents('.card-footer.top');
+          // console.log(card)
+          var kode  = card.find('.item-code').val();
+          // console.log(kode)
+          var qty   = card.find('.item-qty').val();
+
+          var formData = [];
+
+          formData.kode = kode;
+          formData.qty  = qty;
+          // formData.Authorization = app.data.token;
+
+          app.request.post( app.data.endpoint + 'cart/remove', formData, function(res) {
+              
+            var data = JSON.parse(res);
+            app.data.total_items = data.totqty;
+
+            app.methods.deleteItem(kode);
+            card.remove();
+
+            if (app.data.total_items == 0) { // cart empty - back to home
+              var view = app.views.current;
+              view.router.back(view.history[0], { force: true });
+
+            } else {
+              
+              app.router.navigate('/cart/', {
+                reloadCurrent: true,
+                ignoreCache: true,
+              });
+            }
+          });
+        });
+      }
+    }
+  }
+</script>

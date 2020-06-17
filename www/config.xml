@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- config.xml reference: https://build.phonegap.com/docs/config-xml -->
+<widget xmlns     = "http://www.w3.org/ns/widgets"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:gap = "http://phonegap.com/ns/1.0"
+        id        = "com.app.kaori"
+        version   = "1.0.8">
+
+    <name>KAORI</name>
+
+    <description>
+        KAORI e-commerce mobile app.
+    </description>
+
+    <author href="https://github.com/tuebom/kaori-mobile.git" email="rokmeowildan@gmail.com">
+        Putu Wirya
+    </author>
+
+    <content src="index.html"/>
+    <preference name="permissions" value="none"/>
+    <preference name="orientation" value="portrait"/> <!-- default -->
+    <preference name="target-device" value="universal"/>
+    <preference name="fullscreen" value="false"/>
+    <preference name="webviewbounce" value="true"/>
+    <preference name="prerendered-icon" value="true"/>
+    <preference name="stay-in-webview" value="false"/>
+    <preference name="ios-statusbarstyle" value="black-opaque"/>
+    <preference name="detect-data-types" value="true"/>
+    <preference name="exit-on-suspend" value="false"/>
+    <preference name="show-splash-screen-spinner" value="false"/>
+    <preference name="auto-hide-splash-screen" value="true"/>
+    <preference name="disable-cursor" value="false"/>
+    <preference name="android-minSdkVersion" value="19"/>
+    <preference name="android-targetSdkVersion" value="28"/>
+    <preference name="android-installLocation" value="auto"/>
+    <preference name="phonegap-version" value="cli-9.0.0" />
+    <preference name="android-build-tool" value="gradle" />
+    
+    <!-- https://community.adobe.com/t5/phonegap/jquery-ajax-not-working-in-android-9/td-p/10242625?page=1 -->
+    <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
+        <application android:usesCleartextTraffic="true" />
+    </edit-config>
+
+    <plugin name="cordova-plugin-geolocation" source="npm" />
+    
+    <!--<plugin name="phonegap-plugin-portrait-barcodescanner" source="npm" />-->
+    <!-- <plugin spec="https://github.com/phonegap/phonegap-plugin-barcodescanner#6.0.1" /> -->
+    <!-- <plugin name="cordova-plugin-qrscanner" source="npm" /> --> <!--failed-->>
+    <!-- <plugin name="cordova-plugin-cszbar" source="npm" /> -->
+    
+    <!-- <plugin name="cordova-plugin-camera" source="npm" /> -->
+
+    <!-- <config-file target="AndroidManifest.xml" parent="/*" mode="merge">
+      <uses-permission android:name="android.permission.CAMERA" />
+      <uses-feature android:name="android.hardware.camera" />
+      <uses-feature android:name="android.hardware.camera.autofocus" />
+    </config-file> -->
+
+    <plugin name="cordova-plugin-splashscreen" source="npm" />
+    <preference name="SplashScreenDelay" value="3000" />
+    <preference name="SplashScreen" value="screen"/>
+
+    <plugin name="cordova-plugin-x-socialsharing" source="npm" />
+    <plugin name="cordova-plugin-inappbrowser"    source="npm" />
+
+    <plugin name="cordova-plugin-console" source="npm" />
+    <!-- <plugin name="cordova-plugin-contacts" spec="~2.3.1" /> --><!-- cli-6.5.0 -->
+    <plugin name="cordova-plugin-contacts" source="npm" />
+
+    <plugin name="cordova-plugin-dialogs" source="npm" />
+
+    <plugin name="cordova-plugin-file" source="npm" spec="6.0.1" />
+    <preference name="AndroidPersistentFileLocation" value="Compatibility" />
+    <plugin name="cordova-plugin-sqlite-2" spec="~1.0.4" />
+    <!-- <plugin name="cordova-plugin-geolocation" spec="~4.0.1" /> -->
+    <plugin name="cordova-plugin-inappbrowser" source="npm" />
+    <!-- <plugin name="cordova-plugin-network-information" source="npm" /> -->
+    <!--<plugin name="cordova-plugin-splashscreen" source="npm" />-->
+    <!-- <plugin name="cordova-plugin-vibration" source="npm" /> -->
+    <plugin name="phonegap-plugin-push" spec="2.1.3" source="npm">
+        <variable name="FCM_VERSION" value="11.0.1" />
+    </plugin>
+    <plugin name="cordova-plugin-whitelist" source="npm" />
+    
+    <!--<icon src="img/icon/icon.png"/>-->
+    <engine name="android" spec="~7.0.0" />
+    <!-- <allow-intent href="*" launch-external="yes" /> -->
+    <!-- <allow-intent href="http://*/*" launch-external="yes" />
+    <allow-intent href="https://*/*" launch-external="yes" /> -->
+    <!-- <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" /> -->
+    <allow-navigation href="*" />
+    <!-- <allow-navigation href="http://*/*" />
+    <allow-navigation href="https://*/*" /> -->
+
+    <platform name="android">
+      <allow-intent href="market:*" />
+
+      <resource-file src="google-services.json" target="app/google-services.json" />
+
+      <icon src="res/icon/android/icon-36-ldpi.png"  density="ldpi"/>
+      <icon src="res/icon/android/icon-48-mdpi.png"  density="mdpi"/>
+      <icon src="res/icon/android/icon-72-hdpi.png"  density="hdpi"/>
+      <icon src="res/icon/android/icon-96-xhdpi.png" density="xhdpi"/>
+
+      <splash src="res/screen/android/screen-hdpi-portrait.png" />
+      <splash density="port-ldpi"  src="res/screen/android/screen-ldpi-portrait.png" />
+      <splash density="port-mdpi"  src="res/screen/android/screen-mdpi-portrait.png" />
+      <splash density="port-hdpi"  src="res/screen/android/screen-hdpi-portrait.png" />
+      <splash density="port-xhdpi" src="res/screen/android/screen-xhdpi-portrait.png" />
+    </platform>
+    <!-- <platform name="ios">
+      <allow-intent href="itms:*"/>
+      <allow-intent href="itms-apps:*"/>
+    </platform> -->
+    
+    <access origin="*" />
+</widget>

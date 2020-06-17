@@ -1,0 +1,335 @@
+<template>
+  <div class="page">
+    <div class="navbar">
+      <div class="navbar-inner sliding">
+        <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="ios-only">Back</span>
+          </a>
+        </div>
+        <div class="title">{{data.title}}</div>
+        <div class="right">
+          <a href="/cart/" data-view=".view-main" class="link icon-only panel-close ac-more1">
+            <i class="icon f7-icons ios-only">shopping_cart<span class="badge color-red"></span></i>
+            <i class="icon material-icons md-only">shopping_cart<span class="badge color-red"></span></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="page-content">
+        
+      <div class="block header">
+        <div data-pagination='{"el": ".swiper-pagination"}' class="swiper-container swiper-init swiper-detail">
+          <div class="swiper-pagination detail"></div>
+          <div class="swiper-wrapper"> <!-- image {{$root.endpoint}}upload/products/ -->
+            <div class="swiper-slide"><span class="img-helper"></span><img class="lazy product" src="{{$root.endpoint}}upload/products/{{data.photo1}}" /></div>
+            <div class="swiper-slide"><span class="img-helper"></span><img class="lazy product" src="{{$root.endpoint}}upload/products/{{#if data.photo2}}{{data.photo2}}{{else}}{{data.photo}}{{/if}}" /></div>
+            <div class="swiper-slide"><span class="img-helper"></span><img class="lazy product" src="{{$root.endpoint}}upload/products/{{#if data.photo3}}{{data.photo3}}{{else}}{{data.photo}}{{/if}}" /></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card item-detail">
+        <input type="hidden" class="item-code"    value="{{data.barcode}}" />
+        <input type="hidden" class="item-name"    value="{{data.title}}" />
+        <input type="hidden" class="item-price"   value="{{data.price}}" />
+        <input type="hidden" class="item-picture" value="{{data.img}}" />
+        <input type="hidden" class="last-value"   value="{{data.stock}}" />
+        
+        <input type="hidden" id="maxqty" value="{{data.stock}}">
+
+        <div class="card-footer product">
+          <div class="product-name">{{data.title}}</div>
+          {{#if data.stock}}
+          <div class="stock-avail">Stock Available</div>
+          {{else}}
+          <div class="stock-not-avail">Out of Stock</div>
+          {{/if}}
+        </div>
+        <div class="card-footer detail">
+          <div class="product-price">Rp{{data.pricef}}</div>
+          <div class="product-price">
+            <a href="#" class="button-add"><img src="img/add.png" class="cart-img" /></a>
+            <!-- <a href="#" class="button-add2"><img src="img/a2wl.png" class="cart-img" /></a> -->
+          </div>
+        </div>
+        <div class="product-code2">{{data.barcode}}</div><!-- Note: jika kode berbeda dgn link, maka data adalah master -->
+        <!-- <span id="rater" class="rating golden" data-default-rating="3"></span> -->
+        <!-- <div class="starbox">
+          <i class="f7-icons">star_fill</i>
+          <i class="f7-icons">star_fill</i>
+          <i class="f7-icons">star_fill</i>
+          <i class="f7-icons">star</i>
+          <i class="f7-icons">star</i>
+        </div> -->
+        {{#js_if "this.data.stock"}}
+        <div class="card-footer">
+          <div class="stepper stepper-fill stepper-init" data-wraps="false" data-autorepeat="true" data-autorepeat-dynamic="true" data-decimal-point="2" data-manual-input-mode="true">
+            <div class="stepper-button-minus"></div>
+            <div class="stepper-input-wrap">
+              <input class="item-qty" type="text" value="{{#js_if 'this.data.minimum > 0'}}{{data.minimum}}{{else}}1{{/js_if}}" min="{{#js_if 'this.data.minimum > 0'}}{{data.minimum}}{{else}}1{{/js_if}}" max="{{#js_if 'this.data.stok > 0'}}{{data.stok}}{{else}}100{{/js_if}}" step="1">
+            </div>
+            <div class="stepper-button-plus"></div>
+          </div>
+        </div>
+        {{/js_if}}
+      </div>
+
+      <div class="block">
+        <div class="block-title detail">Description</div>
+        <p class="product-desc">{{data.content}}</p>
+      </div>
+    
+      <div class="block">
+        <div class="block-title detail">Related Products</div>
+        <div data-space-between="10" data-slides-per-view="3" class="swiper-container swiper-init swiper-related">
+          <!-- <div class="swiper-pagination"></div> -->
+          <div class="swiper-wrapper">
+            
+            {{#each data.related}}
+            <div class="swiper-slide detail" @click="doOpenLink('{{barcode}}')">
+              <div>
+                <img class="responsive-product lazy" src="{{../$root.endpoint}}upload/products/{{img}}" />
+              </div>
+              <div class="product-name-rel">{{title}}</div>
+              <div class="product-price-rel">Rp{{price}}</div>
+              <div class="product-code-rel">{{barcode}}</div>
+              <img class="button-buy" src="img/{{#js_if 'this.saldo > 0'}}beli{{else}}pre{{/js_if}}.png" />
+            </div>
+            {{/each}}
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</template>
+<script>
+  return {
+    // Component Methods
+    methods: {
+      
+      doOpenLink: function (code) {
+
+        app.router.navigate('/detail/'+code, {
+          reloadCurrent: true,
+          ignoreCache: true,
+        });
+      }
+    },
+        
+    // Page Events
+    on: {
+      
+      pageBeforeIn: function (event, page) {
+        
+        if (app.data.bLogedIn) {
+
+          app.request.get( app.data.endpoint + 'cart/total_items', function(res) {
+                    
+            var data = JSON.parse(res);
+            
+            if (data.status)
+            {
+              app.data.total_items = data.totqty;
+              $$('.badge').text(data.totqty);
+            }
+            else
+            {
+              $$('.badge').css("display", "none");
+              app.data.total_items = 0;
+            }
+          });
+        }
+
+        if (app.data.total_items > 0) {
+          $$('.badge').text(app.data.total_items);
+          $$('.badge').css("display", "block");
+        } else {
+          $$('.badge').css("display", "none");
+        }
+      },
+      
+      pageInit: function(e, page) {
+
+        // var starRating = new SimpleStarRating($$('#rater'));
+        
+        var cmp = $$('.swiper-container.swiper-init.swiper-related');
+
+        if (cmp[0].swiper === undefined) {
+
+          var swiper = app.swiper.create('.swiper-container.swiper-init.swiper-related', {
+              speed: 400,
+              loop: true,
+              spaceBetween: 10,
+              slidesPerView: 3
+          });
+
+          swiper.autoplay.start();
+        }
+
+        
+        $$('.page-content').on('scroll', function (e) {
+          
+          var card = $$('.card.item-detail');
+          var scrollTop = card.offsetTop; // $$('.card.item-detail').offsetTop;
+          
+          // console.log(scrollTop)
+          
+          if (scrollTop >= 56) {
+            card.removeClass("sticky")
+            // card.css('position', 'relative');
+          } else {
+            card.addClass("sticky");
+            // card.css('position', 'sticky');
+            // card.css('top', '0');
+          }
+        })
+
+        
+        // add to cart
+        $$('.button-add').on('click', function (e) {
+          
+          var maxVal  = parseInt($$('#maxqty').val());
+
+          if (maxVal == 0)
+            return false;
+
+          // cek login
+          if (!app.data.bLogedIn) {
+            
+            app.data.lastURL = app.views.main.router.url;
+
+            app.router.navigate('/login/', {
+              reloadCurrent: true,
+              ignoreCache: true,
+            });
+            return;
+          }
+
+          var page  = $$('.page-current'); // get current page
+          // var card  = $$('.item-detail');
+          var kode  = page.find('.item-code').val();
+          var qty   = page.find('.item-qty').val();
+          var hjual = page.find('.item-price').val();
+
+
+          var bFound = false;
+
+          for (var i =0; i < items.length; i++)
+            if (items[i].kdbar === kode) {
+              
+              bFound = true;
+
+              if (items[i].qty >= maxVal) {
+                // console.log('item.qty >= maxVal')
+                return;
+              }
+            
+              if (parseInt(items[i].qty) + parseInt(qty) > maxVal) {
+                // console.log('maxVal: '+ maxVal)
+                // console.log('item.qty + qty > maxVal')
+                return;
+              }
+              
+              items[i].qty += parseInt(qty);
+            }
+
+          if (!bFound) {
+            app.methods.addItem(kode, qty);
+          }
+
+          
+          var formData = [];
+
+          formData.kode  = kode;
+          formData.qty   = qty;
+          formData.hjual = hjual;
+          
+          // formData.Authorization = app.data.token;
+          // app.methods.addItem(kode);
+
+          app.request.post( app.data.endpoint + 'cart', formData, function(res) {
+              
+            var data = JSON.parse(res);
+
+            if (data.status)
+            {
+              app.data.total_items = data.totqty;
+              $$('.badge').text(data.totqty);
+              $$('.badge').css("display", "block");
+            }
+          });
+        });
+
+        
+        // add to wishlist
+        /*$$('.button-add2').on('click', function (e) {
+
+          // cek login
+          if (!app.data.bLogedIn) {
+            
+            app.data.lastURL = app.views.main.router.url;
+
+            app.router.navigate('/login/', {
+              reloadCurrent: true,
+              ignoreCache: true,
+            });
+            return;
+          }
+
+          var page   = $$('.page-current'); // get current page
+          var kode   = page.find('.item-code').val();
+          var nama   = page.find('.item-name').val();
+          var gambar = page.find('.item-picture').val();
+          var hjual  = page.find('.item-price').val();
+
+          var pnj    = page.find('.item-pnj').val();
+          var lbr    = page.find('.item-lbr').val();
+          var tgi    = page.find('.item-tgi').val();
+          
+          
+          var db = app.data.db;
+
+          if (db) {
+          
+            var now = new Date();
+            var date = now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate();
+          
+            db.transaction(function(tx) {
+              
+              tx.executeSql('insert into wishlist (kdbar, kdurl, nama, gambar, hjual, pnj, lbr, tgi, tglinput) values (?, ?, ?, ?, ?, ?, ?, ?, ?);', 
+              [kode, url, nama, gambar, hjual, pnj, lbr, tgi, date]);
+              
+              app.dialog.alert('Data berhasil ditambahkan ke dalam tabel wishlist.')
+            });
+          
+          } else {
+            
+            var formData = [];
+
+            formData.kdbar  = kode;
+            
+            app.request.post( app.data.endpoint + 'wishlist/'+app.data.mbrid, formData, function(res) {
+              
+              var data = JSON.parse(res);
+  
+              if (data.status)
+              {
+                app.dialog.alert('Data berhasil ditambahkan ke dalam wishlist.')
+                // var view = app.views.current;
+                // view.router.back(view.history[0], { force: true });
+              }
+              else
+              {
+                app.dialog.alert(data.message)
+              }
+            });
+          }
+        });*/
+      }
+    }
+  }
+</script>

@@ -1,0 +1,108 @@
+<template>
+  <div class="page">
+    <div class="navbar search no-shadow" style="border-bottom: solid 1px #c0c0c0;">
+      <div class="navbar-inner sliding">
+        <div class="left search">
+          
+          <!-- Searchbar with auto init -->
+          <form class="searchbar list-stock">
+            <div class="searchbar-inner">
+              <div class="searchbar-input-wrap">
+                <input id="searchTerm" type="search" placeholder="Cari" autofocus>
+                <i class="searchbar-icon"></i>
+                <span class="input-clear-button"></span>
+              </div>
+              <span class="searchbar-disable-button">Cancel</span>
+            </div>
+          </form>
+
+          <!-- Searchbar backdrop -->
+          <div class="searchbar-backdrop"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="page-content">
+      
+      <!-- Nothing found message -->
+      <div class="block searchbar-not-found">
+        <div class="block-inner">Item tidak ditemukan!</div>
+      </div>
+
+      <div class="list media-list virtual-list virtual-stock searchbar-found">
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+  return {
+    // Page Events
+    on: {
+      
+      pageInit: function(e, page) {
+
+        // create searchbar
+        var searchbar = app.searchbar.create({
+          el: '.list-stock', //.searchbar',
+          customSearch: true,
+          searchContainer: '.list',
+          // searchIn: '.item-title',
+          on: {
+            
+            search(sb, query, previousQuery) {
+              
+              if (query)
+              app.request.getJSON( app.data.endpoint + 'api/v1/search?q='+query, function(res) {
+                
+                // var data = JSON.parse(res);
+                var items = res.data;
+
+                var virtualList = app.virtualList.create({
+                  // List Element
+                  el: '.virtual-stock',
+                  // Pass array with items
+                  items: items,
+                  // List item Template7 template
+                  itemTemplate:
+                    '<li>' +
+                      '<a href="/detail/{{barcode}}" class="item-link item-content">' +
+                        '<div class="item-media"><img src="'+app.data.endpoint+'upload/products/{{img}}" width="70" /></div>' + //https://kaoribali.com/dev/
+                        '<div class="item-inner">' +
+                          '<div class="item-title-row">' +
+                            '<div class="item-title">{{title}}</div>' +
+                          '</div>' +
+                          '<div class="item-text product-price">Rp{{price}}</div>' +
+                          // '{{#if pnj}}<div class="item-text product-size">{{pnj}} x {{lbr}}{{#if tgi}} x {{tgi}}{{/if}}</div>{{/if}}' +
+                          '<div class="item-text">{{barcode}}</div>' +
+                        '</div>' +
+                      '</a>' +
+                    '</li>',
+                  // Item height
+                  //height: app.theme === 'ios' ? 63 : 73,
+                });
+
+              });
+            },
+            disable(sb) {
+              // console.log('Search canceled!');
+              // app.router.back('/', {force: true});
+              var view = app.views.current;
+              // console.log(view.history);
+              
+              if (view.history.length > 1) {
+                view.router.back(view.history[view.history.length-2], { force: true });
+              } else {
+                view.router.back('/', {force: true});
+              }
+            }
+          }
+        });
+        
+        app.preloader.hide();
+        
+        $$('#searchTerm').focus();
+     
+      }
+    }
+  }
+</script>

@@ -1,0 +1,172 @@
+<template>
+  <div class="page">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="ios-only">Back</span>
+          </a>
+          <!-- <a href="#" class="link icon-only panel-open" data-panel="left">
+            <i class="icon f7-icons ios-only">menu</i>
+            <i class="icon material-icons md-only">menu</i>
+          </a> -->
+        </div>
+        <div class="title sliding"><img class="responsive" src="img/logo.png" /></div>
+        <div class="right">
+          <a href="/cart/" data-view=".view-main" class="link icon-only">
+            <i class="icon f7-icons ios-only">shopping_cart<span class="badge color-red"></span></i>
+            <i class="icon material-icons md-only">shopping_cart<span class="badge color-red"></span></i>
+          </a>
+          <a href="#" class="link icon-only popover-open" data-popover=".popover-more">
+            <i class="icon f7-icons ios-only">more_vert</i>
+            <i class="icon material-icons md-only">more_vert</i>
+          </a>
+        </div>
+      </div>
+      <div class="subnavbar">
+        <div class="title" style="width: 100%; font-size: 16px;">
+          <a href="/search/"><div class="search">
+            <span class="searchButton"><i class="fa fa-search"></i></span>
+            <div class="searchTerm">Cari..</div>
+          </div></a>
+        </div>
+      </div>
+    </div>
+    <div class="page-content">
+        
+      <div class="block">
+          
+        <div class="row no-gutter">
+          {{#each data}}
+          <div class="col-50 tablet-33 product">
+            <a href="/detail/{{kode}}" class="item-link">
+            <div>
+              <img class="responsive-product lazy" src="{{../$root.endpoint}}upload/products/{{img}}" />
+            </div>
+            <div class="product-name">{{nama}}</div>
+            <div class="product-price">Rp{{hjual}}</div>
+            <div class="product-code">{{kode}}</div>
+            <a href="/detail/{{kode}}" class="button button-raised button-fill button-round-md larger btnBuy">BELI</a>
+            <!--<img class="button-buy" src="img/{{#js_if 'this.stock > 0'}}beli{{else}}pre{{/js_if}}.png" />--></a>
+          </div>
+          {{/each}}
+        </div>
+        {{#js_if 'this.total > 10'}}
+        <div class="data-table-footer">
+          <ul class="pagination">
+            <!-- <li>
+              <a href="#" class="link disabled">
+              <i class="icon icon-prev"></i>
+              </a>
+            </li> -->
+            {{#js_if 'this.total_page < 10'}}
+              
+              {{#each pages}}
+              <li>
+                {{#js_if 'this.page == ../curr_page'}}
+                <a href="#" class="link active disabled">
+                {{else}}
+                <a href="/product/{{kode}}/{{page}}" class="link">
+                {{/js_if}}
+                <span class="">{{page}}</span>
+                </a>
+              </li>
+              {{/each}}
+              {{#js_if 'this.curr_page < this.total_page'}}
+              <!-- <li>
+                <a href="/product/{{kode}}/{{next_page}}" class="link">
+                <i class="icon icon-next"></i>
+                </a>
+              </li> -->
+              {{/js_if}}
+            
+            {{else}}
+              
+              {{#each pages}}
+              <li>
+                {{#js_if 'this.page == ../curr_page'}}
+                <a href="#" class="link active disabled">
+                {{else}}
+                <a href="/product/{{kode}}/{{page}}" class="link">
+                {{/js_if}}
+                <span class="">{{page}}</span>
+                </a>
+              </li>
+              {{/each}}
+              {{#js_if 'this.curr_page < this.total_page'}}
+              <!-- <li>
+                <a href="/product/{{kode}}/{{next_page}}" class="link">
+                <i class="icon icon-next link"></i>
+                </a>
+              </li> -->
+              {{/js_if}}
+            {{/js_if}}
+          </ul>
+          <!-- <span class="">Current page: {{curr_page}}</span> -->
+        </div>
+        {{/js_if}}
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+  return {
+        
+    // Page Events
+    on: {
+      pageBeforeIn: function (event, page) {
+                
+        if (app.data.bLogedIn) {
+
+          app.request.get( app.data.endpoint + 'cart/total_items', function(res) {
+                    
+            var data = JSON.parse(res);
+            
+            if (data.status)
+            {
+              app.data.total_items = data.totqty;
+              $$('.badge').text(data.totqty);
+            }
+            else
+            {
+              $$('.badge').css("display", "none");
+              app.data.total_items = 0;
+            }
+          });
+        }
+
+        if (app.data.total_items > 0) {
+          $$('.badge').text(app.data.total_items);
+          $$('.badge').css("display", "block");
+        } else {
+          $$('.badge').css("display", "none");
+        }
+      },
+      
+      pageInit: function(e, page) {
+        
+        $$('.searchTerm').on('focus', function (e) {
+          
+          e.preventDefault();
+          
+          app.router.navigate('/search/', {
+            reloadCurrent: true,
+            ignoreCache: true,
+          });
+
+        });
+        
+        $$('.link.back').on('click', function (e) {
+          // e.preventDefault();
+          // e.stopPropagation();
+    
+          // back to main page
+          var view = app.views.current;
+          if (view.history.length > 4)
+            view.router.back(view.history[0], { force: true });
+        });
+      }
+    }
+  }
+</script>
