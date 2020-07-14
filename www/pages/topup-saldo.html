@@ -64,7 +64,7 @@
               <input type="radio" name="bank" value="{{bank_code}}" />
               <i class="icon icon-radio"></i>
               <div class="item-inner" style="display: block;">
-                <div class="item-media"><img style="width: 150px;" src="{{../$root.endpoint}}assets/bank/{{bank_logo}}"></div>
+                <div class="item-media"><img style="width: 150px;" src="{{../$root.endpoint}}assets/bank/{{img}}"></div>
                 <div>
                   <div class="item-title">Transfer via {{bank_name}}</div>
                   <div class="item-text">Nomor rekening: {{account_number}}</div>
@@ -83,3 +83,50 @@
     </div>
   </div>
 </template>
+<script>
+  return {
+    // Component Methods
+    methods: {
+    },
+    // Page Events
+    on: {
+      
+      pageInit: function (event, page) {
+      
+        $$('.btnKirim').on('click', function(e){
+          //e.preventDefault();
+          
+          var nominal = $$('#nominal').val();
+          
+          if (nominal == '') {
+              app.dialog.alert('Masukkan jumlah nominal topup saldo.', 'Topup Saldo');
+              return;
+          } else
+          if (nominal < app.data.min_topup) {
+            app.dialog.alert('Jumlah minimal topup saldo sebesar '+app.data.min_topup+'.', 'Topup Saldo');
+            return;
+          }
+                  
+          app.preloader.show();
+
+          var formData = app.form.convertToData('.topup');
+          
+          app.request.post( app.data.endpoint + 'api/v1/member/topup', formData, function (res) {
+            
+            app.preloader.hide();
+            
+            var data = JSON.parse(res);
+        
+            if (data.status) {
+              app.router.back();
+            } else {
+              if (data.message !== '') {
+                app.dialog.alert(data.message, 'Topup Saldo');
+              }
+            }
+          });
+        });
+      }
+    }
+  }
+</script>

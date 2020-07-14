@@ -32,20 +32,10 @@
                 <i class="icon material-icons md-only">person</i>
               </div> -->
               <div class="item-inner">
-                <div class="item-title item-label">Nama Depan</div>
+                <div class="item-title item-label">Nama Lengkap</div>
                 <div class="item-input-wrap">
-                  <input type="text" id="first_name" name="first_name" value="{{data.first_name}}" placeholder="Nama Depan">
+                  <input type="text" id="name" name="name" value="{{data.first_name}}" placeholder="Nama Lengkap">
                   <!-- <span class="input-clear-button"></span> -->
-                </div>
-              </div>
-            </li>
-            <li>
-              <div class="item-content item-input">
-                <div class="item-inner">
-                  <div class="item-title item-label">Nama Belakang</div>
-                  <div class="item-input-wrap">
-                    <input type="text" id="last_name" name="last_name" value="{{data.last_name}}" placeholder="Nama Belakang"/>
-                  </div>
                 </div>
               </div>
             </li>
@@ -123,7 +113,6 @@
         if (imageData) {
           // $$('img.responsive.profile').attr('src', "data:image/jpeg; base64," + imageData);
           $$('img.responsive.profile2').attr('src', "data:image/jpeg; base64," + imageData);
-          // app.dialog.alert('imageData exists!');
         } //else {
         //   app.dialog.alert('imageData is empty!');
         // }
@@ -199,21 +188,6 @@
           ]
         });
 
-        // get member detail
-        // app.request.getJSON( app.data.endpoint + "member/"+app.data.mbrid, function(res) {
-                    
-        //   $$('#first_name').val(res.first_name);
-        //   $$('#last_name').val(res.last_name);
-        //   $$('#alamat').val(res.address);
-        //   $$('#email').val(res.email);  
-        //   $$('#telepon').val(res.phone);  
-
-        //   // $$('#kota').val(res.data.kota);
-        //   // $$('#kodepos').val(res.data.kodepos);
-        //   // $$('#fax').val(res.data.fax);
-        //   // $$('#npwp').val(res.data.npwp);
-        // });
-
         $$('.take-photo').on('click', function () {
           
           ac_photo.open();
@@ -221,39 +195,35 @@
 
         $$('.btnSimpan').on('click', function () {
           
-          var nama_dpn = $$('#first_name').val();
+          var nama = $$('#name').val();
           
           // validasi input
-          if (nama_dpn === "") {
-            app.dialog.alert("Masukkan nama depan.");
-            $$('.page-content').scrollTop($$('#first_name').offset().top);
+          if (nama == "") {
+            app.dialog.alert("Masukkan data nama.");
+            $$('.page-content').scrollTop($$('#name').offset().top);
             //$$('#nama').focus();
             return;
           }
 
-          var nama_blk = $$('#last_name').val();
-          var alamat   = $$('#alamat').val();
-          var email    = $$('#email').val();
-          var telepon  = $$('#telepon').val();
+          var nama    = $$('#name').val();
+          var alamat  = $$('#alamat').val();
+          var nohp    = $$('#telepon').val();
+          var email   = $$('#email').val();
           
           // var kota = $$('#kota').val();
           // var kodepos = $$('#kodepos').val();
-          // var fax = $$('#fax').val();
-          // var npwp = $$('#npwp').val();
           
           // update display nama
-          $$('.member-name').text(nama_dpn + ' ' + nama_blk);
+          // $$('.member-name').text(nama);
 
-          var formData = [];
+          var formData = {};
           
-          formData.mbrid      = app.data.mbrid;
-          formData.first_name = nama_dpn;
-          formData.last_name  = nama_blk;
+          formData.first_name = nama;
           formData.address    = alamat;
           formData.email      = email;
           formData.phone      = telepon;
           
-          app.request.post( app.data.endpoint + 'member/edit', formData, function (res) {
+          app.request.post( app.data.endpoint + 'api/v1/member/update', formData, function (res) {
                 
             var view = app.views.current;
             view.router.back(view.history[0], { force: true });

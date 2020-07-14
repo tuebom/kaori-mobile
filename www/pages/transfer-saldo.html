@@ -72,6 +72,16 @@
             if (mbrid == app.data.mbrid) {
               app.dialog.alert('Nomor ID tujuan tidak boleh sama dengan ID asal.', 'Transfer Saldo');
               return;
+            } else
+
+            // cek saldo
+            if (app.data.saldo == 0) {
+              app.dialog.alert('Saldo anda kosong. Silahkan topup saldo anda terlebih dahulu.', 'Transfer Saldo');
+              return;
+            } else
+            if (app.data.saldo < app.data.min_trf) {
+              app.dialog.alert('Jumlah saldo anda belum mencukupi minimal transfer.', 'Transfer Saldo');
+              return;
             }
 
             var nominal = $$('#nominal').val();
@@ -80,36 +90,25 @@
                 app.dialog.alert('Masukkan nominal transfer saldo.', 'Transfer Saldo');
                 return;
             } else
-            if (app.data.saldo == 0) {
-              app.dialog.alert('Saldo anda kosong. Silahkan topup saldo anda terlebih dahulu.', 'Transfer Saldo');
-              return;
-            } else
-            if (app.data.saldo < 1000) {
-              app.dialog.alert('Jumlah saldo anda belum mencukupi minimal transfer.', 'Transfer Saldo');
-              $$('#withdrawal [name="nominal"]').val('0');
-              return;
-            } else
-            if (nominal < 1000) {
-              app.dialog.alert('Jumlah minimal transfer saldo sebesar 1000.', 'Transfer Saldo');
-              $$('#nominal').val(1000);
+            if (nominal < app.data.min_trf) {
+              app.dialog.alert('Jumlah minimal transfer saldo sebesar '+app.data.min_trf+'.', 'Transfer Saldo');
+              $$('#nominal').val(app.data.min_trf);
               return;
             } else
             if (nominal > app.data.saldo) {
-              app.dialog.alert('Jumlah maksimal saldo yang bisa ditransfer adalah ' + app.data.saldo +'.', 'Transfer Saldo');
+              app.dialog.alert('Jumlah saldo anda belum mencukupi.', 'Transfer Saldo');
               return;
             }
             
             var pin = $$('#pin').val();
-            if (pin === '') {
-              app.dialog.alert('Masukkan nomor PIN anda.', 'Transfer Saldo');
+            if (pin == '') {
+              app.dialog.alert('Masukkan nomor PIN atau password anda.', 'Transfer Saldo');
               return;
             }
                     
             app.preloader.show();
 
             var formData = app.form.convertToData('.trfsaldo');
-            formData.Authorization = app.data.token;
-            //console.log(formData);
             
             app.request.post( app.data.endpoint + 'api/v1/member/trfsaldo', formData, function (res) {
               
@@ -123,19 +122,13 @@
                 app.router.back();
 
                 // ambil informasi saldo member
-                app.request.get( app.data.endpoint + 'api/v1/member/saldo/'+app.data.mbrid, function (res) {
-                    
-                  var data = JSON.parse(res);
-              
-                  if (data.status) {
-                    $$('.saldo').text(parseInt(data.saldo).toLocaleString('ID'));
-                    app.data.saldo = parseInt(data.saldo);
-                    $$('.bonus').text(parseInt(data.bonus).toLocaleString('ID'));
-                    app.data.bonus = parseInt(data.bonus);
-                  } else {
-                    app.dialog.alert(data.message);
-                  }
-                });
+                /*app.request.getJSON( app.data.endpoint + 'api/v1/member/saldo', function (res) {
+                  
+                  $$('.saldo').text(res.saldof);
+                  app.data.saldo = parseInt(res.saldo);
+                  $$('.bonus').text(res.bonusf);
+                  app.data.bonus = parseInt(res.bonus);
+                });*/
               } else {
                 $$('#pin').val('');
                 app.dialog.alert(data.message, 'Transfer Saldo');

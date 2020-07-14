@@ -1,0 +1,287 @@
+<template>
+    <div class="page" data-name="address">
+        <div class="navbar">
+          <div class="navbar-inner sliding">
+            <div class="left">
+              <a href="#" class="link back">
+                <i class="icon icon-back"></i>
+                <span class="ios-only">Back</span>
+              </a>
+            </div>
+            <div class="title">Tambah Alamat</div>
+          </div>
+        </div>
+        <div class="page-content">
+            <div class="block">
+            <form class="address form-ajax-submit">
+              <div class="list no-hairlines-md">
+                <ul>
+                  <li class="item-content item-input">
+                    <div class="item-inner">
+                      <div class="item-title item-label">Nama Penerima</div>
+                      <div class="item-input-wrap">
+                        <input type="text" id="name" name="name" placeholder="Nama Penerima" value="{{name}}" />
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content item-input">
+                    <div class="item-inner">
+                      <div class="item-title item-label">Alamat</div>
+                      <div class="item-input-wrap">
+                        <input type="text" id="address" name="address" placeholder="Alamat" value="{{address}}" />
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content item-input">
+                    <div class="item-inner">
+                      <div class="item-title item-label">Nomor Handphone</div>
+                      <div class="item-input-wrap">
+                        <input type="text" id="phone" name="phone" placeholder="Nomor Handphone" value="{{phone}}" />
+                      </div>
+                    </div>
+                  </li>
+                  <!-- <li class="item-content item-input">
+                    <div class="item-inner">
+                      <div class="item-title item-label">Email</div>
+                      <div class="item-input-wrap">
+                        <input type="text" id="email" name="email" placeholder="Email" value="{{email}}" />
+                      </div>
+                    </div>
+                  </li> -->
+                  <li class="item-content item-input">
+                    <div class="item-inner">
+                      <div class="item-title item-label">Provinsi</div>
+                      <div class="item-input-wrap">
+                        <select id="province" name="province">
+                          <option value="" selected>-</option>
+                          <option value="1">BALI</option>
+                          <option value="2">BANGKA BELITUNG</option>
+                          <option value="3">BANTEN</option>
+                          <option value="4">BENGKULU</option>
+                          <option value="5">DI YOGYAKARTA</option>
+                          <option value="6">DKI JAKARTA</option>
+                          <option value="7">GORONTALO</option>
+                          <option value="8">JAMBI</option>
+                          <option value="9">JAWA BARAT</option>
+                          <option value="10">JAWA TENGAH</option>
+                          <option value="11">JAWA TIMUR</option>
+                          <option value="12">KALIMANTAN BARAT</option>
+                          <option value="13">KALIMANTAN SELATAN</option>
+                          <option value="14">KALIMANTAN TENGAH</option>
+                          <option value="15">KALIMANTAN TIMUR</option>
+                          <option value="16">KALIMANTAN UTARA</option>
+                          <option value="17">KEPULAUAN RIAU</option>
+                          <option value="18">LAMPUNG</option>
+                          <option value="19">MALUKU</option>
+                          <option value="20">MALUKU UTARA</option>
+                          <option value="21">NANGGROE ACEH DARUSSALAM (NAD)</option>
+                          <option value="22">NUSA TENGGARA BARAT (NTB)</option>
+                          <option value="23">NUSA TENGGARA TIMUR (NTT)</option>
+                          <option value="24">PAPUA</option>
+                          <option value="25">PAPUA BARAT</option>
+                          <option value="26">RIAU</option>
+                          <option value="27">SULAWESI BARAT</option>
+                          <option value="28">SULAWESI SELATAN</option>
+                          <option value="29">SULAWESI TENGAH</option>
+                          <option value="30">SULAWESI TENGGARA</option>
+                          <option value="31">SULAWESI UTARA</option>
+                          <option value="32">SUMATERA BARAT</option>
+                          <option value="33">SUMATERA SELATAN</option>
+                          <option value="34">SUMATERA UTARA</option>
+                        </select>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content item-input">
+                    <div class="item-inner">
+                      <div class="item-title item-label">Kabupaten/Kota</div>
+                      <div class="item-input-wrap">
+                        <select id="regency" name="regency">
+                        </select>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content item-input">
+                    <div class="item-inner">
+                      <div class="item-title item-label">Kecamatan</div>
+                      <div class="item-input-wrap">
+                        <select id="district" name="district">
+                        </select>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content item-input">
+                    <div class="item-inner">
+                      <div class="item-title item-label">Kode Pos</div>
+                      <div class="item-input-wrap">
+                        <input type="text" id="post_code" name="post_code" placeholder="Kode Pos" autocomplete="off" onkeypress="return isNumber(event)"/>
+                      </div>
+                    </div>
+                  </li>
+                                
+                  <script type="text/javascript">
+                      
+                    function isNumber(evt) {
+                      evt = (evt) ? evt : window.event;
+                      var charCode = (evt.which) ? evt.which : evt.keyCode;
+                      if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                        return false;
+                      }
+                      return true;
+                    }
+                  </script>
+                  <!-- <li class="item-content item-input">
+                    <div class="item-inner">
+                      <div class="item-title item-label">Catatan</div>
+                      <div class="item-input-wrap">
+                        <input type="text" id="note" name="note" placeholder="Catatan" autocomplete="off"/>
+                      </div>
+                    </div>
+                  </li> -->
+                </ul>
+              </div>
+
+              <div class="content-block"><a href="#" @click="simpanAlamat" class="button button-raised button-fill larger">Simpan Alamat</a></div>
+
+            </form></div>
+        </div>
+    </div>
+</template>
+<script>
+  return {
+    // Component Methods
+    methods: {
+      
+      simpanAlamat: function (e) {
+            
+        var name = $$('#name').val();
+        if ( name == '')
+        {
+            app.dialog.alert('Masukkan nama penerima.');
+            $$( "#name" ).focus();
+            return false;
+        }
+        
+        var address = $$('#address').val();
+        if ( address == '')
+        {
+            app.dialog.alert('Masukkan alamat.');
+            $$( "#address" ).focus();
+            return false;
+        }
+        
+        // var phone = $$('#phone').val();
+        // if ( phone == '')
+        // {
+        //     app.dialog.alert('Masukkan nomor handphone.');
+        //     $$( "#phone" ).focus();
+        //     return false;
+        // }
+
+        // var email = $$('#email').val();
+        // if ( email == '')
+        // {
+        //     app.dialog.alert('Masukkan email.');
+        //     $$( "#email" ).focus();
+        //     return false;
+        // }
+
+        var province = $$('#province').val();
+        if ( province == '')
+        {
+            app.dialog.alert('Pilih data provinsi.');
+            $$( "#province" ).focus();
+            return false;
+        }
+        
+        var regency = $$('#regency').val();
+        if ( regency == '')
+        {
+            app.dialog.alert('Pilih data kabupaten.');
+            $$( "#regency" ).focus();
+            return false;
+        }
+        
+        var district = $$('#district').val();
+        if ( district == '')
+        {
+            app.dialog.alert('Pilih data kecamatan.');
+            $$( "#district" ).focus();
+            return false;
+        }
+        
+        var post_code = $$('#post_code').val();
+
+        var formData = app.form.convertToData('.address');
+
+        app.request.post( app.data.endpoint + 'api/v1/checkout/address', formData, function(data) {
+          // mainView.router.back();
+          app.data.bSetAddress = true;
+          app.router.navigate('/checkout/', {
+            reloadCurrent: true,
+            ignoreCache: true,
+          });
+        });
+      }
+    },
+    // Page Events
+    on: {
+
+      pageInit: function(e, page) {
+       
+        $$('#province').on('change', function(e){
+          
+          var provid = $$(this).val();
+
+          app.request.json( app.data.endpoint + 'api/v1/checkout/regencies/'+provid, function(json) {
+            
+            var data = json.data, firstid = data[0].id;
+            // console.log('firstid: '+firstid)
+
+            $$('#regency').html('');
+            for (var i = 0; i < data.length; i++) {
+              $$('#regency').append('<option value="'+data[i].id+'">'+data[i].name+'</option>')
+            }
+            
+            app.request.json( app.data.endpoint + 'api/v1/checkout/districts/'+firstid, function(json) {
+              var data = json.data;
+
+              $$('#district').html('');
+              for (var i = 0; i < data.length; i++) {
+                  $$('#district').append('<option value="'+data[i].subdistrict_id+'">'+data[i].subdistrict_name+'</option>')
+              }
+            });
+
+            app.request.json( app.data.endpoint + 'api/v1/checkout/post_code/'+firstid, function(json) {
+              var data = json.data;
+              $$('#post_code').val(data.postal_code);
+            });
+          });
+        });
+
+        
+        $$('#regency').on('change', function(e){
+          
+          var provid = $$('#province').val();
+          
+          // get district data
+          app.request.json( app.data.endpoint + 'api/v1/checkout/districts/'+$$(this).val(), function(json) {
+            
+            var data = json.data;
+
+            $$('#district').html('');
+            for (var i = 0; i < data.length; i++) {
+              $$('#district').append('<option value="'+data[i].subdistrict_id+'">'+data[i].subdistrict_name+'</option>')
+            }
+          });
+
+          // get post code
+          app.request.json( app.data.endpoint + 'api/v1/checkout/post_code/'+$$(this).val(), function(json) {
+            var data = json.data;
+            $$('#post_code').val(data.postal_code);
+          });
+        });
+      }
+    }
+  }
+</script>

@@ -19,15 +19,15 @@
         <div class="card-header"><span><b>Order #{{id}}</b></span><span>{{tglinput}}</span></div>
         {{#each detail}}
         <div class="card-footer top">
-          <img class="cart lazy" src="../../{{$root.endpoint}}upload/products/{{img}}" />
-          <div class="product-name">{{nama}}</div>
+          <img class="cart lazy" src="../../{{$root.endpoint}}upload/products/{{photo1}}" />
+          <div class="product-name">{{title}}</div>
           <div>x {{qty}}</div>
         </div>
         <div class="card-footer">
           <img class="cart lazy" src="img/none.png" />
-          <div>@Rp{{hjual}}</div>
+          <div>@Rp{{price}}</div>
           <div>Disc. {{disc}}%</div>
-          <div>Rp{{jumlah}}</div>
+          <div>Rp{{amount}}</div>
         </div>
         {{/each}}
       </div>

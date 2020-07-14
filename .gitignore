@@ -7,6 +7,7 @@ yarn-error.log*
 lerna-debug.log*
 
 server.js
+backup/
 www/backup/
 www/pages/backup/
 

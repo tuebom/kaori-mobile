@@ -11,19 +11,19 @@
                 <i class="icon material-icons md-only">menu</i>
               </a>
             </div> -->
-            <div class="title sliding"><img class="responsive" src="img/logo.png" /></div>
+            <div class="title sliding"><a href="/akun/"><img class="responsive" src="img/logo.png" /></a></div>
             <div class="right">
               <!-- <a href="/chat/" data-view=".view-main" class="link icon-only">
                 <i class="icon f7-icons ios-only">chat</i>
                 <i class="icon material-icons md-only">chat</i>
               </a> -->
-              <a href="/cart/" data-view=".view-main" class="link icon-only">
-                <i class="icon f7-icons ios-only">shopping_cart<span class="badge color-red"></span></i>
-                <i class="icon material-icons md-only">shopping_cart<span class="badge color-red"></span></i>
-              </a>
               <a href="/cust-svc/" class="link icon-only">
                 <i class="icon f7-icons ios-only">chat</i>
                 <i class="icon material-icons md-only">chat</i>
+              </a>
+              <a href="/cart/" data-view=".view-main" class="link icon-only">
+                <i class="icon f7-icons ios-only">shopping_cart<span class="badge color-red"></span></i>
+                <i class="icon material-icons md-only">shopping_cart<span class="badge color-red"></span></i>
               </a>
               <a href="#" class="link icon-only popover-open" data-popover=".popover-more">
                 <i class="icon f7-icons ios-only">more_vert</i>
@@ -118,7 +118,6 @@
           </div>
   
           <div class="row no-gutter">
-            <!-- Each "cell" has col-[widht in percents] class -->
             <div class="col-33  tablet-33">
               <div class="card">
                 <div class="card-content">
@@ -184,50 +183,7 @@
             </div>
         </div> -->
 
-        <!-- <div class="row no-gutter">
-            <div class="col-33  tablet-33">
-              <div class="card">
-                <div class="card-content">
-                  <a href="/sms/" class="btn item-link">
-                    <img class="responsive-card" src="img/sms.png" />
-                    <div class="card-content-inner">Paket SMS</div>
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div class="col-33  tablet-33">
-              <div class="card">
-                <div class="card-content">
-                  <a href="/telpon/" class="btn item-link">
-                    <img class="responsive-card" src="img/telpon.png" />
-                    <div class="card-content-inner">Pkt Nelpon</div>
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div class="col-33  tablet-33">
-              <div class="card">
-                <div class="card-content">
-                  <a href="/hinet/" class="btn item-link">
-                    <img class="responsive-card" src="img/hinet.png" />
-                    <div class="card-content-inner">Internet</div>
-                  </a>
-                </div>
-              </div>
-            </div>
-        </div> -->
-
         <div class="row no-gutter">
-          <!-- <div class="col-33  tablet-33">
-            <div class="card">
-              <div class="card-content">
-                <a href="/topup-saldo/" class="btn item-link">
-                  <img class="responsive-card" src="img/transfer.png" />
-                  <div class="card-content-inner">Topup Saldo</div>
-                </a>
-              </div>
-            </div>
-          </div> -->
           <div class="col-33  tablet-33">
             <div class="card">
               <div class="card-content">
@@ -271,25 +227,19 @@
       
       pageBeforeIn: function (event, page) {
         
-        if (app.data.bLogedIn) {
-
-          app.request.get( app.data.endpoint + 'api/v1/cart/total_items', function(res) {
-                    
-            var data = JSON.parse(res);
-            
-            if (data.status)
-            {
-              app.data.total_items = data.totqty;
-              if (app.data.total_items > 0) {
-                $$('.badge').text(data.totqty);
-                $$('.badge').css("display", "block");
-              }
-            } else {
-              $$('.badge').css("display", "none");
-              app.data.total_items = 0;
-            }
-          });
-        }
+        if (app.data.bLogedIn)
+        app.request.getJSON( app.data.endpoint + 'api/v1/cart/total_items', function(res) {
+                  
+          if (res.totqty > 0)
+          {
+            app.data.total_items = res.totqty;
+            $$('.badge').text(res.totqty);
+            $$('.badge').css("display", "block");
+          } else {
+            $$('.badge').css("display", "none");
+            app.data.total_items = 0;
+          }
+        });
       },
       
       pageInit: function(e, page) {
@@ -308,7 +258,6 @@
 
           swiper.autoplay.start();
         }
-
       }
     }
   }

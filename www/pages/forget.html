@@ -58,7 +58,7 @@
         // var regId = localStorage.getItem('RegId');
         // formData.gcmid = regId;
         
-        app.request.post( app.data.endpoint + 'auth/forgot_password', formData, function (res) {
+        app.request.post( app.data.endpoint + 'api/v1/auth/forgot_password', formData, function (res) {
           
           app.preloader.hide();
           

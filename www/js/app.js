@@ -1,21 +1,21 @@
 // Dom7
 var $$ = Dom7;
 // localStorage.setItem('mbrid', '');
+// localStorage.setItem('nohp', '');
 
-var mbrid = localStorage.getItem('mbrid');
 var items = [];
 
 var bBackPressed = false;
 
 var destinationType = null;
-var ref = null;
+// var ref = null;
 
 // Framework7 App main instance
 var app  = new Framework7({
   root: '#app', // App root element
   id: 'io.framework7.kaori', // App bundle ID
   name: 'KAORI', // App name
-  theme: 'auto', // Automatic theme detection
+  theme: 'md', // Automatic theme detection
   init: true,
   initOnDeviceReady: true,
   
@@ -26,67 +26,41 @@ var app  = new Framework7({
   // App root data
   data: function () {
     return {
+      // endpoint: 'http://localhost/kaori/',
+      endpoint: 'https://kaoribali.com/dev/',
       db: null,
 
-      mbrid: null,
-      username: null,
-      email: null,
-      password: null,
-
-      // endpoint: 'http://localhost/kaori/',
-      // endpoint: 'http://212.24.111.23/kaori/',
-      endpoint: 'https://kaoribali.com/dev/',
-
-      total_items: 0, // total item cart
-
-      // tax: 0,         // pajak
-      // shipcost: 0,    // ongkos kirim
-      // addcost: 0,     // payment gateway
-      gtotal: 0,      // total
-
-      currentDate: null,
-      ordernum: null,
-      lastURL: null,
-      
+      bSetAddress: false,
       bLogedIn: false,
-      // bUpdateInfo: false,
-      token: null,
+      mbrid: null,
+      pin: null,
+      gtotal: 0,      // grand total
+      promo: null,
+      regency: null,
+      total_items: 0, // total item cart
+      ordernum: null,
+      currentDate: null,
+
+      min_trf: 1000,
+      min_blj: 5000,
+      min_topup: 50000,
+
       push: null,
     };
   },
   // App root methods
   methods: {
     
-    addItem: function(kode, qty) {
-      
-      var bFound = false;
+    capital_letter: function (str) 
+    {
+      str = str.split(" ");
 
-      for (var i=0; i < items.length; i++)
-        if (items[i].kdbar === kode) {
-          
-          bFound = true;
-          items[i].qty += parseInt(qty);
-          break;
-        }
-
-      if (!bFound) {
-        items.push({ kdbar: kode, qty: parseInt(qty) })
+      for (var i = 0, x = str.length; i < x; i++) {
+          str[i] = str[i][0].toUpperCase() + str[i].substr(1);
       }
-      
-      // hitung total
-      // app.methods.calcTotal();
-    },
-    deleteItem: function(kode) {
-      
-      for (var i =0; i < items.length; i++)
-        if (items[i].kdbar === kode) {
-          items.splice(i,1);
-          break;
-        }
 
-      // app.methods.calcTotal();
-    },
-  
+      return str.join(" ");
+    }  
   },
   on: {
 
@@ -94,14 +68,14 @@ var app  = new Framework7({
       
       // app.statusbar.hide();
 
-      if (!this.data.bLogedIn) {
-        $$('.member-status').css('display', 'none');
-        $$('.member-edit').css('display', 'none');
-      }
+      // if (!this.data.bLogedIn) {
+      //   $$('.member-status').css('display', 'none');
+      //   $$('.member-edit').css('display', 'none');
+      // }
       
       // destinationType = navigator.camera.DestinationType;
 
-      /*
+      //*
       function copyDatabaseFile(dbName) {
 
         var sourceFileName = cordova.file.applicationDirectory + 'www/' + dbName;
@@ -135,22 +109,19 @@ var app  = new Framework7({
       copyDatabaseFile('data.db').then(function () {
         // success! :)
         app.data.db = window.sqlitePlugin.openDatabase({name: 'data.db'});
-        // var currentDate = new Date();
-        // var month = currentDate.getMonth() + 1;
-        // var year = currentDate.getFullYear();
         
         var db = app.data.db;
         
         if (db) {
           // app.dialog.alert('db is OK!');
-
-          // $$('.item-basket').on('click', function () {
-          //   var li = $$(this).parents("li");
-          //   var kode = li.find('input').val();
-          //   // console.log(kode)
-          //   app.methods.addSalesItem(kode)
-          //   // app.dialog.alert('Tes')
-          // });                      
+          var now = new Date();
+          var date = now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate();
+  
+          app.data.db.transaction(function(tx) {
+            tx.executeSql('delete from notifikasi where tgl < ?;', [date]);
+          }, function(error) {
+            app.dialog.alert('delete error: ' + error.message);
+          });
         }
       }).catch(function (err) {
         // error! :(
@@ -158,7 +129,7 @@ var app  = new Framework7({
       }); //*/
       
 
-      /*
+      //*
       this.data.push = PushNotification.init({
         "android": {},
         "browser": {
@@ -183,7 +154,6 @@ var app  = new Framework7({
             // Post registrationId to your app server as the value has changed
             // app.dialog.alert('Registrasi Id berhasil!');
         }
-
       });
 
       push.on('notification', function(data) {
@@ -211,69 +181,58 @@ var app  = new Framework7({
         // update info saldo
         setTimeout(function () {
 
-          app.request.get( app.data.endpoint + 'api/v1/member/saldo/'+ app.data.mbrid, function (res) {
+          app.request.getJSON( app.data.endpoint + 'api/v1/member/saldo', function (res) {
           
-            var data = JSON.parse(res);
-        
-            if (data.status) {
-              $$('.saldo').text(parseInt(data.saldo).toLocaleString('ID'));
-              app.data.saldo = parseInt(data.saldo);
-              $$('.bonus').text(parseInt(data.bonus).toLocaleString('ID'));
-              app.data.bonus = parseInt(data.bonus);
-            } else {
-              app.dialog.alert(data.message, data.title);
-            }
+            $$('.saldo').text(res.saldof);
+            app.data.saldo = parseInt(res.saldo);
+            $$('.bonus').text(res.bonusf);
+            app.data.bonus = parseInt(res.bonus);
           });
-        }, 1000);
+        }, 300);
       }); //*/
 
-      if (mbrid) {
+      var nohp = localStorage.getItem('nohp');
 
-        console.log('Direct login!')
-        var mbrid = localStorage.getItem('mbrid');
-        var nohp  = localStorage.getItem('nohp');
+      if (nohp) {
+
+        // console.log('Direct login!')
         var pin   = localStorage.getItem('pin');
         var gcmid = localStorage.getItem('RegId');
-
-        this.data.mbrid = mbrid;
-        this.data.nohp = nohp;
-        this.data.pin = pin;
 
         var formData = {};
         formData.identity = nohp;
         formData.password = pin;
-        formData.gcmid = gcmid;
+        formData.gcmid    = gcmid;
   
         this.preloader.show();
 
-        this.request.post(app.data.endpoint + 'api/v1/auth/login', formData, function (res) {
+        this.request.post(this.data.endpoint + 'api/v1/auth/login', formData, function (res) {
     
           app.preloader.hide();
+          app.data.bLogedIn = true;
+
           var data = JSON.parse(res);
       
           if (data.status) {
-
-            // set data token
-            app.data.bLogedIn = true;
-            app.data.mbrid = mbrid;
-            app.data.token = data.token;
-            
-            // ambil informasi saldo member
-            app.request.get(app.data.endpoint + 'api/v1/member/saldo/'+mbrid, function (res) {
-                
-              var data = JSON.parse(res);
-          
-              if (data.status) {
-                $$('.saldo').text(parseInt(data.saldo).toLocaleString('ID'));
-                app.data.saldo = parseInt(data.saldo);
-              } else {
-                app.dialog.alert(data.message);
+            console.log('Direct login sukses!')
+            app.request.setup({
+              headers: {
+                'Token': data.token //Authorization
               }
             });
 
+            app.data.mbrid = data.mbrid;
+            
+            // ambil informasi saldo member
+            app.request.getJSON(app.data.endpoint + 'api/v1/member/saldo', function (res) {
+                
+              $$('.saldo').text(res.saldof);
+              app.data.saldo = parseInt(res.saldo);
+            });
+
           } else {
-            localStorage.setItem('mbrid', '');
-            this.loginScreen.open('#my-login-screen');
+            // localStorage.setItem('nohp', '');
+            app.loginScreen.open('#my-login-screen');
           }
         });
       } else {
@@ -427,7 +386,7 @@ $$('#my-login-screen .login-button').on('click', function () {
 
   var pin = $$('#my-login-screen [name="password"]').val();
   if (pin === '') {
-      app.dialog.alert('Masukkan nomor PIN/password anda.', 'Login Member');
+      app.dialog.alert('Masukkan nomor PIN atau password anda.', 'Login Member');
       return;
   }
   
@@ -443,37 +402,40 @@ $$('#my-login-screen .login-button').on('click', function () {
   app.request.post(app.data.endpoint + 'api/v1/auth/login', formData, function (res) {
     
     app.preloader.hide();
-    
+    app.data.bLogedIn = true;
+
     var data = JSON.parse(res);
 
+    if (data.block) {
+      app.dialog.alert(data.message, 'Login Member');
+      return;
+    }
+
     if (data.status) {
-    
-      localStorage.setItem('mbrid', mbrid);
+      
+      app.request.setup({
+        headers: {
+          'Token': data.token
+        }
+      });
+
+      // console.log('login sukses!')
       localStorage.setItem('nohp', nohp);
       localStorage.setItem('pin', pin);
+      // localStorage.setItem('mbrid', data.mbrid);
 
+      // tutup & kosongkan isian nomor pin
       app.loginScreen.close('#my-login-screen');
+      $$('#my-login-screen [name="password"]').val('');
       
-      app.data.bLogedIn = true;
-      app.data.mbrid = mbrid;
-      app.data.nohp  = nohp;
-      app.data.pin   = pin;
-      app.data.token = data.token;
+      app.data.mbrid = data.mbrid;
+      // console.log(app.data.mbrid)
       
-      // kosongkan isian nomor pin
-      $$('#my-login-screen [name="pin"]').val('');
-      
-      app.request.get(app.data.endpoint + 'api/v1/member/saldo/'+mbrid, function (res) {
+      app.request.getJSON(app.data.endpoint + 'api/v1/member/saldo', function (res) {
           
-        var data = JSON.parse(res);
-    
-        if (data.status) {
-          $$('.saldo').text(parseInt(data.saldo).toLocaleString('ID'));
-          app.data.saldo = parseInt(data.saldo);
-          app.data.bonus = parseInt(data.bonus);
-        } else {
-          app.dialog.alert(data.message, 'Akun Saya');
-        }
+        $$('.saldo').text(res.saldof);
+        app.data.saldo = parseInt(res.saldo);
+        app.data.bonus = parseInt(res.bonus);
       });
 
     } else {
@@ -534,13 +496,13 @@ $$('#my-reg-screen .register-button').on('click', function () {
 
     if (data.status) {
       
+      // console.log('Registrasi sukses!')
       // simpan data nomor handphone
-      localStorage.setItem('mbrid', data.mbrid);
+      // localStorage.setItem('mbrid', data.mbrid);
       localStorage.setItem('nohp', nohp);
-      localStorage.setItem('pin', '1234');
 
-      app.data.mbrid = data.mbrid;
-      app.data.nohp = data.nohp;
+      // app.data.mbrid = data.mbrid;
+      // app.data.nohp = data.nohp;
 
       // set data ke form login
       // $$('#my-login-screen [name="mbrid"]').val(data.mbrid);
@@ -568,7 +530,258 @@ $$('a.label-login').on('click', function () {
 $$('#my-login-screen').on('loginscreen:opened', function (e, loginScreen) {
   // set data ke form login
   // $$('#my-login-screen [name="mbrid"]').val(localStorage.getItem('mbrid'));
+  console.log('get nohp: '+localStorage.getItem('nohp'))
   $$('#my-login-screen [name="identity"]').val(localStorage.getItem('nohp'));
+});
+
+// transfer bonus
+$$('#transfer-bonus .btnTransfer').on('click', function(e){
+  //e.preventDefault();
+  
+  var bonus = parseInt($$('#transfer-bonus [name="nominal"]').val());
+
+  if (bonus === '' || bonus === '0') {
+    app.dialog.alert('Masukkan jumlah bonus yang akan ditransfer.', 'Transfer Bonus');
+    return;
+  } else
+  if (app.data.bonus === 0) {
+    app.dialog.alert('Jumlah bonus anda masih kosong.', 'Transfer Bonus');
+    return;
+  } else
+  if (bonus < 500) {
+    app.dialog.alert('Jumlah minimal transfer bonus sebesar 500.', 'Transfer Bonus');
+    $$('#nominal').val(500);
+    return;
+  } else
+  if (app.data.bonus < 500) {
+    app.dialog.alert('Jumlah bonus anda belum mencukupi minimal transfer.', 'Transfer Bonus');
+    $$('#nominal').val('');
+    return;
+  } else
+  if (bonus > app.data.bonus) {
+    app.dialog.alert('Jumlah maksimal bonus yang bisa ditransfer adalah ' + app.data.bonus +'.', 'Transfer Bonus');
+    $$('#nominal').val(app.data.bonus);
+    return;
+  }
+
+  var pin = $$('#transfer-bonus [name="pin"]').val();
+  if (pin === '') {
+    app.dialog.alert('Masukkan nomor PIN atau password anda.', 'Transfer Bonus');
+    return;
+  }
+
+  var formData = app.form.convertToData('.trfbonus');
+  
+  app.request.post( app.data.endpoint + 'api/v1/member/trfbonus', formData, function (res) {
+    
+    app.preloader.hide();
+
+    var data = JSON.parse(res);
+
+    if (data.status) {
+      
+      $$('#transfer-bonus [name="nominal"]').val('');
+      $$('#transfer-bonus [name="pin"]').val('');
+      
+      app.popup.close($$('.page[data-name="transfer-bonus"]').parents(".popup"));
+      
+      app.request.getJSON( app.data.endpoint + 'api/v1/member/saldo', function (res) {
+          
+        $$('#saldo').text(res.saldof);
+        app.data.saldo = parseInt(res.saldo);
+        
+        $$('#bonus').text(res.bonusf);
+        app.data.bonus = parseInt(res.bonus);
+      });
+    } else {
+      $$('#transfer-bonus [name="pin"]').val('');
+      app.dialog.alert(data.message, 'Transfer Bonus');
+    }
+  });
+});  
+
+$$('#transfer-bonus').on('popup:closed', function (e, popup) {
+  $$('#transfer-bonus [name="nominal"]').val('');
+  $$('#transfer-bonus [name="pin"]').val('');
+});
+
+// setup bank transfer
+$$('#bank-trf .btnBankTrf').on('click', function(e){
+  //e.preventDefault();
+  
+  var bank = $$('#bank-trf [name="bank"]').val();
+
+  if (bank === '') {
+    app.dialog.alert('Pilih data nama bank transfer penarikan uang anda.', 'Bank Transfer Withdrawal');
+    return;
+  }
+  
+  var norek = $$('#bank-trf [name="norek"]').val();
+
+  if (norek === '') {
+    app.dialog.alert('Masukkan data nama nomor rekening bank anda.', 'Bank Transfer Withdrawal');
+    return;
+  }
+  
+  var atn = $$('#bank-trf [name="atn"]').val();
+
+  if (atn === '') {
+    app.dialog.alert('Masukkan data nama pemilik rekening.', 'Bank Transfer Withdrawal');
+    return;
+  }
+
+  var pin = $$('#bank-trf [name="pin"]').val();
+  if (pin === '') {
+    app.dialog.alert('Masukkan nomor PIN atau password anda.', 'Bank Transfer Withdrawal');
+    return;
+  }
+
+  var formData = app.form.convertToData('.bank-trf');
+  
+  app.request.post( app.data.endpoint + 'api/v1/member/setbank', formData, function (res) {
+    
+    app.preloader.hide();
+
+    var data = JSON.parse(res);
+
+    if (data.status) {
+      
+      $$('#bank-trf [name="bank"]').val('');
+      $$('#bank-trf [name="norek"]').val('');
+      $$('#bank-trf [name="atn"]').val('');
+      $$('#bank-trf [name="pin"]').val('');
+      
+      app.popup.close($$('.page[data-name="bank-trf"]').parents(".popup"));
+
+    } else {
+      $$('#bank-trf [name="pin"]').val('');
+      app.dialog.alert(data.message, 'Bank Transfer Withdrawal');
+    }
+  });
+});  
+
+$$('#bank-trf').on('popup:closed', function (e, popup) {
+  $$('#bank-trf [name="bank"]').val('');
+  $$('#bank-trf [name="norek"]').val('');
+  $$('#bank-trf [name="atn"]').val('');
+  $$('#bank-trf [name="pin"]').val('');
+});
+
+// withdrawal
+$$('#withdrawal .btnWithdraw').on('click', function(e){
+  //e.preventDefault();
+  
+  var saldo = parseInt($$('#withdrawal [name="nominal"]').val());
+
+  if (saldo === '' || saldo === '0') {
+    app.dialog.alert('Masukkan jumlah saldo yang akan ditarik.', 'Withdrawal');
+    return;
+  } else
+  if (app.data.saldo === 0) {
+    app.dialog.alert('Jumlah saldo anda masih kosong.', 'Withdrawal');
+    return;
+  } else
+  if (app.data.saldo < 100000) {
+    app.dialog.alert('Jumlah saldo anda belum mencukupi minimal penarikan.', 'Withdrawal');
+    $$('#withdrawal [name="nominal"]').val('0');
+    return;
+  } else
+  if (saldo < 100000) {
+    app.dialog.alert('Jumlah minimal withdrawal sebesar 100.000.', 'Withdrawal');
+    $$('#withdrawal [name="nominal"]').val(100000);
+    return;
+  } else
+  if (saldo > app.data.saldo) {
+    app.dialog.alert('Jumlah maksimal saldo yang bisa diwithdraw adalah ' + app.data.saldo +'.', 'Withdrawal');
+    $$('#withdrawal [name="nominal"]').val(app.data.saldo);
+    return;
+  }
+
+  var pin = $$('#withdrawal [name="pin"]').val();
+  if (pin === '') {
+    app.dialog.alert('Masukkan nomor PIN atau password anda.', 'Withdrawal');
+    return;
+  }
+
+  var formData = app.form.convertToData('.withdrawal');
+  
+  app.request.post( app.data.endpoint + 'api/v1/member/withdraw', formData, function (res) {
+    
+    app.preloader.hide();
+
+    var data = JSON.parse(res);
+
+    if (data.status) {
+      
+      $$('#withdrawal [name="nominal"]').val('');
+      $$('#withdrawal [name="pin"]').val('');
+      
+      app.popup.close($$('.page[data-name="withdrawal"]').parents(".popup"));
+    } else {
+      $$('#withdrawal [name="pin"]').val('');
+      app.dialog.alert(data.message, 'Withdrawal');
+    }
+  });
+});  
+
+$$('#withdrawal').on('popup:closed', function (e, popup) {
+  $$('#withdrawal [name="nominal"]').val('');
+  $$('#withdrawal [name="pin"]').val('');
+});
+
+// ganti pin
+$$('#ganti-pin .btnGanti').on('click', function () {
+  
+  var pinlama = $$('#ganti-pin [name="pinlama"]').val();
+  var pinbaru = $$('#ganti-pin [name="pinbaru"]').val();
+  
+  if (pinlama == '') {
+      app.dialog.alert('Masukkan nomor PIN atau password yang lama.', 'Ganti PIN');
+      return;
+  } else
+  if (pinlama != app.data.pin) {
+    app.dialog.alert('Input nomor pin/password yang lama belum benar.', 'Ganti PIN');
+    return;
+  } else
+  if (pinbaru == '') {
+      app.dialog.alert('Masukkan nomor PIN atau password yang baru.', 'Ganti PIN');
+      return;
+  }
+  
+  app.preloader.show();
+
+  var formData = app.form.convertToData('.ganti-pin');
+  
+  app.request.post( app.data.endpoint + 'api/v1/member/gantipin', formData, function (res) {
+    
+    app.preloader.hide();
+    
+    var data = JSON.parse(res);
+
+    if (data.status) {
+
+      app.request.setup({
+        headers: {
+          'Token': data.token
+        }
+      });
+
+      app.data.pin = pinbaru;
+      localStorage.setItem('pin', pinbaru);
+
+      $$('#ganti-pin [name="pinlama"]').val('');
+      $$('#ganti-pin [name="pinbaru"]').val('');
+      
+      app.popup.close($$('.page[data-name="ganti-pin"]').parents(".popup"));
+    } else {
+      app.dialog.alert(data.message, 'Ganti PIN');
+    }
+  });
+});
+
+$$('#ganti-pin').on('popup:closed', function (e, popup) {
+  $$('#ganti-pin [name="pinlama"]').val('');
+  $$('#ganti-pin [name="pinbaru"]').val('');
 });
 
 
@@ -613,12 +826,12 @@ $$(document).on('backbutton', function (e) {
       
     } else {*/
       
-      if (app.data.bLogedIn) {
-        app.request.get( app.data.endpoint + 'api/v1/auth/logout', function(res) {});
-      }
-
-      navigator.app.exitApp();
-      // console.log('navigator.app.exitApp();')
+      app.request.get( app.data.endpoint + 'api/v1/auth/logout', function(res) {
+        app.data.total_items = 0;
+        app.data.bLogedIn = false;
+        navigator.app.exitApp();
+      });
+      
     // }
   } else
   
@@ -663,36 +876,16 @@ app.on('pageInit', function (page) {
   $$('a.list-button.item-link.popover-close.logout').on('click', function (e) {
     
     e.preventDefault();
-    console.log('do logout!')
-    /*if ($$(this).text() == 'Login') {
-
-      app.router.navigate('/login/', {
-        reloadCurrent: true,
-        ignoreCache: true,
-      });
-
-    } else {*/
       
-
-      // if (app.data.bLogedIn) {
-          
-        // app.data.bLogedIn = false;
-        // app.data.mbrid = null;
-        // app.data.total_items = 0;
-        // $$('.badge').text('');
-        // $$('.badge').css("display", "none");
-  
-        app.request.get( app.data.endpoint + 'api/v1/auth/logout', function(res) {
-          
-          app.data.bLogedIn = false;
-          app.data.mbrid = null;
-          app.data.total_items = 0;
-          localStorage.setItem('mbrid', '');
-          localStorage.setItem('nohp', '');
-          app.loginScreen.open('#my-login-screen');
-        });
-      // }
-    // }
+    app.request.get( app.data.endpoint + 'api/v1/auth/logout', function(res) {
+      
+      app.data.total_items = 0;
+      app.data.bLogedIn = false;
+      app.data.mbrid = null;
+      // localStorage.setItem('mbrid', '');
+      localStorage.setItem('nohp', '');
+      app.loginScreen.open('#my-login-screen');
+    });
   });
 
 
@@ -705,11 +898,79 @@ app.on('pageInit', function (page) {
 
     e.preventDefault();
 
-    // app.popup.close($$('.page[data-name="transfer-bonus"]').parents(".popup"));
     app.popup.close('#order-display', false);
     
     // back to main page
     var view = app.views.current;
     view.router.back(view.history[0], { force: true });    
   });
+
+  $$('.toggle.voucher').on('change', function (e) {
+    
+    var toggle = e.srcElement; //app.toggle.get('.toggle');
+
+    if (toggle.checked) {
+      
+      var dialog = app.dialog.prompt('Masukkan kode voucher atau promo:', 'Input Kode Voucher', function (kode) {
+        
+        var formData = {};
+        formData.promo_code = kode;
+  
+        app.preloader.show();
+
+        app.request.post(app.data.endpoint + 'api/v1/checkout/promo-code', formData, function (res) {
+    
+          app.preloader.hide();
+          var data = JSON.parse(res);
+          if (data.status = true)
+          {
+            
+            app.router.navigate('/checkout/', {
+              reloadCurrent: true,
+              ignoreCache: true,
+            });
+          }
+          else
+          {
+            app.dialog.alert('Kode promo tidak ditemukan!');
+            toggle.checked = false;
+          }
+        });
+      }, function (kode) {
+        toggle.checked = false;
+      });
+      dialog.$el.find('input').focus();
+      dialog.$el.find('.item-input-wrap').addClass('voucher');
+    }
+    else
+    {
+      if (app.data.promo) {
+        app.request.post(app.data.endpoint + 'api/v1/checkout/unset-promo-code', function (res) {
+          app.router.navigate('/checkout/', {
+            reloadCurrent: true,
+            ignoreCache: true,
+          });
+        });
+      }
+    }
+  });
+
+  // .stepper.cart.stepper-fill.stepper-init
+  $$('.stepper.cart').on('stepper:change', function (stepper, el) {
+    
+    var kode   = $$(stepper.srcElement).attr('item-code');
+    var value  = el.value;
+
+    var formData = {};
+    formData.kode = kode;
+    formData.qty  = value;
+
+    app.request.post(app.data.endpoint + 'api/v1/cart/chg-qty', formData, function (res) {
+      app.router.navigate('/cart/', {
+        reloadCurrent: true,
+        ignoreCache: true,
+      });
+    });
+  });
 });
+

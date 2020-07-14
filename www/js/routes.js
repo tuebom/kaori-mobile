@@ -7,18 +7,22 @@ routes = [
 
       // App instance
       var app = router.app;
-
+      // var banner = null;
+      
       // Show Preloader
       app.preloader.show();
 
-      app.request.getJSON( app.data.endpoint + 'api/v1/dashboard', function(res) {
+      app.request.getJSON( app.data.endpoint + 'api/v1/transactions/defaults', function(res) {
 
         // Hide Preloader
         app.preloader.hide();
 
-        // console.log(res)
-        // var data = JSON.parse(res)
-        
+        app.data.min_trf   = res.data.min_transfer;
+        app.data.min_blj   = res.data.min_belanja;
+        app.data.min_topup = res.data.min_topup;
+
+        // banner = res.banner;
+      
         // Resolve route to load page
         resolve(
           {
@@ -27,7 +31,6 @@ routes = [
           {
             context: {
               banner: res.banner
-              // data: res.categories,
             }
           }
         );
@@ -41,121 +44,6 @@ routes = [
   {
     path: '/forget/',
     componentUrl: './pages/forget.html',
-  },
-  {
-    path: '/login/',
-    componentUrl: './pages/login.html',
-  },
-  {
-    path: '/register/',
-    url: './pages/register.html',
-    on: {
-      
-      pageInit: function (event, page) {
-        
-        $$('i.icon.icon-back').on('click', function () {
-          var view = app.views.current;
-          view.router.back(view.history[0], { force: true });
-        });
-        
-        $$('.register-button').on('click', function () {
-  
-          var first_name = $$('#first_name').val();
-          if (first_name == '') {
-              app.dialog.alert('Masukkan nama depan anda.', 'Pendaftaran');
-              return;
-          }
-          
-          var rgx_nama = /^[a-zA-Z]'?([a-zA-Z]|\,|\.| |-)+$/;
-          var namax = first_name.trim().match(rgx_nama);
-          if (!namax) {
-            app.dialog.alert('Input data nama belum benar.', 'Pendaftaran');
-            return;
-          }
-          
-          // var last_name = $$('#last_name').val();
-          // if (last_name == '') {
-          //     app.dialog.alert('Masukkan nama belakang anda.', 'Pendaftaran');
-          //     return;
-          // }
-        
-          var email = $$('#email-reg').val();
-          if (email == '') {
-              app.dialog.alert('Masukkan email anda.', 'Pendaftaran');
-              return;
-          }
-        
-          var phone = $$('#phone').val();
-          if (phone == '') {
-              app.dialog.alert('Masukkan nomor handphone anda.', 'Pendaftaran');
-              return;
-          }
-        
-          var password = $$('#password-reg').val();
-          if (password == '') {
-            app.dialog.alert('Masukkan password anda.', 'Pendaftaran');
-            return;
-          }
-        
-          var pconfirm = $$('#password_confirm').val();
-          if (pconfirm == '') {
-            app.dialog.alert('Masukkan konfirmasi password anda.', 'Pendaftaran');
-            return;
-          }
-
-          if (password !== pconfirm) {
-            app.dialog.alert('Input password tidak sama.', 'Pendaftaran');
-            return;
-          }
-
-          app.preloader.show();
-          
-          // var regId = localStorage.getItem('RegId');
-          var formData = app.form.convertToData('.register-form');
-        
-          // formData.gcmid = regId;
-          
-          app.request.post( app.data.endpoint + 'api/v1/register', formData, function (res) {
-            
-            app.preloader.hide();
-            
-            var data = JSON.parse(res);
-        
-            if (data.status) {
-              
-              // simpan data nomor handphone
-              localStorage.setItem('email', email);
-              // localStorage.setItem('phone', phone);
-              localStorage.setItem('password', password);
-        
-          
-              // setTimeout(function () {
-                app.dialog.alert(data.message, 'Pendaftaran');
-              // }, 2000);
-              
-              // redirect to login
-              app.router.navigate('/login/', {
-                reloadCurrent: true,
-                ignoreCache: true,
-              });
-
-            } else {
-              app.dialog.alert(data.message, 'Pendaftaran');
-            }
-          }, function (xhr) {
-            
-            console.log(xhr)
-          });
-        });
-
-        $$('.login-button').on('click', function () {
-  
-          var view = app.views.current;
-          view.router.back(view.history[0], { force: true });
-        });
-        
-      }
-    }
   },
   {
     path: '/cust-svc/',
@@ -207,33 +95,16 @@ routes = [
         return;
       }
 
-      if (!app.data.bLogedIn) {
-        
-        app.data.lastURL = app.views.main.router.url;
-
-        resolve(
-          {
-            componentUrl: './pages/login.html',
-          }
-        );
-        return;
-      }
-
       // Show Preloader
       app.preloader.show();
 
-      app.request.get( app.data.endpoint + 'api/v1/cart', function(res) {
+      app.request.getJSON( app.data.endpoint + 'api/v1/cart', function(res) {
 
         // Hide Preloader
         app.preloader.hide();
 
-        // console.log(res)
-        var data = JSON.parse(res)
+        app.data.bSetAddress = false;
         
-        app.data.tot_equipment = data.total_equipment;
-        app.data.tot_utensil   = data.total_utensil;
-        // $$('#spangt').text(app.data.gtotal.toLocaleString());
-
         // Resolve route to load page
         resolve(
           {
@@ -241,8 +112,8 @@ routes = [
           },
           {
             context: {
-              equipment: data.equipment,
-              utensil: data.utensil,
+              items: res.items,
+              total: res.total
             }
           }
         );
@@ -265,11 +136,8 @@ routes = [
 
       // Show Preloader
       app.preloader.show();
-      // var mbrid = routeTo.params.id;
       
       app.request.getJSON( app.data.endpoint + 'api/v1/categories', function(res) {
-        // var data = JSON.parse(res.data);
-        // console.log(data)
         app.preloader.hide();
         resolve(
           { componentUrl: './pages/categories2.html' },
@@ -295,10 +163,6 @@ routes = [
     url: './pages/cek-harga-telpon.html',
   },
   {
-    path: '/cek-harga-sms/',
-    url: './pages/cek-harga-sms.html',
-  },
-  {
     path: '/cek-harga-brg/:id',
     async: function (routeTo, routeFrom, resolve, reject) {
       // Router instance
@@ -320,7 +184,7 @@ routes = [
 
         resolve(
           { componentUrl: './pages/daftar-harga.html' },
-          { context: { data: data, } }
+          { context: { data: data } }
         );
         app.preloader.hide();
       });
@@ -348,7 +212,7 @@ routes = [
 
         resolve(
           { componentUrl: './pages/daftar-harga.html' },
-          { context: { data: data, } }
+          { context: { data: data } }
         );
         app.preloader.hide();
       });
@@ -404,7 +268,7 @@ routes = [
 
         resolve(
           { componentUrl: './pages/daftar-harga.html' },
-          { context: { data: data, } }
+          { context: { data: data } }
         );
         app.preloader.hide();
       });
@@ -459,35 +323,7 @@ routes = [
 
         resolve(
           { componentUrl: './pages/daftar-harga.html' },
-          { context: { data: data, } }
-        );
-        app.preloader.hide();
-      });
-    }
-  },
-  {
-    path: '/harga-sms/:opr/:nama',
-    async: function (routeTo, routeFrom, resolve, reject) {
-      // Router instance
-      var router = this;
-
-      // App instance
-      var app = router.app;
-
-      // Show Preloader
-      app.preloader.show();
-
-      // kode operator
-      var opr = routeTo.params.opr;
-      var nama = routeTo.params.nama;
-
-      app.request.json( app.data.endpoint + 'api/v1/sms/cekharga/'+opr, function(json) {
-          
-        var data = { title: 'Harga Paket SMS ' + nama, list: json };
-
-        resolve(
-          { componentUrl: './pages/daftar-harga.html' },
-          { context: { data: data, } }
+          { context: { data: data } }
         );
         app.preloader.hide();
       });
@@ -515,7 +351,7 @@ routes = [
 
         resolve(
           { componentUrl: './pages/daftar-harga.html' },
-          { context: { data: data, } }
+          { context: { data: data } }
         );
         app.preloader.hide();
       });
@@ -530,7 +366,6 @@ routes = [
         $$('.contact').on('click', function(e){
      
           navigator.contacts.pickContact(function(contact){
-              //console.log('The following contact has been selected:' + JSON.stringify(contact));
               var nomor = contact.phoneNumbers[0].value;
               $$('#nohp').val(nomor.replace('+62','0').replace(/-/g,'').replace(/ /g,''));
               // $$('#nama').val(contact.name.givenName);
@@ -581,7 +416,8 @@ routes = [
           app.preloader.show();
 
           var formData = app.form.convertToData('.pendaftaran');
-          formData.mbrid = app.data.mbrid;
+          formData.nama = app.methods.capital_letter(formData.nama);
+          formData.reffid = app.data.mbrid;
           
           app.request.post( app.data.endpoint + 'api/v1/member', formData, function (res) {
             
@@ -591,23 +427,17 @@ routes = [
         
             if (data.status) {
               
-              app.dialog.alert(data.message, 'Registrasi Member');
+              app.dialog.alert(data.message, 'Pendaftaran Member');
               app.router.back();
 
               // ambil informasi saldo member
-              app.request.get( app.data.endpoint + 'api/v1/member/saldo/'+app.data.mbrid, function (res) {
+              /*app.request.getJSON( app.data.endpoint + 'api/v1/member/saldo', function (res) {
                   
-                var data = JSON.parse(res);
-            
-                if (data.status) {
-                  $$('.saldo').text(parseInt(data.saldo).toLocaleString('ID'));
-                  app.data.saldo = parseInt(data.saldo);
-                  $$('.bonus').text(parseInt(data.bonus).toLocaleString('ID'));
-                  app.data.bonus = parseInt(data.bonus);
-                } else {
-                  app.dialog.alert(data.message);
-                }
-              });
+                $$('.saldo').text(res.saldof);
+                app.data.saldo = parseInt(res.saldo);
+                $$('.bonus').text(res.bonusf);
+                app.data.bonus = parseInt(res.bonus);
+              });*/
 
             } else {
               app.dialog.alert(data.message, 'Pendaftaran Member');
@@ -615,6 +445,21 @@ routes = [
           });
         });                  
       }
+    }
+  },
+  {
+    path: '/address/',
+    async: function (routeTo, routeFrom, resolve, reject) {
+      // Router instance
+      var router = this;
+
+      // App instance
+      var app = router.app;
+
+      resolve (
+        { componentUrl: './pages/address.html' }
+        // { context: { data: data } }
+      );
     }
   },
   {
@@ -626,33 +471,42 @@ routes = [
       // App instance
       var app = router.app;
 
-      if (!app.data.bLogedIn) {
-        
-        app.data.lastURL = '/checkout/';
-
-        app.router.navigate('/login/', {
-          reloadCurrent: true,
-          ignoreCache: true,
-        });
-      }
-
       // Show Preloader
       app.preloader.show();
         
-      app.request.get( app.data.endpoint + 'api/v1/cart', function(res) {
+      app.request.getJSON( app.data.endpoint + 'api/v1/checkout', function(res) {
           
-        var data = JSON.parse(res);
-        // app.data.tot_equipment = data.total_equipment;
-        app.data.tot_utensil   = data.total_utensil;
-        // console.log(data.total_utensil)
-        // console.log(data.utensil)
-
         app.preloader.hide();
 
-        resolve (
-          { componentUrl: './pages/checkout.html' },
-          { context: { data: data } }
-        );
+        if (!app.data.bSetAddress) //(!res.order.address)
+        {
+          resolve (
+            { componentUrl: './pages/address.html' },
+            { context: { 
+              name: app.methods.capital_letter(res.order.first_name),
+              address: res.order.address,
+              phone: res.order.phone,
+              email: res.order.email,
+              province: res.order.province,
+              regency: res.order.regency
+            } }
+          );
+        }
+        else
+        {
+          app.data.regency = res.order.regency;
+          app.data.gtotal  = res.order.gtotal;
+          app.data.promo   = res.order.promo_code;
+
+          resolve (
+            { componentUrl: './pages/checkout.html' },
+            { context: { 
+              order: res.order,
+              promo: res.promo,
+              agents: res.agents
+            } }
+          );
+        }
       });
     }
   },
@@ -681,54 +535,33 @@ routes = [
     }
   },
   {
-    path: '/settings/',
-    url: './pages/settings.html',
-  },
-  {
     path: '/akun/',
     url: './pages/akun.html',
     on: {
       pageInit: function (event, page) {
         
-        var mbrid = app.data.mbrid;
-        
-        app.request.get( app.data.endpoint + 'api/v1/member/saldo/'+mbrid, function (res) {
+        app.request.getJSON( app.data.endpoint + 'api/v1/member/saldo', function (res) {
             
-          var data = JSON.parse(res);
-        
-          if (data.status) {
-            $$('#saldo').text(parseInt(data.saldo).toLocaleString('ID'));
-            app.data.saldo = parseInt(data.saldo);
+          $$('#saldo').text(res.saldof);
+          app.data.saldo = parseInt(res.saldo);
 
-            // $$('#poin').text(parseInt(data.poin).toLocaleString('ID'));
-            // app.data.poin = parseInt(data.poin);
-
-            $$('#bonus').text(parseInt(data.bonus).toLocaleString('ID'));
-            app.data.bonus = parseInt(data.bonus);
-
-          } else {
-            app.dialog.alert(data.message, 'Akun Saya');
-          }
+          $$('#bonus').text(res.bonusf);
+          app.data.bonus = parseInt(res.bonus);
         });
         
         $$('.cek-id').on('click', function(e){
           
-          app.request.get( app.data.endpoint + 'api/v1/member/cek_id/'+ app.data.mbrid, function (res) {
+          app.request.getJSON( app.data.endpoint + 'api/v1/member/cek_id', function (res) {
             
-            var data = JSON.parse(res);
-    
-            // if (data.status) {
-              app.dialog.alert(data.message, 'Akun Saya');
-            // } else {
-              // app.dialog.alert(data.message, 'Akun Saya');
-            // }
+            // var data = JSON.parse(res);
+            app.dialog.alert(res.message, 'Akun Saya');
           });
         });
       }
     }
   },
-  /*{
-    path: '/account/',
+  {
+    path: '/profil/',
     async: function (routeTo, routeFrom, resolve, reject) {
       // Router instance
       var router = this;
@@ -736,125 +569,18 @@ routes = [
       // App instance
       var app = router.app;
 
-      if (!app.data.bLogedIn) {
+      // Show Preloader
+      app.preloader.show();
         
-        app.data.lastURL = '/account/';
-
-        resolve(
-          {
-            componentUrl: './pages/login.html',
-          }
-        );
-        return;
-      }
-      
-      resolve(
-        {
-          componentUrl: './pages/account.html',
-        }
-      );
-      return;
-    }
-  },
-  {
-    path: '/wish-list/',
-    // componentUrl: './pages/wish-list.html',
-    async: function (routeTo, routeFrom, resolve, reject) {
-      // Router instance
-      var router = this;
-
-      // App instance
-      var app = router.app;
-
-      // Show Preloader
-      app.preloader.show();
-    
-      var db = app.data.db;
-      // var items = [];
-
-      if (db) {
-      
-        db.transaction(function(tx) {
+      app.request.getJSON( app.data.endpoint + 'api/v1/member', function(res) {
           
-          tx.executeSql('select kdbar, kdurl, nama, gambar, hjual, pnj, lbr, tgi from wishlist order by tglinput;', [], function(ignored, res) {
-            
-            if (res.rows.length === 0) {
-              app.preloader.hide();
-              return;
-            }
-            
-            var items = [];
-
-            for (var i = 0; i < res.rows.length; i++) {
-              
-              items.push({
-                kdbar: res.rows.item(i).kdbar,
-                kdurl: res.rows.item(i).kdurl,
-                nama: res.rows.item(i).nama,
-                gambar: res.rows.item(i).gambar,
-                hjual: res.rows.item(i).hjual,
-                pnj: res.rows.item(i).pnj,
-                lbr: res.rows.item(i).lbr,
-                tgi: res.rows.item(i).tgi,
-              });
-            }
-            
-            app.preloader.hide();
-      
-            resolve(
-              { componentUrl: './pages/wish-list.html' },
-              { context: { data: items } }
-            );
-          });
-          
-        }, function(error) {
-          app.preloader.hide();
-          app.dialog.alert('select error: ' + error.message);
-        });
-      }
-      else
-      {
-        app.request.getJSON( app.data.endpoint + 'api/v1/wishlist/'+app.data.mbrid, function(res) {
-          app.preloader.hide();
-          // var items = [{"kdbar":"AB-106R","kdurl":"AB-106R","nama":"CHEST FREEZER 102 LITER","deskripsi":"Box tempat penyimpanan bahan makanan yang akan dibekukan seperti daging, bakso, nuget, sosis, dsb. Dengan berbagai ukuran yang disesuaikan untuk kebutuhan masing-masing.","hjual":"2,650,000","hpromof":"2,650,000","kriteria":"","pnj":"56.3cm","lbr":"56.2cm","tgi":"84.5cm","master":"N","saldo":"0","gambar":"ab-106r.png"},{"kdbar":"AB-1200TX","kdurl":"AB-1200TX","nama":"CHEST FREEZER 1.050 LITER","deskripsi":"Box tempat penyimpanan bahan makanan yang akan dibekukan seperti daging, bakso, nuget, sosis, dsb. Dengan berbagai ukuran yang disesuaikan untuk kebutuhan masing-masing.\r\n","hjual":"13,000,000","hpromof":"13,000,000","kriteria":"","pnj":"225.0cm","lbr":"82.0cm","tgi":"88.0cm","master":"N","saldo":"0","gambar":"ab12001.png"},{"kdbar":"AB-226R","kdurl":"AB-226R","nama":"CHEST FREEZER 220 LITER","deskripsi":"Box tempat penyimpanan bahan makanan yang akan dibekukan seperti daging, bakso, nuget, sosis, dsb. Dengan berbagai ukuran yang disesuaikan untuk kebutuhan masing-masing.\r\n","hjual":"3,575,000","hpromof":"3,575,000","kriteria":"","pnj":"94.6cm","lbr":"56.2cm","tgi":"84.5cm","master":"N","saldo":"0","gambar":"ab336r.png"}];
-          
-          resolve(
-            { componentUrl: './pages/wish-list.html' },
-            { context: { data: res } }
-          );
-        });
-      }
-    }
-  },*/
-  {
-    path: '/order-status/',
-    // componentUrl: './pages/order-status.html',
-    async: function (routeTo, routeFrom, resolve, reject) {
-      // Router instance
-      var router = this;
-
-      // App instance
-      var app = router.app;
-
-      // Show Preloader
-      app.preloader.show();
-
-      // kode item
-      var mbrid = app.data.mbrid;
-      // var nama = routeTo.params.nama;
-
-      // var db = app.data.db;
-      
-      app.request.getJSON( app.data.endpoint + 'api/v1/member/order-status/'+mbrid, function(res) {
-        // var data = [{"id":"00015","name":"Putu Wirya","tglinput":"30 Sep 2019","address":"Jalan Raya Demak,<br>SURABAYA - JAWA TIMUR 60119","totalamount":"308750","tax":"0","shipcost":"15000","addcost":"11241.25","gtotal":"334991.25","paymentcode":"0","no_resi":null,"delivery":"jne","package":"OKE","status":"Pending"}];
         app.preloader.hide();
-
-        resolve(
-          { componentUrl: './pages/order-status.html' },
-          { context: { data: res.data } }
+        resolve (
+          { componentUrl: './pages/profile.html' },
+          { context: { data: res } }
         );
       });
-    },
+    }
   },
   {
     path: '/order-history/',
@@ -870,12 +596,124 @@ routes = [
       app.preloader.show();
 
       // kode item
-      var mbrid = app.data.mbrid;
-      // var nama = routeTo.params.nama;
+      // var mbrid = app.data.mbrid;
 
       // var db = app.data.db;
       
-      app.request.getJSON( app.data.endpoint + 'api/v1/member/order-history/'+mbrid, function(res) {
+      app.request.getJSON( app.data.endpoint + 'api/v1/member/order-history', function(res) {
+        
+        app.preloader.hide();
+
+        if (res.data.length == 0) {
+          app.dialog.alert('Anda belum memiliki histori transaksi.');
+          reject();
+          return;
+        }
+        
+        resolve(
+          { componentUrl: './pages/order-history.html' },
+          { context: { data: res.data } }
+        );
+      });
+    },
+  },
+  {
+    path: '/konfirmasi/',
+    async: function (routeTo, routeFrom, resolve, reject) {
+      // Router instance
+      var router = this;
+
+      // App instance
+      var app = router.app;
+        
+      if (!app.data.currentDate) {
+      
+        var now = new Date();
+        
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        
+        var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+        app.data.currentDate = today;
+      }
+
+      // Show Preloader
+      app.preloader.show();
+        
+      app.request.getJSON( app.data.endpoint + 'api/v1/transactions/confirm', function(res) {
+          
+        app.preloader.hide();
+
+        /*if (!res.status)
+        {
+          app.dialog.alert(res.message);
+          reject();
+          return;
+        }*/
+
+        resolve (
+          { componentUrl: './pages/konfirmasi.html' },
+          { context: {
+            trx_exists: res.status,
+            orders: res.orders,
+            bank: res.bank
+            // name: app.methods.capital_letter(res.first_name),
+            // phone: res.phone,
+            // email: res.email
+          } }
+        );
+      });
+    }
+  },
+  {
+    path: '/notifikasi/',
+    componentUrl: './pages/notifications.html',
+  },
+  {
+    path: '/order-status/',
+    async: function (routeTo, routeFrom, resolve, reject) {
+      // Router instance
+      var router = this;
+
+      // App instance
+      var app = router.app;
+
+      // Show Preloader
+      app.preloader.show();
+
+      // kode item
+      // var mbrid = app.data.mbrid;
+
+      // var db = app.data.db;
+      
+      app.request.getJSON( app.data.endpoint + 'api/v1/member/order-status', function(res) {
+        // var data = [{"id":"00015","name":"Putu Wirya","tglinput":"30 Sep 2019","address":"Jalan Raya Demak,<br>SURABAYA - JAWA TIMUR 60119","totalamount":"308750","tax":"0","shipcost":"15000","addcost":"11241.25","gtotal":"334991.25","paymentcode":"0","no_resi":null,"delivery":"jne","package":"OKE","status":"Pending"}];
+        app.preloader.hide();
+
+        resolve(
+          { componentUrl: './pages/order-status.html' },
+          { context: { data: res.data } }
+        );
+      });
+    },
+  },
+  {
+    path: '/order-history/',
+    async: function (routeTo, routeFrom, resolve, reject) {
+      // Router instance
+      var router = this;
+
+      // App instance
+      var app = router.app;
+
+      // Show Preloader
+      app.preloader.show();
+
+      // kode item
+      // var mbrid = app.data.mbrid;
+      // var db = app.data.db;
+      
+      app.request.getJSON( app.data.endpoint + 'api/v1/member/order-history', function(res) {
         
         app.preloader.hide();
 
@@ -885,50 +723,6 @@ routes = [
         );
       });
     },
-  },
-  {
-    path: '/profile/',
-    async: function (routeTo, routeFrom, resolve, reject) {
-      // Router instance
-      var router = this;
-
-      // App instance
-      var app = router.app;
-
-      if (!app.data.bLogedIn) {
-        
-        app.data.lastURL = '/profile/';
-
-        resolve(
-          {
-            componentUrl: './pages/login.html',
-          }
-        );
-        return;
-      }
-
-      // Show Preloader
-      app.preloader.show();
-        
-      app.request.getJSON( app.data.endpoint + 'api/v1/member/'+app.data.mbrid, function(res) {
-          
-        // var data = JSON.parse(res);
-
-        resolve (
-          { componentUrl: './pages/profile.html' },
-          { context: { data: res } }
-        );
-        app.preloader.hide();
-      });
-    }
-  },
-  {
-    path: '/chat/',
-    componentUrl: './pages/chat.html',
-  },
-  {
-    path: '/notifications/',
-    componentUrl: './pages/notifications.html',
   },
   {
     path: '/opsi-belanja/',
@@ -948,8 +742,6 @@ routes = [
       // var mbrid = routeTo.params.id;
       
       app.request.getJSON( app.data.endpoint + 'api/v1/categories', function(res) {
-        // var data = JSON.parse(res.data);
-        // console.log(data)
         app.preloader.hide();
         resolve(
           { componentUrl: './pages/categories.html' },
@@ -1059,10 +851,9 @@ routes = [
         app.data.currentDate = today;
       }
       
-      var formData = [];
+      var formData = {};
 
       formData.tgltrx = app.data.currentDate;
-      formData.Authorization = app.data.token;
       
       app.request.post( app.data.endpoint + "api/v1/member/historitrx", formData, function(res) {
           
@@ -1173,7 +964,7 @@ routes = [
             
           var pin = $$('#pin').val();
           if (pin === '') {
-            app.dialog.alert('Masukkan nomor PIN anda.', 'Pulsa HP');
+            app.dialog.alert('Masukkan nomor PIN atau password anda.', 'Pulsa HP');
             return;
           }
         
@@ -1181,7 +972,6 @@ routes = [
           $$(this).prop("disabled", true);
 
           var formData = app.form.convertToData('.trxpulsa');
-          formData.Authorization = app.data.token;
           
           app.request.post( app.data.endpoint + 'api/v1/pulsa', formData, function (res) {
             
@@ -1275,7 +1065,7 @@ routes = [
             
           var pin = $$('#pin').val();
           if (pin === '') {
-            app.dialog.alert('Masukkan nomor PIN anda.', 'Paket Data');
+            app.dialog.alert('Masukkan nomor PIN atau password anda.', 'Paket Data');
             return;
           }
           
@@ -1283,7 +1073,6 @@ routes = [
           $$(this).prop("disabled", true);
 
           var formData = app.form.convertToData('.trxdata');
-          formData.Authorization = app.data.token;
           
           app.request.post( app.data.endpoint + 'api/v1/data', formData, function (res) {
             
@@ -1380,7 +1169,7 @@ routes = [
             
           var pin = $$('#pin').val();
           if (pin === '') {
-            app.dialog.alert('Masukkan nomor PIN anda.', 'Token PLN');
+            app.dialog.alert('Masukkan nomor PIN atau password anda.', 'Token PLN');
             return;
           }
           
@@ -1388,7 +1177,6 @@ routes = [
           $$(this).prop("disabled", true);
 
           var formData = app.form.convertToData('.trxpln');
-          formData.Authorization = app.data.token;
           
           app.request.post( app.data.endpoint + 'api/v1/pln', formData, function (res) {
             
@@ -1506,7 +1294,6 @@ routes = [
           $$(this).prop("disabled", true);
 
           var formData = app.form.convertToData('.trxtelpon');
-          formData.Authorization = app.data.token;
           
           app.request.post( app.data.endpoint + 'api/v1/telpon', formData, function (res) {
             
@@ -1523,124 +1310,6 @@ routes = [
               $$(this).prop("disabled", false);
               if (data.message !== '') {
                 app.dialog.alert(data.message, 'Paket Nelpon');
-              }
-            }
-          });
-        });            
-      
-      },
-    }
-  },
-  {
-    path: '/sms/',
-    url: './pages/sms.html',
-    on: {
-      pageInit: function (event, page) {
-        
-        /*var numpad = app.keypad.create({
-          inputEl: '#tujuan',
-          dotButton: false,
-          valueMaxLength: 13,
-          on: {
-            change(keypad, value) {
-              // console.log(keypad, value);
-              value = value.toString();
-              if (value.length === 4) {
-                updateList(value);
-              }
-            }
-          }
-        });*/
-        
-        function updateList(hlr) {
-          app.request.json( app.data.endpoint + 'api/v1/sms/'+hlr, function (json) {
-
-            $$('#nominal').html('');
-            for (var i = 0; i < json.length; i++) {
-              $$('#nominal').append('<option value="'+json[i].kode+'">'+json[i].nominal+'</option>')
-            }
-    
-          });
-        }
-        
-        $$('#tujuan').on('input', function(){
-          
-          var str = $$('#tujuan').val();
-          
-          if (str.length < 4) {
-            $$('#nominal').html('');
-          } else
-          if (str.length == 4) {
-            updateList(str);
-          } else {
-            var str = $$(this).val().substring(0, 4);
-            updateList(str);
-          }
-        });
-
-        $$('.contact').on('click', function(e){
-     
-          navigator.contacts.pickContact(function(contact){
-              //console.log('The following contact has been selected:' + JSON.stringify(contact));
-              var nomor = contact.phoneNumbers[0].value;
-              $$('#tujuan').val(nomor.replace('+62','0').replace(/-/g,'').replace(/ /g,''));
-              var str = $$('#tujuan').val().substring(0, 4);
-              updateList(str);
-          },function(err){
-              //console.log('Error: ' + err);
-              // alert('Error: ' + err);
-              $$('#tujuan').val('');
-          });
-        });
-      
-        $$('.btnKirim').on('click', function(e){
-          //e.preventDefault();
-          
-          var tujuan = $$('#tujuan').val();
-          if (tujuan == '') {
-              app.dialog.alert('Masukkan data nomor hp tujuan.', 'Paket SMS');
-              return;
-          }
-
-          var rgx_nohp = /[08][0-9]{9,}/;
-          var nohp = tujuan.trim().match(rgx_nohp);
-          if (!nohp) {
-              app.dialog.alert('Input data nomor hp tujuan belum benar.', 'Paket SMS');
-              return;
-          }
-
-          var nominal = $$('#nominal').val();
-          if (nominal == '') {
-              app.dialog.alert('Pilih nominal paket sms.', 'Paket SMS');
-              return;
-          }
-          
-          if (app.data.saldo == 0) {
-            app.dialog.alert('Saldo anda tidak cukup untuk melakukan transaksi pembelian paket sms.', 'Paket SMS');
-            return;
-          }
-          
-          // app.preloader.show();
-          $$(this).prop("disabled", true);
-
-          var formData = app.form.convertToData('.trxsms');
-          formData.Authorization = app.data.token;
-          
-          app.request.post( app.data.endpoint + 'api/v1/sms', formData, function (res) {
-            
-            // app.preloader.hide();
-            
-            var data = JSON.parse(res);
-        
-            if (data.status) {
-              // setTimeout(function () {
-                app.router.back();
-              // }, 500);
-            } else {
-
-              $$(this).prop("disabled", false);
-              if (data.message !== '') {
-                app.dialog.alert(data.message, 'Paket SMS');
               }
             }
           });
@@ -1703,7 +1372,6 @@ routes = [
           $$(this).prop("disabled", true);
 
           var formData = app.form.convertToData('.trxtopup');
-          formData.Authorization = app.data.token;
           
           app.request.post( app.data.endpoint + 'api/v1/topup', formData, function (res) {
             
@@ -1773,7 +1441,6 @@ routes = [
           $$(this).prop("disabled", true);
 
           var formData = app.form.convertToData('.trxtopup');
-          formData.Authorization = app.data.token;
           
           app.request.post( app.data.endpoint + 'api/v1/topup', formData, function (res) {
             
@@ -1843,7 +1510,6 @@ routes = [
           $$(this).prop("disabled", true);
 
           var formData = app.form.convertToData('.trxtopup');
-          formData.Authorization = app.data.token;
           
           app.request.post( app.data.endpoint + 'api/v1/topup', formData, function (res) {
             
@@ -1913,7 +1579,6 @@ routes = [
           $$(this).prop("disabled", true);
 
           var formData = app.form.convertToData('.trxhinet');
-          formData.Authorization = app.data.token;
           
           app.request.post( app.data.endpoint + 'api/v1/hinet', formData, function (res) {
             
@@ -1935,7 +1600,6 @@ routes = [
   },
   {
     path: '/topup-saldo/',
-    // url: './pages/topup-saldo.html',
     async: function (routeTo, routeFrom, resolve, reject) {
       // Router instance
       var router = this;
@@ -1946,13 +1610,13 @@ routes = [
       // Show Preloader
       app.preloader.show();
 
-      app.request.get( app.data.endpoint + 'api/v1/bank', function(res) {
+      app.request.getJSON( app.data.endpoint + 'api/v1/bank', function(res) {
 
         // Hide Preloader
         app.preloader.hide();
 
         // console.log(res)
-        var data = JSON.parse(res)
+        // var data = JSON.parse(res)
 
         // Resolve route to load page
         resolve(
@@ -1961,53 +1625,13 @@ routes = [
           },
           {
             context: {
-              data: data.bank
+              data: res.bank
             }
           }
         );
 
       });
     },
-    /*on: {
-      pageInit: function (event, page) {
-      
-        $$('.btnKirim').on('click', function(e){
-          //e.preventDefault();
-          
-          var nominal = $$('#nominal').val();
-          
-          if (nominal == '') {
-              app.dialog.alert('Masukkan jumlah nominal topup saldo.', 'Topup Saldo');
-              return;
-          } else
-          if (nominal < 50000) {
-            app.dialog.alert('Jumlah minimal topup saldo sebesar 50.000.', 'Topup Saldo');
-            return;
-          }
-                  
-          app.preloader.show();
-
-          var formData = app.form.convertToData('.topup');
-          formData.Authorization = app.data.token;
-          
-          app.request.post( app.data.endpoint + 'api/v1/member/topup', formData, function (res) {
-            
-            app.preloader.hide();
-            
-            var data = JSON.parse(res);
-        
-            if (data.status) {
-              app.router.back();
-            } else {
-              if (data.message !== '') {
-                app.dialog.alert(data.message, 'Topup Saldo');
-              }
-            }
-          });
-        });            
-      
-      },
-    }*/
   },
   {
     path: '/category/:id/:page',
@@ -2025,13 +1649,13 @@ routes = [
       var id   = routeTo.params.id;
       var page = routeTo.params.page;
 
-      app.request.get( app.data.endpoint + 'api/v1/category/'+id+'/'+page, function(res) {
+      app.request.getJSON( app.data.endpoint + 'api/v1/category/'+id+'/'+page, function(res) {
           
-        var data = JSON.parse(res);
+        // var data = JSON.parse(res);
 
         resolve(
           { componentUrl: './pages/category.html' },
-          { context: { data: data.data, title: nama } }
+          { context: { data: res.data, title: nama } }
         );
         app.preloader.hide();
       });
@@ -2074,7 +1698,7 @@ routes = [
         // var url = '/product/' + kode + '/' + nama + '/'
         
         var total_page = Math.ceil(total/10)
-        var pages = [];
+        var pages = {};
 
         for (var i=0; i < total_page; i++)
           pages.push({page : i+1, kode: kode, nama: res.title})

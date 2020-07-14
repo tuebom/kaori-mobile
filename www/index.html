@@ -23,6 +23,8 @@
   <link rel="stylesheet" href="css/framework7.min.css">
   <link rel="stylesheet" href="css/icons.css">
   <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/swiper.css">
+  <link rel="stylesheet" href="css/detail.css">
 </head>
 <body>
   
@@ -305,7 +307,31 @@
         </div>
       </div>
     </div>
-  
+
+    <div class="popup" id="order-display">
+      <div class="view">
+        <div class="page" data-name="order-display">
+          
+          <div class="navbar">
+            <div class="navbar-inner">
+              <div class="title">Kaori Group</div>
+              <!-- <div class="right">
+                <a href="#" class="link popup-close">Close</a>
+              </div> -->
+            </div>
+          </div>
+          <div class="page-content">
+            <div class="block">
+              <p style="text-align: center;"><h3>Terima kasih!</h3></p>
+              <p style="text-align: center; padding: 15px;">Nomor order anda #<span class="ordernum"></span><br>
+                Setelah melakukan pembayaran, silahkan konfirmasi pembayaran Anda melalui aplikasi ini.</p>
+              <div class="content-block"><a href="#" class="button button-raised button-fill larger btnContinue">Lanjutkan Belanja</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Login Screen -->
     <div class="login-screen" id="my-login-screen">
       <div class="view">
@@ -377,7 +403,7 @@
                         <div class="item-inner">
                           <div class="item-title item-label">Nama Lengkap</div>
                           <div class="item-input-wrap">
-                            <input type="text" id="nama" name="nama" placeholder="Nama Lengkap" style="text-transform: uppercase" />
+                            <input type="text" id="nama" name="nama" placeholder="Nama Lengkap" />
                           </div>
                         </div>
                       </div>
@@ -422,7 +448,8 @@
           <div class="list">
               <ul>
                 <li><a href="/akun/" class="list-button item-link popover-close">Akun Saya</a></li>
-                <!-- <li><a href="/notifikasi/" class="list-button item-link popover-close">Notifikasi</a></li> -->
+                <li><a href="/konfirmasi/" class="list-button item-link popover-close">Konfirmasi Pembayaran</a></li>
+                <li><a href="/notifikasi/" class="list-button item-link popover-close">Notifikasi</a></li>
                 <li><a href="#" class="list-button item-link popover-close logout">Logout</a></li>
                 <!-- <li><a href="/about-us/" class="list-button item-link popover-close">About Us</a></li>
                 <li><a href="/term/" class="list-button item-link popover-close">Term &amp; Condition</a></li>

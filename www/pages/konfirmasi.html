@@ -1,0 +1,242 @@
+<template>
+  <div class="page" data-name="profile">
+    <div class="navbar">
+      <div class="navbar-inner sliding">
+        <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="ios-only">Back</span>
+          </a>
+        </div>
+        <div class="title">Konfirmasi Pembayaran</div>
+      </div>
+    </div>
+    <div class="page-content">
+      <div class="block">
+        <form class="konfirmasi form-ajax-submit">
+        <input type="hidden" id="trx_exists" name="trx_exists" value="{{trx_exists}}" />
+        <div class="list no-hairlines-md">
+          <ul>
+            {{#if trx_exists}}
+            <li>
+              <div class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-title item-label">Jenis Transaksi</div>
+                  <div class="item-input">
+                    <select id="trx_type" name="trx_type">
+                      <option value="topup">Topup Saldo</option>
+                      <option value="order">Order Online</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </li>
+            {{/if}}
+            <li class="orderid">
+              <div class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-title item-label">Nomor Order</div>
+                  <div class="item-input">
+                    <select id="id_order" name="id_order">
+                      {{#each orders}}
+                      <option value="{{id}}">{{id}}</option>
+                      {{/each}}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <!-- <li class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-title item-label">Nama Member</div>
+                <div class="item-input-wrap">
+                  <input type="text" id="name" name="name" value="{{name}}" placeholder="Nama Member">
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-title item-label">Nomor Handphone</div>
+                  <div class="item-input-wrap">
+                    <input type="text" id="phone" name="phone" value="{{phone}}" placeholder="Nomor Handphone"/>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-title item-label">Email</div>
+                  <div class="item-input-wrap">
+                    <input type="email" id="email" name="email" value="{{email}}" placeholder="Email"/>
+                  </div>
+                </div>
+              </div>
+            </li> -->
+            <li>
+              <div class="row no-gutter">
+                <div class="item-content top-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Tanggal pembayaran</div>
+                    <div class="item-input-wrap">
+                      <input id="paydate" name="paydate" type="date" placeholder="Tanggal Bayar" value=""/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-title item-label">Metode Pembayaran</div>
+                  <div class="item-input">
+                    <select id="payment" name="paymethod">
+                      <option value="">-</option>
+                      <option value="ATM">ATM</option>
+                      <option value="Internet Banking">Internet Banking</option>
+                      <option value="Mobile Banking">Mobile Banking</option>
+                      <option value="Transfer Antar Bank">Transfer Antar Bank</option>
+                      <option value="Cash deposit">Cash deposit</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content top-content item-input">
+                <div class="item-inner">
+                  <div class="item-title item-label">Nama Bank</div>
+                  <div class="item-input-wrap">
+                      <select id="bank" name="bankname">
+                        <option value="">-</option>
+                        {{#each bank}}
+                        <option value="{{bank_code}}">{{bank_name}}</option>
+                        {{/each}}
+                      </select>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content item-input">
+                  <div class="item-inner">
+                      <div class="item-title item-label">Atas Nama</div>
+                      <div class="item-input-wrap">
+                          <input type="text" id="atn" name="bankaccount" placeholder="Atas Nama" />
+                      </div>
+                  </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Nominal Pembayaran</div>
+                    <div class="item-input-wrap">
+                        <input type="number" id="nominal" name="amount" placeholder="Nominal Pembayaran" />
+                    </div>
+                  </div>
+                </div>
+            </li>
+          </ul>
+        </div>
+        </form>
+        <div class="content-block">
+            <a href="#" class="col button button-raised button-fill larger btnKirim">Kirim</a>
+        </div>
+        <div class="kb">
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+  return {
+    // Page Events
+    on: {
+      
+      pageInit: function (event, page) {
+        
+        $$('#trx_type').on('change', function () {
+          
+          var trxtype = $$(this).val();
+          
+          if (trxtype == 'order') {
+            $$('li.orderid').css('display', 'block');
+          } else {
+            $$('li.orderid').css('display', 'none');
+          }
+        });
+
+        $$('#paydate').val(app.data.currentDate);
+            
+        $$('.btnKirim').on('click', function () {
+          
+          var trx_exists = $$('#trx_exists').val();
+
+          if (trx_exists) {
+            var trxtype = $$('#trx_type').val();
+
+            if (trxtype == 'order') {
+              
+              var id_order = $$('#id_order').val();
+              
+              // validasi input
+              if (id_order == "") {
+                app.dialog.alert("Pilih nomor order.");
+                // $$('.page-content').scrollTop($$('#id_order').offset().top);
+                return;
+              }
+            }
+          }
+          // var name = $$('#name').val();
+          
+          // // validasi input
+          // if (name == "") {
+          //   app.dialog.alert("Masukkan data nama.");
+          //   $$('.page-content').scrollTop($$('#name').offset().top);
+          //   return;
+          // }
+
+          // var phone   = $$('#phone').val();
+          // var email   = $$('#email').val();
+          var payment = $$('#payment').val();
+          
+          if (payment == "") {
+            app.dialog.alert("Pilih metode pembayaran.");
+            return;
+          }
+          var bank = $$('#bank').val();
+          
+          if (bank == "") {
+            app.dialog.alert("Pilih bank pembayaran.");
+            return;
+          }
+          var atn = $$('#atn').val();
+          
+          if (atn == "") {
+            app.dialog.alert("Masukkan data nama pemilik rekening.");
+            return;
+          }
+          var nominal = $$('#nominal').val();
+          
+          if (nominal == "") {
+            app.dialog.alert("Masukkan nominal pembayaran.");
+            return;
+          }
+          
+          var formData = app.form.convertToData('.konfirmasi');
+          
+          app.request.post( app.data.endpoint + 'api/v1/transactions/confirm', formData, function (res) {
+            var data = JSON.parse(res);
+            if (data.message)
+              app.dialog.alert(data.message)
+            var view = app.views.current;
+            view.router.back(view.history[0], { force: true });
+          });
+          
+        });
+      }
+    }
+  }
+</script>

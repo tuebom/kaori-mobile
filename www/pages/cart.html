@@ -8,84 +8,54 @@
             <span class="ios-only">Back</span>
           </a>
         </div>
-        <div class="title">Cart</div>
+        <div class="title">Keranjang Belanja</div>
       </div>
     </div>
     
     <div class="page-content">
         
-      {{#js_if "app.data.tot_equipment > 0"}}
-      <div class="card item-cart equipment">
+      {{#each items}}
+      <div class="card item-cart" style="border-radius: 5px;">
         
         <div class="card-header">
-          <div class="product-name"><b>Equipment Items</b></div>
+          <div class="card-product-name"><b>{{title}}</b></div>
+          <a href="#" class="link icon-only btn-delete" item-code="{{barcode}}" @click="deleteItem"><i class="material-icons remove-item" item-code="{{barcode}}">delete</i></a>
         </div>
-        {{#each equipment}}
         <div class="card-footer top">
           <!-- data used to remove item -->
           <input type="hidden" class="item-code"  value="{{barcode}}" />
           <input type="hidden" class="item-qty"   value="{{qty}}" />
           <input type="hidden" class="item-price" value="{{price}}" />
           
-          <img class="cart lazy" src="{{$root.endpoint}}upload/products/{{img}}" />
-          <div class="product-name item">{{nama}}</div>
-          <div>x {{qty}}</div>
-          <div class="delete"><a href="#" class="link icon-only btn-delete"><i class="material-icons remove-item">delete</i></a></div>
-        </div>
-        <div class="card-footer bottom">
-          <img class="cart lazy" src="img/none.png" />
-          <div>@Rp{{hargaf}}</div>
-          <div>Disc. {{disc}}%</div>
-          <div>Rp{{jumlah.toLocaleString('ID')}}</div>
-        </div>
-        {{/each}}
-        <!-- total equipment -->
-        <div class="card-footer total">
-          <div class="product-name">Total:</div>
-          <div class="product-price total">Rp{{$root.tot_equipment.toLocaleString('ID')}}</div>
-        </div>
-        <div class="card-footer">
-          <a href="#" @click="doRequest" class="button button-raised button-fill larger btn-inquiry">Request Quotation</a>
+          <div class="item-media"><img src="{{../$root.endpoint}}upload/products/{{#if photo1}}{{photo1}}{{else}}noimage.jpg{{/if}}" width="90"></div>
+          <div class="item-inner cart">
+            <div class="item-title-row">
+              <!-- <div class="item-title"><b>{{title}}</b></div> -->
+              <div class="stepper cart stepper-fill stepper-init" item-code="{{barcode}}" data-wraps="false" data-autorepeat="true" data-autorepeat-dynamic="true" data-decimal-point="2" data-manual-input-mode="true">
+                <div class="stepper-button-minus"></div>
+                <div class="stepper-input-wrap">
+                  <input class="item-qty" type="text" value="{{qty}}" min="{{minimum}}" max="{{maxqty}}" step="1">
+                </div>
+                <div class="stepper-button-plus"></div>
+              </div>    
+            </div>
+            <div class="item-text"><span>@&nbsp;Rp{{pricef}}</span>&nbsp;&nbsp;
+            {{#js_if "this.disc > 0"}}<span>Disc. {{disc}}%</span>{{/js_if}}<br>
+            <span class="label-subtotal"><b>Sub total</b> Rp{{amountf}}</span></div>
+          </div>
         </div>
       </div>
-      {{/js_if}}
-
-      {{#js_if "app.data.tot_utensil > 0"}}
-      <div class="card item-cart">
-        
-        <div class="card-header">
-          <div class="product-name"><b>Utensil Items</b></div>
+      {{/each}}
+      
+      <div class="kb2"></div>
+      
+      <div class="card-total">
+        <div class="total-order">
+          <div style="padding: 5px 10px;">Total belanja:</div>
+          <div style="padding: 0 10px;" class="label-total">Rp{{total}}</div>
         </div>
-        {{#each utensil}}
-        <div class="card-footer top">
-          <!-- data used to remove item -->
-          <input type="hidden" class="item-code"  value="{{barcode}}" />
-          <input type="hidden" class="item-qty"   value="{{qty}}" />
-          <input type="hidden" class="item-price" value="{{net}}" />
-          
-          <img class="cart lazy" src="{{$root.endpoint}}upload/products/{{img}}" />
-          <div class="product-name item">{{nama}}</div>
-          <span>x {{qty}}</span>
-          <div class="delete"><a href="#" class="link icon-only btn-delete"><i class="material-icons remove-item">delete</i></a></div>
-        </div>
-        <div class="card-footer bottom">
-          <img class="cart lazy" src="img/none.png" />
-          <div>@Rp{{hargaf}}</div>
-          <div>Disc. {{disc}}%</div>
-          <div>Rp{{jumlah.toLocaleString('ID')}}</div>
-        </div>
-        {{/each}}
-        
-        <!-- total utensil -->
-        <div class="card-footer total">
-          <div class="product-name">Total:</div>
-          <div class="product-price total">Rp{{$root.tot_utensil.toLocaleString('ID')}}</div>
-        </div>
-        <div class="card-footer">
-          <a href="#" @click="doCheckout" class="button button-raised button-fill larger btn-checkout">Proceed to checkout</a>
-        </div>
+        <div class="total-next"><a href="/address/" class="button button-raised button-fill larger">Checkout</a></div>
       </div>
-      {{/js_if}}
     </div>
   </div>
 </template>
@@ -94,38 +64,27 @@
     // Component Methods
     methods: {
       
-      doRequest: function (e) {
+      deleteItem: function (e) {
+        var btnEl = e.srcElement;
+        var kode   = $$(btnEl).attr('item-code');
         
-        app.request.post(app.data.endpoint + 'mail-order/1', {}, function (res) {
-                
+        var formData = {};
+        formData.kode = kode;
+
+        app.request.post( app.data.endpoint + 'api/v1/cart/delete', formData, function(res) {
           var data = JSON.parse(res);
-            
-          if (data.status)
-          {
-            app.data.total_items = data.totqty;
-            $$('.badge').text(data.totqty);
 
-            // back to main page
-            // var view = app.views.current;
-            // view.router.back(view.history[0], { force: true });
-          
-            // hide equipment panel
-            $$('.card.item-cart.equipment').css("display", "none");
-
-            app.dialog.alert('Thank you! Your inquiry already sent.');
+          if (data.totqty > 0) {
+            app.router.navigate('/cart/', {
+              reloadCurrent: true,
+              ignoreCache: true,
+            });
+          } else {
+            var view = app.views.current;
+            view.router.back(view.history[0], { force: true });
           }
-          else
-          {
-            app.dialog.alert('Fail to send inquiry!');
-          }
-
-          // app.router.navigate('/', {
-          //   reloadCurrent: true,
-          //   ignoreCache: true,
-          // });
         });
       },
-
       doCheckout: function (e) {
         
         // open checkout page
@@ -142,41 +101,6 @@
       
       pageInit: function(e, page) {
         
-        $$('.btn-delete').on('click', function (e) {
-
-          var card  = $$(this).parents('.card-footer.top');
-          // console.log(card)
-          var kode  = card.find('.item-code').val();
-          // console.log(kode)
-          var qty   = card.find('.item-qty').val();
-
-          var formData = [];
-
-          formData.kode = kode;
-          formData.qty  = qty;
-          // formData.Authorization = app.data.token;
-
-          app.request.post( app.data.endpoint + 'cart/remove', formData, function(res) {
-              
-            var data = JSON.parse(res);
-            app.data.total_items = data.totqty;
-
-            app.methods.deleteItem(kode);
-            card.remove();
-
-            if (app.data.total_items == 0) { // cart empty - back to home
-              var view = app.views.current;
-              view.router.back(view.history[0], { force: true });
-
-            } else {
-              
-              app.router.navigate('/cart/', {
-                reloadCurrent: true,
-                ignoreCache: true,
-              });
-            }
-          });
-        });
       }
     }
   }
