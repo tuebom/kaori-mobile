@@ -49,13 +49,13 @@
     <!-- <plugin name="cordova-plugin-qrscanner" source="npm" /> --> <!--failed-->>
     <!-- <plugin name="cordova-plugin-cszbar" source="npm" /> -->
     
-    <plugin name="cordova-plugin-camera" source="npm" />
+    <!-- <plugin name="cordova-plugin-camera" source="npm" />
 
     <config-file target="AndroidManifest.xml" parent="/*" mode="merge">
       <uses-permission android:name="android.permission.CAMERA" />
       <uses-feature android:name="android.hardware.camera" />
       <uses-feature android:name="android.hardware.camera.autofocus" />
-    </config-file>
+    </config-file> -->
 
     <plugin name="cordova-plugin-splashscreen" source="npm" />
     <preference name="SplashScreenDelay" value="3000" />
