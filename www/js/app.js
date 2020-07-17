@@ -232,6 +232,8 @@ var app  = new Framework7({
 
           } else {
             // localStorage.setItem('nohp', '');
+            app.preloader.hide();
+            app.dialog.alert(data.message);
             app.loginScreen.open('#my-login-screen');
           }
         });
