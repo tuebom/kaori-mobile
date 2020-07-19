@@ -19,25 +19,19 @@
         
         <div class="card-header">
           <div class="card-product-name"><b>{{title}}</b></div>
-          <a href="#" class="link icon-only btn-delete" item-code="{{barcode}}" @click="deleteItem"><i class="material-icons remove-item" item-code="{{barcode}}">delete</i></a>
         </div>
         <div class="card-footer top">
-          <!-- data used to remove item -->
-          <input type="hidden" class="item-code"  value="{{barcode}}" />
-          <input type="hidden" class="item-qty"   value="{{qty}}" />
-          <input type="hidden" class="item-price" value="{{price}}" />
-          
           <div class="item-media"><img src="{{../$root.endpoint}}upload/products/{{#if photo1}}{{photo1}}{{else}}noimage.jpg{{/if}}" width="90"></div>
           <div class="item-inner cart">
             <div class="item-title-row">
-              <!-- <div class="item-title"><b>{{title}}</b></div> -->
               <div class="stepper cart stepper-fill stepper-init" item-code="{{barcode}}" data-wraps="false" data-autorepeat="true" data-autorepeat-dynamic="true" data-decimal-point="2" data-manual-input-mode="true">
                 <div class="stepper-button-minus"></div>
                 <div class="stepper-input-wrap">
                   <input class="item-qty" type="text" value="{{qty}}" min="{{minimum}}" max="{{maxqty}}" step="1">
                 </div>
                 <div class="stepper-button-plus"></div>
-              </div>    
+              </div>
+              <a href="#" class="link icon-only btn-delete" item-code="{{barcode}}" @click="deleteItem"><i class="material-icons remove-item" item-code="{{barcode}}">delete</i></a>
             </div>
             <div class="item-text"><span>@&nbsp;Rp{{pricef}}</span>&nbsp;&nbsp;
             {{#js_if "this.disc > 0"}}<span>Disc. {{disc}}%</span>{{/js_if}}<br>
@@ -54,7 +48,7 @@
           <div style="padding: 5px 10px;">Total belanja:</div>
           <div style="padding: 0 10px;" class="label-total">Rp{{total}}</div>
         </div>
-        <div class="total-next"><a href="/address/" class="button button-raised button-fill larger">Checkout</a></div>
+        <div class="total-next"><a href="/checkout/" class="button button-raised button-fill larger">Checkout</a></div>
       </div>
     </div>
   </div>

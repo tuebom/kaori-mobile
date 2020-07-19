@@ -53,41 +53,41 @@
                       <div class="item-title item-label">Provinsi</div>
                       <div class="item-input-wrap">
                         <select id="province" name="province">
-                          <option value="" selected>-</option>
-                          <option value="1">BALI</option>
-                          <option value="2">BANGKA BELITUNG</option>
-                          <option value="3">BANTEN</option>
-                          <option value="4">BENGKULU</option>
-                          <option value="5">DI YOGYAKARTA</option>
-                          <option value="6">DKI JAKARTA</option>
-                          <option value="7">GORONTALO</option>
-                          <option value="8">JAMBI</option>
-                          <option value="9">JAWA BARAT</option>
-                          <option value="10">JAWA TENGAH</option>
-                          <option value="11">JAWA TIMUR</option>
-                          <option value="12">KALIMANTAN BARAT</option>
-                          <option value="13">KALIMANTAN SELATAN</option>
-                          <option value="14">KALIMANTAN TENGAH</option>
-                          <option value="15">KALIMANTAN TIMUR</option>
-                          <option value="16">KALIMANTAN UTARA</option>
-                          <option value="17">KEPULAUAN RIAU</option>
-                          <option value="18">LAMPUNG</option>
-                          <option value="19">MALUKU</option>
-                          <option value="20">MALUKU UTARA</option>
-                          <option value="21">NANGGROE ACEH DARUSSALAM (NAD)</option>
-                          <option value="22">NUSA TENGGARA BARAT (NTB)</option>
-                          <option value="23">NUSA TENGGARA TIMUR (NTT)</option>
-                          <option value="24">PAPUA</option>
-                          <option value="25">PAPUA BARAT</option>
-                          <option value="26">RIAU</option>
-                          <option value="27">SULAWESI BARAT</option>
-                          <option value="28">SULAWESI SELATAN</option>
-                          <option value="29">SULAWESI TENGAH</option>
-                          <option value="30">SULAWESI TENGGARA</option>
-                          <option value="31">SULAWESI UTARA</option>
-                          <option value="32">SUMATERA BARAT</option>
-                          <option value="33">SUMATERA SELATAN</option>
-                          <option value="34">SUMATERA UTARA</option>
+                          <option value=""{{#unless province}} selected{{/unless}}>-</option>
+                          <option value="1"{{#js_if "this.province == 1"}} selected{{/js_if}}>BALI</option>
+                          <option value="2"{{#js_if "this.province == 2"}} selected{{/js_if}}>BANGKA BELITUNG</option>
+                          <option value="3"{{#js_if "this.province == 3"}} selected{{/js_if}}>BANTEN</option>
+                          <option value="4"{{#js_if "this.province == 4"}} selected{{/js_if}}>BENGKULU</option>
+                          <option value="5"{{#js_if "this.province == 5"}} selected{{/js_if}}>DI YOGYAKARTA</option>
+                          <option value="6"{{#js_if "this.province == 6"}} selected{{/js_if}}>DKI JAKARTA</option>
+                          <option value="7"{{#js_if "this.province == 7"}} selected{{/js_if}}>GORONTALO</option>
+                          <option value="8"{{#js_if "this.province == 8"}} selected{{/js_if}}>JAMBI</option>
+                          <option value="9"{{#js_if "this.province == 9"}} selected{{/js_if}}>JAWA BARAT</option>
+                          <option value="10"{{#js_if "this.province == 10"}} selected{{/js_if}}>JAWA TENGAH</option>
+                          <option value="11"{{#js_if "this.province == 11"}} selected{{/js_if}}>JAWA TIMUR</option>
+                          <option value="12"{{#js_if "this.province == 12"}} selected{{/js_if}}>KALIMANTAN BARAT</option>
+                          <option value="13"{{#js_if "this.province == 13"}} selected{{/js_if}}>KALIMANTAN SELATAN</option>
+                          <option value="14"{{#js_if "this.province == 14"}} selected{{/js_if}}>KALIMANTAN TENGAH</option>
+                          <option value="15"{{#js_if "this.province == 15"}} selected{{/js_if}}>KALIMANTAN TIMUR</option>
+                          <option value="16"{{#js_if "this.province == 16"}} selected{{/js_if}}>KALIMANTAN UTARA</option>
+                          <option value="17"{{#js_if "this.province == 17"}} selected{{/js_if}}>KEPULAUAN RIAU</option>
+                          <option value="18"{{#js_if "this.province == 18"}} selected{{/js_if}}>LAMPUNG</option>
+                          <option value="19"{{#js_if "this.province == 19"}} selected{{/js_if}}>MALUKU</option>
+                          <option value="20"{{#js_if "this.province == 20"}} selected{{/js_if}}>MALUKU UTARA</option>
+                          <option value="21"{{#js_if "this.province == 21"}} selected{{/js_if}}>NANGGROE ACEH DARUSSALAM (NAD)</option>
+                          <option value="22"{{#js_if "this.province == 22"}} selected{{/js_if}}>NUSA TENGGARA BARAT (NTB)</option>
+                          <option value="23"{{#js_if "this.province == 23"}} selected{{/js_if}}>NUSA TENGGARA TIMUR (NTT)</option>
+                          <option value="24"{{#js_if "this.province == 24"}} selected{{/js_if}}>PAPUA</option>
+                          <option value="25"{{#js_if "this.province == 25"}} selected{{/js_if}}>PAPUA BARAT</option>
+                          <option value="26"{{#js_if "this.province == 26"}} selected{{/js_if}}>RIAU</option>
+                          <option value="27"{{#js_if "this.province == 27"}} selected{{/js_if}}>SULAWESI BARAT</option>
+                          <option value="28"{{#js_if "this.province == 28"}} selected{{/js_if}}>SULAWESI SELATAN</option>
+                          <option value="29"{{#js_if "this.province == 29"}} selected{{/js_if}}>SULAWESI TENGAH</option>
+                          <option value="30"{{#js_if "this.province == 30"}} selected{{/js_if}}>SULAWESI TENGGARA</option>
+                          <option value="31"{{#js_if "this.province == 31"}} selected{{/js_if}}>SULAWESI UTARA</option>
+                          <option value="32"{{#js_if "this.province == 32"}} selected{{/js_if}}>SUMATERA BARAT</option>
+                          <option value="33"{{#js_if "this.province == 33"}} selected{{/js_if}}>SUMATERA SELATAN</option>
+                          <option value="34"{{#js_if "this.province == 34"}} selected{{/js_if}}>SUMATERA UTARA</option>
                         </select>
                       </div>
                     </div>
@@ -97,6 +97,10 @@
                       <div class="item-title item-label">Kabupaten/Kota</div>
                       <div class="item-input-wrap">
                         <select id="regency" name="regency">
+                          <option value=""{{#unless regency}} selected{{/unless}}>-</option>
+                          {{#each regencies}}
+                          <option value="{{this.id}}"{{#js_if "../regency == this.id"}} selected{{/js_if}}>{{this.name}}</option>
+                          {{/each}}
                         </select>
                       </div>
                     </div>
@@ -106,6 +110,10 @@
                       <div class="item-title item-label">Kecamatan</div>
                       <div class="item-input-wrap">
                         <select id="district" name="district">
+                          <option value=""{{#unless district}} selected{{/unless}}>-</option>
+                          {{#each districts}}
+                          <option value="{{this.subdistrict_id}}"{{#js_if "../district == this.subdistrict_id"}} selected{{/js_if}}>{{this.subdistrict_name}}</option>
+                          {{/each}}
                         </select>
                       </div>
                     </div>
@@ -114,7 +122,7 @@
                     <div class="item-inner">
                       <div class="item-title item-label">Kode Pos</div>
                       <div class="item-input-wrap">
-                        <input type="text" id="post_code" name="post_code" placeholder="Kode Pos" autocomplete="off" onkeypress="return isNumber(event)"/>
+                        <input type="text" id="post_code" name="postal_code" value="{{postal_code}}" placeholder="Kode Pos" autocomplete="off" onkeypress="return isNumber(event)"/>
                       </div>
                     </div>
                   </li>

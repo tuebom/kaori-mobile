@@ -19,22 +19,16 @@
         <div class="card-header"><span><b>Order #{{id}}</b></span><span>{{tglinput}}</span></div>
         <div class="card-content"> 
           <div class="card-content-inner">
-            <div style="width: 100%; display: inline-flex;">
-              <div style="width: 75%; margin-top: 4px">
-                <div class="product-name"><span class="status-label">Alamat</span>:  {{address}}</div>
-                <div class="product-name"><span class="status-label">Sub Total</span>: <span class="status-value">{{totalamount}}</span></div>
-                <div class="product-name"><span class="status-label">By. Kirim</span>: <span class="status-value">{{shipcost}}</span></div>
-                <div class="product-name"><span class="status-label">By. Proses</span>: <span class="status-value">{{addcost}}</span></div>
-                <div class="product-name"><span class="status-label">Total</span>: <span class="status-value">{{gtotal}}</span></div>
-                <div class="product-name"><span class="status-label">Status</span>:  {{status}}</div>
-              </div>
-              <div style="width: 25%;">
-                {{#if no_resi}}
-                <a href="#" no-order="{{id}}" @click="cekResi" class="button button-small button-fill color-blue btn-check">Cek Resi</a>
-                {{/if}}
-              </div>
-            </div>
+            <div class="product-name"><div class="status-label">Alamat</div>: <div class="status-address">{{address}}</div></div>
+            <div class="product-name"><span class="status-label">Total</span>: <span class="status-value">{{total}}</span></div>
+            <div class="product-name"><span class="status-label">By. Kirim</span>: <span class="status-value">{{shipcost}}</span></div>
+            <div class="product-name"><span class="status-label">Grand Total</span>: <span class="status-value">{{gtotal}}</span></div>
+            <div class="product-name"><span class="status-label">Status</span>:  {{status}}
           </div>
+        </div>
+        <div class="card-footer">
+          <a href="#" ordernum="{{id}}" @click="viewDetail" class="button button-small button-fill btn-detail">Detail</a>
+          {{#if no_resi}}<a href="#" ordernum="{{id}}" @click="cekResi" class="button button-small button-fill btn-check">Cek Resi</a>{{/if}}
         </div>
       </div>
       {{/each}}
@@ -47,16 +41,27 @@
     // Component Methods
     methods: {
       
+      viewDetail: function (e) {
+        
+        var $btnEl = e.srcElement;
+        var number = $$($btnEl).attr('ordernum');
+
+        app.router.navigate('/view-detail/'+number, {
+          reloadCurrent: false,
+          ignoreCache: true,
+        });
+      },
+      
       cekResi: function (e) {
         
         var $btnEl = e.srcElement;
-        var number = $$($btnEl).attr('no-order');
+        var number = $$($btnEl).attr('ordernum');
 
         app.router.navigate('/cek-resi/'+number, {
           reloadCurrent: false,
           ignoreCache: true,
         });
-      },
+      }
     },
     // Page Events
     on: {

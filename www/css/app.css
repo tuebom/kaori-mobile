@@ -200,7 +200,7 @@ i.fa.fa-search {
 }
 .md .data-table tbody td {
   height: 36px;
-  font-size: 11px;
+  font-size: 14px;
 }
 .md .data-table.card .card-footer {
   height: 36px;
@@ -365,7 +365,7 @@ div.block.main {
 
 .material-icons.remove-item,
 .material-icons.product-detail {
-  color: #000; /*55acee;*/
+  color: #ababab; /*55acee;*/
   line-height: 1.5;
 }
 
@@ -446,8 +446,11 @@ div.block.main {
   padding-right: 15px;
 }
 .md .data-table td:first-child,
-.md .data-table th:first-child {
+.md .data-table th:first-child,
+.md .data-table td.label-cell,
+.md .data-table th.label-cell {
   padding-left: 15px;
+  padding-right: 0;
 }
 /* .card-header:after, */
 .card-footer.top:before {

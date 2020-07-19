@@ -1,0 +1,58 @@
+<template>
+  <div class="page" data-name="order-info">
+    <div class="navbar">
+      <div class="navbar-inner sliding">
+        <!-- <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="ios-only">Back</span>
+          </a>
+        </div> -->
+        <div class="title">Kaori Group</div>
+      </div>
+    </div>
+    <div class="page-content">
+      <div class="block">
+        <div style="text-align: center;"><h3>Terima kasih!</h3></div>
+        <p style="text-align: center; padding: 15px; color:black">Nomor order anda #<span class="ordernum">{{ordernum}}</span><br>
+          Silahkan transfer uang pembayaran ke rekening bank yang tertera di bawah ini.</p>
+        <div class="list no-hairlines-md">
+          <ul>
+            {{#each data}}
+            <li>
+              <label class="item-radio item-content">
+                <div class="item-inner" style="display: block; text-align: center;">
+                    <div class="item-title">{{bank_name}}</div>
+                    <div class="item-text">Nomor rekening: {{account_number}}</div>
+                    <div class="item-text">Atas nama: {{account_name}}</div>
+                </div>
+              </label>
+            </li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+
+      <div class="content-block"><a href="#" class="button button-raised button-fill larger btnContinue">Lanjutkan Belanja</a></div>
+
+    </div>
+  </div>
+</template>
+<script>
+  return {
+    // Component Methods
+    methods: {
+    },
+    // Page Events
+    on: {
+      
+      pageInit: function (event, page) {
+      
+        $$('.btnContinue').on('click', function(e){
+          var view = app.views.current;
+          view.router.back(view.history[0], { force: true });    
+        });
+      }
+    }
+  }
+</script>

@@ -58,7 +58,7 @@
                 <!-- <div class="item-input-wrap"> -->
                   <select id="ship_agent" name="agent">
                     {{#each agents}}
-                    <option value="{{code}}"{{#js_if '../order.promo_code == this.code'}} selected{{/js_if}}>{{name}}</option>
+                    <option value="{{code}}"{{#js_if '../order.agent == this.code'}} selected{{/js_if}}>{{name}}</option>
                     {{/each}}
                   </select>
                 <!-- </div> -->
@@ -147,8 +147,12 @@
           var data = JSON.parse(res);
           
           // simpan data nomor order
-          app.data.ordernum = data.ordernum;
-          app.popup.open('#order-display', false);
+          // app.data.ordernum = data.ordernum;
+          // app.popup.open('#order-display', false);
+          app.router.navigate('/order-info/'+data.ordernum, {
+            reloadCurrent: true,
+            ignoreCache: true,
+          });
         });
       },
     },
@@ -163,7 +167,7 @@
           formData.agent   = $$(this).val();
           formData.regency = app.data.regency;
           
-          app.request.json( app.data.endpoint + 'api/v1/checkout/agent', formData, function(json) {
+          app.request.post( app.data.endpoint + 'api/v1/checkout/agent', formData, function(res) {
             
             app.router.navigate('/checkout/', {
               reloadCurrent: true,

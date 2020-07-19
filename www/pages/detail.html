@@ -11,8 +11,8 @@
         <div class="title">{{data.title}}</div>
         <div class="right">
           <a href="/cart/" data-view=".view-main" class="link icon-only panel-close ac-more1">
-            <i class="icon f7-icons ios-only">shopping_cart<span class="badge color-red"></span></i>
-            <i class="icon material-icons md-only">shopping_cart<span class="badge color-red"></span></i>
+            <i class="icon f7-icons ios-only">shopping_cart<span class="badge cart color-red"></span></i>
+            <i class="icon material-icons md-only">shopping_cart<span class="badge cart color-red"></span></i>
           </a>
         </div>
       </div>
@@ -137,10 +137,10 @@
           if (data.totqty > 0)
           {
             app.data.total_items = data.totqty;
-            $$('.badge').text(data.totqty);
-            $$('.badge').css("display", "block");
+            $$('.badge.cart').text(data.totqty);
+            $$('.badge.cart').css("display", "block");
           } else {
-            $$('.badge').css("display", "none");
+            $$('.badge.cart').css("display", "none");
             app.data.total_items = 0;
           }
         });
@@ -157,12 +157,12 @@
           if (res.totqty > 0)
           {
             app.data.total_items = res.totqty;
-            $$('.badge').text(res.totqty);
-            $$('.badge').css("display", "block");
+            $$('.badge.cart').text(res.totqty);
+            $$('.badge.cart').css("display", "block");
           }
           else
           {
-            $$('.badge').css("display", "none");
+            $$('.badge.cart').css("display", "none");
             app.data.total_items = 0;
           }
         });

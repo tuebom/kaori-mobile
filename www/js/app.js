@@ -3,12 +3,11 @@ var $$ = Dom7;
 // localStorage.setItem('mbrid', '');
 // localStorage.setItem('nohp', '');
 
-var items = [];
+// var items = [];
 
-var bBackPressed = false;
+// var bBackPressed = false;
 
 var destinationType = null;
-// var ref = null;
 
 // Framework7 App main instance
 var app  = new Framework7({
@@ -66,12 +65,6 @@ var app  = new Framework7({
 
     init: function () { // sama dengan onDeviceReady
       
-      // app.statusbar.hide();
-
-      // if (!this.data.bLogedIn) {
-      //   $$('.member-status').css('display', 'none');
-      //   $$('.member-edit').css('display', 'none');
-      // }
       
       // destinationType = navigator.camera.DestinationType;
 
@@ -114,7 +107,7 @@ var app  = new Framework7({
         
         if (db) {
           // app.dialog.alert('db is OK!');
-          var now = new Date();
+          var now = new Date()-3;
           var date = now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate();
   
           app.data.db.transaction(function(tx) {
@@ -162,13 +155,19 @@ var app  = new Framework7({
     
         if (db) {
           
-          var now = new Date();
+          var now  = new Date();
           var date = now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate();
           var time = now.getHours() + ":" + now.getMinutes()
           
           db.transaction(function(tx) {
               db.transaction(function(tx) {
+                
                 tx.executeSql('insert into notifikasi (tgl, jam, info) values (?, ?, ?);', [date, time, data.message]);
+
+                tx.executeSql('select count(*) as total from notifikasi where read = "N";', function(ignored, res) {
+                  $$('.badge.notif').text(res.rows.item(i).total);
+                  $$('.badge.notif').css("display", "block");
+                });
               }, function(error) {
                 app.dialog.alert('insert error: ' + error.message);
               });
@@ -845,7 +844,7 @@ $$(document).on('backbutton', function (e) {
   {
     // console.log('url => '+app.views.main.router.url)
     var view = app.views.current;
-    if (view.history.length > 4) {
+    if (view.history.length > 5) {
       view.router.back(view.history[0], { force: true });
     } else {
       mainView.router.back();

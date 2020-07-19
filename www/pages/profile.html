@@ -11,7 +11,7 @@
         <div class="title">Profil</div>
       </div>
     </div>
-    <div class="fab fab-right-top">
+    <div class="fab fab-right-top" style="display: none;">
       <a href="#" class="take-photo">
         <i class="icon f7-icons ios-only">photo_camera</i>
         <i class="icon material-icons md-only">photo_camera</i>
@@ -210,18 +210,12 @@
           var nohp    = $$('#telepon').val();
           var email   = $$('#email').val();
           
-          // var kota = $$('#kota').val();
-          // var kodepos = $$('#kodepos').val();
-          
-          // update display nama
-          // $$('.member-name').text(nama);
-
           var formData = {};
           
-          formData.first_name = nama;
-          formData.address    = alamat;
-          formData.email      = email;
-          formData.phone      = telepon;
+          formData.name     = nama;
+          formData.address  = alamat;
+          formData.phone    = nohp;
+          formData.email    = email;
           
           app.request.post( app.data.endpoint + 'api/v1/member/update', formData, function (res) {
                 

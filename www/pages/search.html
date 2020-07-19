@@ -54,7 +54,6 @@
               if (query)
               app.request.getJSON( app.data.endpoint + 'api/v1/search?q='+query, function(res) {
                 
-                // var data = JSON.parse(res);
                 var items = res.data;
 
                 var virtualList = app.virtualList.create({

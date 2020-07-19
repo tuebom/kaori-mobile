@@ -1,0 +1,63 @@
+<template>
+  <div class="page">
+    <div class="navbar">
+      <div class="navbar-inner sliding">
+        <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="ios-only">Back</span>
+          </a>
+        </div>
+        <div class="title">Detail Transaksi</div>
+      </div>
+    </div>
+    
+    <div class="page-content">
+        
+      {{#each items}}
+      <div class="card item-cart" style="border-radius: 5px;">
+        
+        <div class="card-header">
+          <div class="card-product-name"><b>{{title}}</b></div>
+        </div>
+        <div class="card-footer top">
+          
+          <div class="item-media"><img src="{{../$root.endpoint}}upload/products/{{#if photo1}}{{photo1}}{{else}}noimage.jpg{{/if}}" width="75"></div>
+          <div class="item-inner cart">
+            <div class="item-text"><span>Qty:&nbsp;&nbsp;{{qty}}</span></div>
+            <div class="item-text"><span>@&nbsp;Rp{{price}}</span>&nbsp;&nbsp;
+            {{#js_if "this.disc > 0"}}<span>Disc. {{disc}}%</span>{{/js_if}}<br>
+            <span class="label-subtotal"><b>Sub total</b> Rp{{amount}}</span></div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+      
+      <div class="kb2"></div>
+      
+      <div class="card-total">
+        <div class="total-order">
+          <div style="padding: 5px 10px;">Total belanja:</div>
+          <div style="padding: 0 10px;" class="label-total">Rp{{total}}</div>
+        </div>
+        <!-- <div class="total-next"><a href="/address/" class="button button-raised button-fill larger">Checkout</a></div> -->
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+  return {
+    // Component Methods
+    methods: {
+      
+    },
+        
+    // Page Events
+    on: {
+      
+      pageInit: function(e, page) {
+        
+      }
+    }
+  }
+</script>

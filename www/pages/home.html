@@ -17,13 +17,13 @@
                 <i class="icon f7-icons ios-only">chat</i>
                 <i class="icon material-icons md-only">chat</i>
               </a> -->
-              <a href="/cust-svc/" class="link icon-only">
-                <i class="icon f7-icons ios-only">chat</i>
-                <i class="icon material-icons md-only">chat</i>
+              <a href="/notifikasi/" class="link icon-only">
+                <i class="icon f7-icons ios-only">chat<span class="badge notif color-red"></span></i>
+                <i class="icon material-icons md-only">chat<span class="badge notif color-red"></span></i>
               </a>
               <a href="/cart/" data-view=".view-main" class="link icon-only">
-                <i class="icon f7-icons ios-only">shopping_cart<span class="badge color-red"></span></i>
-                <i class="icon material-icons md-only">shopping_cart<span class="badge color-red"></span></i>
+                <i class="icon f7-icons ios-only">shopping_cart<span class="badge cart color-red"></span></i>
+                <i class="icon material-icons md-only">shopping_cart<span class="badge cart color-red"></span></i>
               </a>
               <a href="#" class="link icon-only popover-open" data-popover=".popover-more">
                 <i class="icon f7-icons ios-only">more_vert</i>
@@ -233,10 +233,10 @@
           if (res.totqty > 0)
           {
             app.data.total_items = res.totqty;
-            $$('.badge').text(res.totqty);
-            $$('.badge').css("display", "block");
+            $$('.badge.cart').text(res.totqty);
+            $$('.badge.cart').css("display", "block");
           } else {
-            $$('.badge').css("display", "none");
+            $$('.badge.cart').css("display", "none");
             app.data.total_items = 0;
           }
         });

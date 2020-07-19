@@ -17,22 +17,20 @@
         <input type="hidden" id="trx_exists" name="trx_exists" value="{{trx_exists}}" />
         <div class="list no-hairlines-md">
           <ul>
-            {{#if trx_exists}}
             <li>
               <div class="item-content item-input">
                 <div class="item-inner">
                   <div class="item-title item-label">Jenis Transaksi</div>
                   <div class="item-input">
-                    <select id="trx_type" name="trx_type">
-                      <option value="topup">Topup Saldo</option>
-                      <option value="order">Order Online</option>
+                    <select id="trx_type" name="trx_type"{{#unless trx_exists}} disabled{{/unless}}>
+                      <option value="topup"{{#unless trx_exists}} selected{{/unless}}>Topup Saldo</option>
+                      <option value="order"{{#if trx_exists}} selected{{/if}}>Order Online</option>
                     </select>
                   </div>
                 </div>
               </div>
             </li>
-            {{/if}}
-            <li class="orderid">
+            <li class="orderid"{{#unless trx_exists}} style="display: none;"{{/unless}}>
               <div class="item-content item-input">
                 <div class="item-inner">
                   <div class="item-title item-label">Nomor Order</div>
@@ -108,10 +106,10 @@
                 <div class="item-inner">
                   <div class="item-title item-label">Nama Bank</div>
                   <div class="item-input-wrap">
-                      <select id="bank" name="bankname">
+                      <select id="bank" name="bankcode">
                         <option value="">-</option>
-                        {{#each bank}}
-                        <option value="{{bank_code}}">{{bank_name}}</option>
+                        {{#each bank2}}
+                        <option value="{{bank_code}}"{{#js_if '../bank_code == this.bank_code'}} selected{{/js_if}}>{{bank_name}}</option>
                         {{/each}}
                       </select>
                   </div>
@@ -121,9 +119,19 @@
             <li>
               <div class="item-content item-input">
                   <div class="item-inner">
+                      <div class="item-title item-label">Nomor Rekening</div>
+                      <div class="item-input-wrap">
+                          <input type="text" id="atn" name="account_number" value="{{account_number}}" placeholder="Nomor Rekening" />
+                      </div>
+                  </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content item-input">
+                  <div class="item-inner">
                       <div class="item-title item-label">Atas Nama</div>
                       <div class="item-input-wrap">
-                          <input type="text" id="atn" name="bankaccount" placeholder="Atas Nama" />
+                          <input type="text" id="atn" name="account_name" value="{{account_name}}" placeholder="Atas Nama" />
                       </div>
                   </div>
               </div>

@@ -66,6 +66,9 @@
           }
         });
         
+        $$('.badge.notif').text("0");
+        $$('.badge.notif').css("display", "none");
+
         app.preloader.show();
     
         var db = app.data.db;
@@ -81,12 +84,14 @@
                 messages.addMessage({
                   text: res.rows.item(i).info,
                   textHeader: res.rows.item(i).jam,
-                  type: 'received'
-                  // name: person.name,
-                  // avatar: person.avatar
+                  type: 'received',
+                  name: 'KAORI',
+                  avatar: app.data.endpoint + 'assets/images/logo2.png'
                 });
               }
-              
+
+              // update status
+              tx.executeSql('update notifikasi set read = "Y" where read = "N";');
             });
           }, function(error) {
             app.preloader.hide();
@@ -97,7 +102,9 @@
           messages.addMessage({
             text: 'Test...',
             textHeader: '07.00',
-            type: 'received'
+            type: 'received',
+            name: 'KAORI',
+            avatar: app.data.endpoint + 'assets/images/logo2.png'
             // name: person.name,
             // avatar: person.avatar
           });

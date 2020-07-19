@@ -7,7 +7,6 @@ routes = [
 
       // App instance
       var app = router.app;
-      // var banner = null;
       
       // Show Preloader
       app.preloader.show();
@@ -20,8 +19,6 @@ routes = [
         app.data.min_trf   = res.data.min_transfer;
         app.data.min_blj   = res.data.min_belanja;
         app.data.min_topup = res.data.min_topup;
-
-        // banner = res.banner;
       
         // Resolve route to load page
         resolve(
@@ -103,7 +100,7 @@ routes = [
         // Hide Preloader
         app.preloader.hide();
 
-        app.data.bSetAddress = false;
+        // app.data.bSetAddress = false;
         
         // Resolve route to load page
         resolve(
@@ -488,7 +485,11 @@ routes = [
               phone: res.order.phone,
               email: res.order.email,
               province: res.order.province,
-              regency: res.order.regency
+              regency: res.order.regency,
+              district: res.order.district,
+              postal_code: res.order.postal_code,
+              regencies: res.regencies,
+              districts: res.districts
             } }
           );
         }
@@ -507,6 +508,67 @@ routes = [
             } }
           );
         }
+      });
+    }
+  },
+  {
+    path: '/order-info/:num',
+    async: function (routeTo, routeFrom, resolve, reject) {
+      // Router instance
+      var router = this;
+
+      // App instance
+      var app = router.app;
+      var order_id = routeTo.params.num;
+
+      // Show Preloader
+      app.preloader.show();
+
+      app.request.getJSON( app.data.endpoint + 'api/v1/bank', function(res) {
+
+        // Hide Preloader
+        app.preloader.hide();
+
+        // Resolve route to load page
+        resolve(
+          {
+            componentUrl: './pages/order-info.html',
+          },
+          {
+            context: {
+              ordernum: order_id,
+              data: res.bank
+            }
+          }
+        );
+
+      });
+    },
+  },
+  {
+    path: '/view-detail/:nomor',
+    async: function (routeTo, routeFrom, resolve, reject) {
+      // Router instance
+      var router = this;
+
+      // App instance
+      var app = router.app;
+      var orderid = routeTo.params.nomor;
+
+      // Show Preloader
+      app.preloader.show();
+
+      app.request.getJSON( app.data.endpoint + 'api/v1/orders/'+orderid, function(res) {
+
+        app.preloader.hide();
+
+        resolve (
+          { componentUrl: './pages/view-detail.html' },
+          { context: {
+            items: res.items,
+            total: res.total
+          } }
+        );
       });
     }
   },
@@ -656,10 +718,10 @@ routes = [
           { context: {
             trx_exists: res.status,
             orders: res.orders,
-            bank: res.bank
-            // name: app.methods.capital_letter(res.first_name),
-            // phone: res.phone,
-            // email: res.email
+            bank2: res.bank2,
+            bank_code: res.bank.bank_code,
+            account_number: res.bank.account_number,
+            account_name: res.bank.account_name
           } }
         );
       });
@@ -1664,10 +1726,10 @@ routes = [
       pageBeforeIn: function (event, page) {
         
         if (app.data.total_items > 0) {
-          $$('.badge').text(app.data.total_items);
-          $$('.badge').css("display", "block");
+          $$('.badge.cart').text(app.data.total_items);
+          $$('.badge.cart').css("display", "block");
         } else {
-          $$('.badge').css("display", "none");
+          $$('.badge.cart').css("display", "none");
         }
       }
     }
@@ -1732,6 +1794,8 @@ routes = [
       app.request.getJSON( app.data.endpoint + 'api/v1/detail/'+kode, function(res) {
         
         app.preloader.hide();
+
+        app.data.bSetAddress = false;
 
         resolve(
           { componentUrl: './pages/detail.html' },
