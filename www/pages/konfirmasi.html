@@ -121,7 +121,7 @@
                   <div class="item-inner">
                       <div class="item-title item-label">Nomor Rekening</div>
                       <div class="item-input-wrap">
-                          <input type="text" id="atn" name="account_number" value="{{account_number}}" placeholder="Nomor Rekening" />
+                          <input type="text" id="norek" name="account_number" value="{{account_number}}" placeholder="Nomor Rekening" />
                       </div>
                   </div>
               </div>
@@ -218,6 +218,12 @@
           
           if (bank == "") {
             app.dialog.alert("Pilih bank pembayaran.");
+            return;
+          }
+          var norek = $$('#norek').val();
+          
+          if (norek == "") {
+            app.dialog.alert("Masukkan data nomor rekening.");
             return;
           }
           var atn = $$('#atn').val();

@@ -1,0 +1,126 @@
+<template>
+  <div class="page" data-name="profile">
+    <div class="navbar">
+      <div class="navbar-inner sliding">
+        <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="ios-only">Back</span>
+          </a>
+        </div>
+        <div class="title">Bank Transfer</div>
+      </div>
+    </div>
+    <div class="page-content">
+      <div class="block">
+        <form class="bank-transfer form-ajax-submit">
+        <div class="list no-hairlines-md">
+          <ul>
+            <li>
+              <div class="item-content top-content item-input">
+                <div class="item-inner">
+                  <div class="item-title item-label">Nama Bank</div>
+                  <div class="item-input-wrap">
+                      <select id="bank" name="bank_code">
+                        <option value="">-</option>
+                        {{#each bank}}
+                        <option value="{{bank_code}}"{{#js_if '../bank_code == this.bank_code'}} selected{{/js_if}}>{{bank_name}}</option>
+                        {{/each}}
+                      </select>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content item-input">
+                  <div class="item-inner">
+                      <div class="item-title item-label">Nomor Rekening</div>
+                      <div class="item-input-wrap">
+                          <input type="text" id="norek" name="account_number" value="{{account_number}}" placeholder="Nomor Rekening" />
+                      </div>
+                  </div>
+              </div>
+            </li>
+            <li>
+              <div class="item-content item-input">
+                  <div class="item-inner">
+                      <div class="item-title item-label">Atas Nama</div>
+                      <div class="item-input-wrap">
+                          <input type="text" id="atn" name="account_name" value="{{account_name}}" placeholder="Atas Nama" />
+                      </div>
+                  </div>
+              </div>
+            </li>
+            <li>
+                <div class="item-content item-input">
+                    <div class="item-inner">
+                        <div class="item-title item-label">Nomor PIN/Password</div>
+                        <div class="item-input-wrap">
+                            <input type="password" id="pin" name="pin" placeholder="Nomor PIN/Password" />
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        </div>
+        </form>
+        <div class="content-block">
+            <a href="#" class="col button button-raised button-fill larger btnUpdate">Update</a>
+        </div>
+        <div class="kb">
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+  return {
+    // Page Events
+    on: {
+      
+      pageInit: function (event, page) {
+        
+        $$('.btnUpdate').on('click', function () {
+          
+          var bank = $$('#bank').val();
+          
+          if (bank == "") {
+            app.dialog.alert("Pilih nama bank transfer.");
+            return;
+          }
+          var norek = $$('#norek').val();
+          
+          if (norek == "") {
+            app.dialog.alert("Masukkan data nomor rekening.");
+            return;
+          }
+          var atn = $$('#atn').val();
+          
+          if (atn == "") {
+            app.dialog.alert("Masukkan data nama pemilik rekening.");
+            return;
+          }
+          var pin = $$('#pin').val();
+          if (pin == '') {
+            app.dialog.alert('Masukkan nomor PIN atau password anda.');
+            return;
+          }
+          
+          var formData = app.form.convertToData('.bank-transfer');
+          
+          app.request.post( app.data.endpoint + 'api/v1/member/setbank', formData, function (res) {
+            var data = JSON.parse(res);
+            if (data.status) {
+              app.dialog.alert(data.message);
+              var view = app.views.current;
+              view.router.back(view.history[0], { force: true });
+            } else {
+              app.dialog.alert(data.message);
+            }
+          });
+          
+        });
+      }
+    }
+  }
+</script>

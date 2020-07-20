@@ -227,9 +227,33 @@
       
       pageBeforeIn: function (event, page) {
         
+        var db = app.data.db;
+    
+        if (db) {
+          
+          db.transaction(function(tx) {
+            
+            tx.executeSql('select count(*) as total from notifikasi where read = "N";', function(ignored, res) {
+
+              var total = res.rows.item(0).total;
+              if (total > 0) {
+                $$('.badge.notif').text(total);
+                $$('.badge.notif').css("display", "block");
+              } else {
+                $$('.badge.notif').css("display", "none");
+              }
+            });
+          }, function(error) {
+            app.dialog.alert('insert error: ' + error.message);
+          });
+        }
+        
         if (app.data.bLogedIn)
         app.request.getJSON( app.data.endpoint + 'api/v1/cart/total_items', function(res) {
-                  
+          
+          app.data.saldo = parseInt(res.saldo);
+          app.data.bonus = parseInt(res.bonus);
+
           if (res.totqty > 0)
           {
             app.data.total_items = res.totqty;

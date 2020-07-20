@@ -227,7 +227,7 @@ img.cart-img {
 .status-address {
   display: inline-block;
   padding-left: 10px;
-  white-space: nowrap;
+  /* white-space: nowrap; */
 }
 
 .img-helper {

@@ -17,8 +17,10 @@ routes = [
         app.preloader.hide();
 
         app.data.min_trf   = res.data.min_transfer;
+        app.data.min_trfb  = res.data.min_transferb;
         app.data.min_blj   = res.data.min_belanja;
         app.data.min_topup = res.data.min_topup;
+        app.data.min_withdraw = res.data.min_withdraw;
       
         // Resolve route to load page
         resolve(
@@ -623,6 +625,34 @@ routes = [
     }
   },
   {
+    path: '/bank-transfer/',
+    async: function (routeTo, routeFrom, resolve, reject) {
+      // Router instance
+      var router = this;
+
+      // App instance
+      var app = router.app;
+
+      // Show Preloader
+      app.preloader.show();
+        
+      app.request.getJSON( app.data.endpoint + 'api/v1/member/bank', function(res) {
+          
+        app.preloader.hide();
+
+        resolve (
+          { componentUrl: './pages/bank-transfer.html' },
+          { context: {
+            bank: res.bank,
+            bank_code: res.bank_code,
+            account_number: res.account_number,
+            account_name: res.account_name
+          } }
+        );
+      });
+    }
+  },
+  {
     path: '/profil/',
     async: function (routeTo, routeFrom, resolve, reject) {
       // Router instance
@@ -643,41 +673,6 @@ routes = [
         );
       });
     }
-  },
-  {
-    path: '/order-history/',
-    // componentUrl: './pages/order-history.html',
-    async: function (routeTo, routeFrom, resolve, reject) {
-      // Router instance
-      var router = this;
-
-      // App instance
-      var app = router.app;
-
-      // Show Preloader
-      app.preloader.show();
-
-      // kode item
-      // var mbrid = app.data.mbrid;
-
-      // var db = app.data.db;
-      
-      app.request.getJSON( app.data.endpoint + 'api/v1/member/order-history', function(res) {
-        
-        app.preloader.hide();
-
-        if (res.data.length == 0) {
-          app.dialog.alert('Anda belum memiliki histori transaksi.');
-          reject();
-          return;
-        }
-        
-        resolve(
-          { componentUrl: './pages/order-history.html' },
-          { context: { data: res.data } }
-        );
-      });
-    },
   },
   {
     path: '/konfirmasi/',
@@ -742,45 +737,12 @@ routes = [
 
       // Show Preloader
       app.preloader.show();
-
-      // kode item
-      // var mbrid = app.data.mbrid;
-
-      // var db = app.data.db;
       
-      app.request.getJSON( app.data.endpoint + 'api/v1/member/order-status', function(res) {
-        // var data = [{"id":"00015","name":"Putu Wirya","tglinput":"30 Sep 2019","address":"Jalan Raya Demak,<br>SURABAYA - JAWA TIMUR 60119","totalamount":"308750","tax":"0","shipcost":"15000","addcost":"11241.25","gtotal":"334991.25","paymentcode":"0","no_resi":null,"delivery":"jne","package":"OKE","status":"Pending"}];
+      app.request.getJSON( app.data.endpoint + 'api/v1/orders/status', function(res) {
         app.preloader.hide();
 
         resolve(
           { componentUrl: './pages/order-status.html' },
-          { context: { data: res.data } }
-        );
-      });
-    },
-  },
-  {
-    path: '/order-history/',
-    async: function (routeTo, routeFrom, resolve, reject) {
-      // Router instance
-      var router = this;
-
-      // App instance
-      var app = router.app;
-
-      // Show Preloader
-      app.preloader.show();
-
-      // kode item
-      // var mbrid = app.data.mbrid;
-      // var db = app.data.db;
-      
-      app.request.getJSON( app.data.endpoint + 'api/v1/member/order-history', function(res) {
-        
-        app.preloader.hide();
-
-        resolve(
-          { componentUrl: './pages/order-history.html' },
           { context: { data: res.data } }
         );
       });

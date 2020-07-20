@@ -32,7 +32,7 @@ var app  = new Framework7({
       bSetAddress: false,
       bLogedIn: false,
       mbrid: null,
-      pin: null,
+      // pin: null,
       gtotal: 0,      // grand total
       promo: null,
       regency: null,
@@ -41,8 +41,10 @@ var app  = new Framework7({
       currentDate: null,
 
       min_trf: 1000,
+      min_trfb: 500,
       min_blj: 5000,
       min_topup: 50000,
+      min_withdraw: 50000,
 
       push: null,
     };
@@ -110,8 +112,8 @@ var app  = new Framework7({
           var now = new Date()-3;
           var date = now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate();
   
-          app.data.db.transaction(function(tx) {
-            tx.executeSql('delete from notifikasi where tgl < ?;', [date]);
+          db.transaction(function(tx) {
+            tx.executeSql('delete from notifikasi where read = "Y" and tgl < ?;', [date]);
           }, function(error) {
             app.dialog.alert('delete error: ' + error.message);
           });
@@ -119,10 +121,9 @@ var app  = new Framework7({
       }).catch(function (err) {
         // error! :(
         console.log(err);
-      }); //*/
+      });
       
 
-      //*
       this.data.push = PushNotification.init({
         "android": {},
         "browser": {
@@ -160,17 +161,15 @@ var app  = new Framework7({
           var time = now.getHours() + ":" + now.getMinutes()
           
           db.transaction(function(tx) {
-              db.transaction(function(tx) {
-                
-                tx.executeSql('insert into notifikasi (tgl, jam, info) values (?, ?, ?);', [date, time, data.message]);
+            
+            tx.executeSql('insert into notifikasi (tgl, jam, info) values (?, ?, ?);', [date, time, data.message]);
 
-                tx.executeSql('select count(*) as total from notifikasi where read = "N";', function(ignored, res) {
-                  $$('.badge.notif').text(res.rows.item(i).total);
-                  $$('.badge.notif').css("display", "block");
-                });
-              }, function(error) {
-                app.dialog.alert('insert error: ' + error.message);
-              });
+            tx.executeSql('select count(*) as total from notifikasi where read = "N";', function(ignored, res) {
+              $$('.badge.notif').text(res.rows.item(0).total);
+              $$('.badge.notif').css("display", "block");
+            });
+          }, function(error) {
+            app.dialog.alert('insert error: ' + error.message);
           });
         }
       
@@ -182,9 +181,9 @@ var app  = new Framework7({
 
           app.request.getJSON( app.data.endpoint + 'api/v1/member/saldo', function (res) {
           
-            $$('.saldo').text(res.saldof);
+            // $$('.saldo').text(res.saldof);
             app.data.saldo = parseInt(res.saldo);
-            $$('.bonus').text(res.bonusf);
+            // $$('.bonus').text(res.bonusf);
             app.data.bonus = parseInt(res.bonus);
           });
         }, 300);
@@ -399,7 +398,6 @@ $$('#my-login-screen .login-button').on('click', function () {
   formData.gcmid = regId;
 
   
-  // http://212.24.111.23/
   app.request.post(app.data.endpoint + 'api/v1/auth/login', formData, function (res) {
     
     app.preloader.hide();
@@ -531,7 +529,6 @@ $$('a.label-login').on('click', function () {
 $$('#my-login-screen').on('loginscreen:opened', function (e, loginScreen) {
   // set data ke form login
   // $$('#my-login-screen [name="mbrid"]').val(localStorage.getItem('mbrid'));
-  console.log('get nohp: '+localStorage.getItem('nohp'))
   $$('#my-login-screen [name="identity"]').val(localStorage.getItem('nohp'));
 });
 
@@ -539,24 +536,20 @@ $$('#my-login-screen').on('loginscreen:opened', function (e, loginScreen) {
 $$('#transfer-bonus .btnTransfer').on('click', function(e){
   //e.preventDefault();
   
-  var bonus = parseInt($$('#transfer-bonus [name="nominal"]').val());
+  var bonus = $$('#transfer-bonus [name="nominal"]').val();
 
+  if (app.data.bonus < app.data.min_trfb) {
+    app.dialog.alert('Jumlah bonus anda belum mencukupi minimal transfer.', 'Transfer Bonus');
+    $$('#nominal').val('');
+    return;
+  } else
   if (bonus === '' || bonus === '0') {
     app.dialog.alert('Masukkan jumlah bonus yang akan ditransfer.', 'Transfer Bonus');
     return;
   } else
-  if (app.data.bonus === 0) {
-    app.dialog.alert('Jumlah bonus anda masih kosong.', 'Transfer Bonus');
-    return;
-  } else
-  if (bonus < 500) {
-    app.dialog.alert('Jumlah minimal transfer bonus sebesar 500.', 'Transfer Bonus');
-    $$('#nominal').val(500);
-    return;
-  } else
-  if (app.data.bonus < 500) {
-    app.dialog.alert('Jumlah bonus anda belum mencukupi minimal transfer.', 'Transfer Bonus');
-    $$('#nominal').val('');
+  if (bonus < app.data.min_trfb) {
+    app.dialog.alert('Jumlah minimal transfer bonus sebesar '+app.data.min_trfb+'.', 'Transfer Bonus');
+    $$('#nominal').val(app.data.min_trfb);
     return;
   } else
   if (bonus > app.data.bonus) {
@@ -585,6 +578,7 @@ $$('#transfer-bonus .btnTransfer').on('click', function(e){
       $$('#transfer-bonus [name="pin"]').val('');
       
       app.popup.close($$('.page[data-name="transfer-bonus"]').parents(".popup"));
+      app.dialog.alert(data.message, 'Transfer Bonus');
       
       app.request.getJSON( app.data.endpoint + 'api/v1/member/saldo', function (res) {
           
@@ -653,7 +647,7 @@ $$('#bank-trf .btnBankTrf').on('click', function(e){
       $$('#bank-trf [name="pin"]').val('');
       
       app.popup.close($$('.page[data-name="bank-trf"]').parents(".popup"));
-
+      app.dialog.alert(data.message, 'Bank Transfer Withdrawal');
     } else {
       $$('#bank-trf [name="pin"]').val('');
       app.dialog.alert(data.message, 'Bank Transfer Withdrawal');
@@ -672,24 +666,20 @@ $$('#bank-trf').on('popup:closed', function (e, popup) {
 $$('#withdrawal .btnWithdraw').on('click', function(e){
   //e.preventDefault();
   
-  var saldo = parseInt($$('#withdrawal [name="nominal"]').val());
+  var saldo = $$('#withdrawal [name="nominal"]').val();
 
-  if (saldo === '' || saldo === '0') {
+  if (app.data.saldo < app.data.min_withdraw) {
+    app.dialog.alert('Jumlah saldo anda belum mencukupi minimal penarikan.', 'Withdrawal');
+    $$('#withdrawal [name="nominal"]').val('');
+    return;
+  } else
+  if (saldo == '' || saldo == '0') {
     app.dialog.alert('Masukkan jumlah saldo yang akan ditarik.', 'Withdrawal');
     return;
   } else
-  if (app.data.saldo === 0) {
-    app.dialog.alert('Jumlah saldo anda masih kosong.', 'Withdrawal');
-    return;
-  } else
-  if (app.data.saldo < 100000) {
-    app.dialog.alert('Jumlah saldo anda belum mencukupi minimal penarikan.', 'Withdrawal');
-    $$('#withdrawal [name="nominal"]').val('0');
-    return;
-  } else
-  if (saldo < 100000) {
-    app.dialog.alert('Jumlah minimal withdrawal sebesar 100.000.', 'Withdrawal');
-    $$('#withdrawal [name="nominal"]').val(100000);
+  if (saldo < app.data.min_withdraw) {
+    app.dialog.alert('Jumlah minimal withdrawal sebesar '+app.data.min_withdraw+'.', 'Withdrawal');
+    $$('#withdrawal [name="nominal"]').val(app.data.min_withdraw);
     return;
   } else
   if (saldo > app.data.saldo) {
@@ -718,6 +708,7 @@ $$('#withdrawal .btnWithdraw').on('click', function(e){
       $$('#withdrawal [name="pin"]').val('');
       
       app.popup.close($$('.page[data-name="withdrawal"]').parents(".popup"));
+      app.dialog.alert(data.message, 'Withdrawal');
     } else {
       $$('#withdrawal [name="pin"]').val('');
       app.dialog.alert(data.message, 'Withdrawal');
@@ -739,10 +730,6 @@ $$('#ganti-pin .btnGanti').on('click', function () {
   if (pinlama == '') {
       app.dialog.alert('Masukkan nomor PIN atau password yang lama.', 'Ganti PIN');
       return;
-  } else
-  if (pinlama != app.data.pin) {
-    app.dialog.alert('Input nomor pin/password yang lama belum benar.', 'Ganti PIN');
-    return;
   } else
   if (pinbaru == '') {
       app.dialog.alert('Masukkan nomor PIN atau password yang baru.', 'Ganti PIN');
@@ -767,13 +754,14 @@ $$('#ganti-pin .btnGanti').on('click', function () {
         }
       });
 
-      app.data.pin = pinbaru;
+      // app.data.pin = pinbaru;
       localStorage.setItem('pin', pinbaru);
 
       $$('#ganti-pin [name="pinlama"]').val('');
       $$('#ganti-pin [name="pinbaru"]').val('');
       
       app.popup.close($$('.page[data-name="ganti-pin"]').parents(".popup"));
+      app.dialog.alert(data.message, 'Ganti PIN');
     } else {
       app.dialog.alert(data.message, 'Ganti PIN');
     }
