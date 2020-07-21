@@ -106,6 +106,12 @@
             app.dialog.alert('Jumlah minimal topup saldo sebesar '+app.data.min_topup+'.', 'Topup Saldo');
             return;
           }
+            
+          var pin = $$('#pin').val();
+          if (pin === '') {
+            app.dialog.alert('Masukkan nomor PIN atau password anda.', 'Topup Saldo');
+            return;
+          }
                   
           app.preloader.show();
 

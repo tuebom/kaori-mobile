@@ -102,8 +102,6 @@ routes = [
         // Hide Preloader
         app.preloader.hide();
 
-        // app.data.bSetAddress = false;
-        
         // Resolve route to load page
         resolve(
           {
@@ -1231,21 +1229,6 @@ routes = [
     on: {
       pageInit: function (event, page) {
         
-        /*var numpad = app.keypad.create({
-          inputEl: '#tujuan',
-          dotButton: false,
-          valueMaxLength: 13,
-          on: {
-            change(keypad, value) {
-              // console.log(keypad, value);
-              value = value.toString();
-              if (value.length === 4) {
-                updateList(value);
-              }
-            }
-          }
-        });*/
-        
         function updateList(hlr) {
           app.request.json( app.data.endpoint + 'api/v1/telpon/'+hlr, function (json) {
 
@@ -1292,7 +1275,7 @@ routes = [
           
           var tujuan = $$('#tujuan').val();
           if (tujuan == '') {
-              app.dialog.alert('Masukkan data nomor hp tujuan.', 'Paket Nelpon');
+              app.dialog.alert('Masukkan data nomor handphone tujuan.', 'Paket Nelpon');
               return;
           }
 
@@ -1311,6 +1294,12 @@ routes = [
           
           if (app.data.saldo == 0) {
             app.dialog.alert('Saldo anda tidak cukup untuk melakukan transaksi pembelian paket nelpon.', 'Paket Nelpon');
+            return;
+          }
+            
+          var pin = $$('#pin').val();
+          if (pin === '') {
+            app.dialog.alert('Masukkan nomor PIN atau password anda.', 'Paket Nelpon');
             return;
           }
           
@@ -1391,6 +1380,12 @@ routes = [
             app.dialog.alert('Saldo anda tidak cukup untuk melakukan transaksi topup GOPAY.', 'Topup GOPAY');
             return;
           }
+            
+          var pin = $$('#pin').val();
+          if (pin === '') {
+            app.dialog.alert('Masukkan nomor PIN atau password anda.', 'Topup GOPAY');
+            return;
+          }
           
           // app.preloader.show();
           $$(this).prop("disabled", true);
@@ -1458,6 +1453,12 @@ routes = [
           
           if (app.data.saldo === 0) {
             app.dialog.alert('Saldo anda tidak cukup untuk melakukan transaksi topup OVO.', 'Topup OVO');
+            return;
+          }
+            
+          var pin = $$('#pin').val();
+          if (pin === '') {
+            app.dialog.alert('Masukkan nomor PIN atau password anda.', 'Topup OVO');
             return;
           }
           
@@ -1529,6 +1530,12 @@ routes = [
             app.dialog.alert('Saldo anda tidak cukup untuk melakukan transaksi topup DANA.', 'Topup DANA');
             return;
           }
+            
+          var pin = $$('#pin').val();
+          if (pin === '') {
+            app.dialog.alert('Masukkan nomor PIN atau password anda.', 'Topup DANA');
+            return;
+          }
           
           // app.preloader.show();
           $$(this).prop("disabled", true);
@@ -1577,7 +1584,7 @@ routes = [
           
           var tujuan = $$('#tujuan').val();
           if (tujuan === '') {
-              app.dialog.alert('Masukkan data nomor hp tujuan.', 'Paket HINET');
+              app.dialog.alert('Masukkan data nomor handphone tujuan.', 'Paket HINET');
               return;
           }
 
@@ -1596,6 +1603,12 @@ routes = [
           
           if (app.data.saldo === 0) {
             app.dialog.alert('Saldo anda tidak cukup untuk melakukan transaksi isi ulang paket HINET.', 'Paket HINET');
+            return;
+          }
+            
+          var pin = $$('#pin').val();
+          if (pin === '') {
+            app.dialog.alert('Masukkan nomor PIN atau password anda.', 'Pulsa HINET');
             return;
           }
           

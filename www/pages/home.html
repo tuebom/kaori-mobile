@@ -11,7 +11,7 @@
                 <i class="icon material-icons md-only">menu</i>
               </a>
             </div> -->
-            <div class="title sliding"><a href="/akun/"><img class="responsive" src="img/logo.png" /></a></div>
+            <div class="title sliding"><a href="#" @click="nganu"><img class="responsive" src="img/logo.png" /></a></div>
             <div class="right">
               <!-- <a href="/chat/" data-view=".view-main" class="link icon-only">
                 <i class="icon f7-icons ios-only">chat</i>
@@ -221,7 +221,37 @@
 </template>
 <script>
   return {
+    // Component Methods
+    methods: {
+      
+      nganu: function (e) {
         
+        var db = app.data.db;
+    
+        if (db) {
+          
+          db.transaction(function(tx) {
+            
+            tx.executeSql('select count(*) as total from notifikasi where read = "N";', function(ignored, res) {
+
+              var total = res.rows.item(0).total;
+              if (total > 0) {
+                $$('.badge.notif').text(total);
+                $$('.badge.notif').css("display", "block");
+                app.dialog.alert('Total unread notification: ' + total);
+              } else {
+                $$('.badge.notif').css("display", "none");
+              }
+            });
+          }, function(error) {
+            app.dialog.alert('insert error: ' + error.message);
+          });
+        }
+            
+        // $$('.badge.notif').text('2');
+        // $$('.badge.notif').css("display", "block");
+      }
+    },        
     // Page Events
     on: {
       
