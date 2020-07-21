@@ -232,7 +232,7 @@
           
           db.transaction(function(tx) {
             
-            tx.executeSql('select count(*) as total from notifikasi where read = "N";', function(ignored, res) {
+            tx.executeSql('select count(*) as total from notifikasi where read = "N";', [], function(ignored, res) {
 
               var total = res.rows.item(0).total;
               if (total > 0) {
@@ -263,7 +263,7 @@
           
           db.transaction(function(tx) {
             
-            tx.executeSql('select count(*) as total from notifikasi where read = "N";', function(ignored, res) {
+            tx.executeSql('select count(*) as total from notifikasi where read = "N";', [], function(ignored, res) {
 
               var total = res.rows.item(0).total;
               if (total > 0) {
