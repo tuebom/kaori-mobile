@@ -164,7 +164,7 @@ var app  = new Framework7({
             
             tx.executeSql('insert into notifikasi (tgl, jam, info) values (?, ?, ?);', [date, time, data.message]);
 
-            tx.executeSql('select count(*) as total from notifikasi where read = "N";', function(ignored, res) {
+            tx.executeSql('select count(*) as total from notifikasi where read = "N";', [], function(ignored, res) {
               $$('.badge.notif').text(res.rows.item(0).total);
               $$('.badge.notif').css("display", "block");
             });
