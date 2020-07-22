@@ -106,7 +106,7 @@
                 <div class="item-inner">
                   <div class="item-title item-label">Nama Bank</div>
                   <div class="item-input-wrap">
-                      <select id="bank" name="bankcode">
+                      <select id="bank" name="bank_code">
                         <option value="">-</option>
                         {{#each bank2}}
                         <option value="{{bank_code}}"{{#js_if '../bank_code == this.bank_code'}} selected{{/js_if}}>{{bank_name}}</option>
@@ -141,7 +141,7 @@
                   <div class="item-inner">
                     <div class="item-title item-label">Nominal Pembayaran</div>
                     <div class="item-input-wrap">
-                        <input type="number" id="nominal" name="amount" placeholder="Nominal Pembayaran" />
+                        <input type="number" id="nominal" name="amount" value="{{amount}}" placeholder="Nominal Pembayaran" />
                     </div>
                   </div>
                 </div>
@@ -174,6 +174,18 @@
           } else {
             $$('li.orderid').css('display', 'none');
           }
+        });
+        
+        $$('#id_order').on('change', function () {
+          
+          var orderid = $$(this).val();
+          
+          app.request.getJSON( app.data.endpoint + 'api/v1/transactions/amount', {order_id: orderid}, function (res) {
+            if (res.status)
+              $$('#nominal').val(res.amount)
+            else
+              app.dialog.alert(res.message)
+          });
         });
 
         $$('#paydate').val(app.data.currentDate);

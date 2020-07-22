@@ -714,7 +714,8 @@ routes = [
             bank2: res.bank2,
             bank_code: res.bank.bank_code,
             account_number: res.bank.account_number,
-            account_name: res.bank.account_name
+            account_name: res.bank.account_name,
+            amount: res.status ? res.orders[0].gtotal : ''
           } }
         );
       });
