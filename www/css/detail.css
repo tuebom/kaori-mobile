@@ -269,6 +269,12 @@ img.cart-img {
 }
 /* stepper */
 
+input.item-note {
+  border-bottom: solid 1px #ababab;
+  width: 100%;
+  padding: 0 5px;
+}
+
 /* product by category */
 
 .col-50.tablet-33.product {

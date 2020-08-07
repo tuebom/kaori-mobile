@@ -962,4 +962,3 @@ app.on('pageInit', function (page) {
     });
   });
 });
-

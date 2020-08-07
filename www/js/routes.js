@@ -16,11 +16,11 @@ routes = [
         // Hide Preloader
         app.preloader.hide();
 
-        app.data.min_trf   = res.data.min_transfer;
-        app.data.min_trfb  = res.data.min_transferb;
-        app.data.min_blj   = res.data.min_belanja;
-        app.data.min_topup = res.data.min_topup;
-        app.data.min_withdraw = res.data.min_withdraw;
+        app.data.min_trf   = parseFloat(res.data.min_transfer);
+        app.data.min_trfb  = parseFloat(res.data.min_transferb);
+        app.data.min_blj   = parseFloat(res.data.min_belanja);
+        app.data.min_topup = parseFloat(res.data.min_topup);
+        app.data.min_withdraw = parseFloat(res.data.min_withdraw);
       
         // Resolve route to load page
         resolve(

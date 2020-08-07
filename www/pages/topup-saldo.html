@@ -96,7 +96,9 @@
         $$('.btnKirim').on('click', function(e){
           //e.preventDefault();
           
-          var nominal = $$('#nominal').val();
+          var nominal = parseFloat($$('#nominal').val());
+          console.log(nominal)
+          console.log(app.data.min_topup)
           
           if (nominal == '') {
               app.dialog.alert('Masukkan jumlah nominal topup saldo.', 'Topup Saldo');
@@ -124,11 +126,10 @@
             var data = JSON.parse(res);
         
             if (data.status) {
+              app.dialog.alert(data.message, 'Topup Saldo');
               app.router.back();
             } else {
-              if (data.message !== '') {
-                app.dialog.alert(data.message, 'Topup Saldo');
-              }
+              app.dialog.alert(data.message, 'Topup Saldo');
             }
           });
         });

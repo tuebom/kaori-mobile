@@ -38,6 +38,9 @@
             <span class="label-subtotal"><b>Sub total</b> Rp{{amountf}}</span></div>
           </div>
         </div>
+        <div class="card-footer">
+          <input class="item-note" type="text" item-code="{{barcode}}" value="{{note}}" placeholder="Catatan">
+        </div>
       </div>
       {{/each}}
       
@@ -94,7 +97,22 @@
     on: {
       
       pageInit: function(e, page) {
-        
+
+        $$('input.item-note').on('blur', function (e) {
+          // console.log('On blur!')
+          var btnEl = e.srcElement;
+          var kode  = $$(btnEl).attr('item-code');
+          var note  = $$(this).val();
+          // console.log('Note: '+note)
+          
+          var formData = {};
+          formData.kode = kode;
+          formData.note = note;
+
+          app.request.post( app.data.endpoint + 'api/v1/cart/set-note', formData, function(res) {
+            // var data = JSON.parse(res);
+          });
+        });
       }
     }
   }
