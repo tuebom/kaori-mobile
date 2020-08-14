@@ -26,7 +26,7 @@ var app  = new Framework7({
   data: function () {
     return {
       // endpoint: 'http://localhost/kaori/',
-      endpoint: 'https://kaoribali.com/dev/',
+      endpoint: 'https://kaoribali.com/',
       db: null,
 
       bSetAddress: false,

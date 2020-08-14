@@ -173,6 +173,13 @@
             $$('li.orderid').css('display', 'block');
           } else {
             $$('li.orderid').css('display', 'none');
+          
+            app.request.getJSON( app.data.endpoint + 'api/v1/transactions/tiket', {}, function (res) {
+              if (res.status)
+                $$('#nominal').val(res.nominal)
+              else
+                $$('#nominal').val('');
+            });
           }
         });
         
@@ -184,7 +191,7 @@
             if (res.status)
               $$('#nominal').val(res.amount)
             else
-              app.dialog.alert(res.message)
+              $$('#nominal').val('');
           });
         });
 
