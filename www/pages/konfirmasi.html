@@ -36,6 +36,7 @@
                   <div class="item-title item-label">Nomor Order</div>
                   <div class="item-input">
                     <select id="id_order" name="id_order">
+                      <option value="">-</option>
                       {{#each orders}}
                       <option value="{{id}}">{{id}}</option>
                       {{/each}}
@@ -171,8 +172,10 @@
           
           if (trxtype == 'order') {
             $$('li.orderid').css('display', 'block');
+            $$('#nominal').val('');
           } else {
             $$('li.orderid').css('display', 'none');
+            $$('#id_order').val('');
           
             app.request.getJSON( app.data.endpoint + 'api/v1/transactions/tiket', {}, function (res) {
               if (res.status)

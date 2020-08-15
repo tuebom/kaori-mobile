@@ -52,11 +52,24 @@
           <!-- kurir -->
           <div class="card item-cart" style="border-radius: 5px;">
             <div class="card-header">
-              <div class="card-product-name">Kurir</div>
+              <div class="card-product-name">Gunakan kurir</div>
+              <div class="card-product-name">
+                <div class="item-input">
+                  <label class="toggle kurir toggle-init color-blue">
+                    <input type="checkbox"{{#if order.agent}} checked{{/if}}>
+                    <span class="toggle-icon"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
 
+            <div class="data-kurir"{{#unless order.agent}} style="display: none;"{{/unless}}>
+            <div class="card-footer">
+              <div class="card-product-name">Kurir</div>
               <div class="card-product-name">
                 <!-- <div class="item-input-wrap"> -->
                   <select id="ship_agent" name="agent">
+                    <option value="">-</option>
                     {{#each agents}}
                     <option value="{{code}}"{{#js_if '../order.agent == this.code'}} selected{{/js_if}}>{{name}}</option>
                     {{/each}}
@@ -67,7 +80,7 @@
             <div class="card-footer">
               <div class="card-product-name">Ongkos Kirim</div>
               <div class="card-product-name">Rp<span id="spanship">{{order.shipcost}}</span></div>
-            </div>
+            </div></div>
           </div>
 
           <!-- total order -->

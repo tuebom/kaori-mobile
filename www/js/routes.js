@@ -498,6 +498,7 @@ routes = [
           app.data.regency = res.order.regency;
           app.data.gtotal  = res.order.gtotal;
           app.data.promo   = res.order.promo_code;
+          app.data.kurir   = res.order.agent;
 
           resolve (
             { componentUrl: './pages/checkout.html' },

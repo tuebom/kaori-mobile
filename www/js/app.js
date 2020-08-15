@@ -35,6 +35,7 @@ var app  = new Framework7({
       // pin: null,
       gtotal: 0,      // grand total
       promo: null,
+      kurir: null,
       regency: null,
       total_items: 0, // total item cart
       ordernum: null,
@@ -894,6 +895,7 @@ app.on('pageInit', function (page) {
     view.router.back(view.history[0], { force: true });    
   });
 
+  // input voucher
   $$('.toggle.voucher').on('change', function (e) {
     
     var toggle = e.srcElement; //app.toggle.get('.toggle');
@@ -934,6 +936,7 @@ app.on('pageInit', function (page) {
     else
     {
       if (app.data.promo) {
+        app.data.promo = null;
         app.request.post(app.data.endpoint + 'api/v1/checkout/unset-promo-code', function (res) {
           app.router.navigate('/checkout/', {
             reloadCurrent: true,
@@ -943,6 +946,31 @@ app.on('pageInit', function (page) {
       }
     }
   });
+
+
+  // input kurir
+  $$('.toggle.kurir').on('change', function (e) {
+    
+    var toggle = e.srcElement; //app.toggle.get('.toggle');
+
+    if (toggle.checked) {
+      $$('.data-kurir').css("display", "block");
+    }
+    else
+    {
+      $$('.data-kurir').css("display", "none");
+      if (app.data.kurir) {
+        app.data.kurir = null;
+        app.request.post(app.data.endpoint + 'api/v1/checkout/unset-kurir', function (res) {
+          app.router.navigate('/checkout/', {
+            reloadCurrent: true,
+            ignoreCache: true,
+          });
+        });
+      }
+    }
+  });
+
 
   // .stepper.cart.stepper-fill.stepper-init
   $$('.stepper.cart').on('stepper:change', function (stepper, el) {
