@@ -122,30 +122,6 @@
     font-weight: bold;
 }
 
-.material-icons {
-  font-family: 'Material Icons';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px;
-  /* Preferred icon size */
-  display: inline-block;
-  width: 1em;
-  line-height: 1;
-  text-transform: none;
-  letter-spacing: normal;
-  word-wrap: normal;
-  white-space: nowrap;
-  direction: ltr;
-  /* Support for all WebKit browsers. */
-  -webkit-font-smoothing: antialiased;
-  /* Support for Safari and Chrome. */
-  text-rendering: optimizeLegibility;
-  /* Support for Firefox. */
-  -moz-osx-font-smoothing: grayscale;
-  /* Support for IE. */
-  font-feature-settings: 'liga';
-}
-
 /* search bar input */
 .search {
   width: 100%;
@@ -157,29 +133,37 @@
   width: 100%;
   background: #fff;
   border: none;
-  padding: 5px;
+  padding: 5px 5px 5px 10px;
   height: 26px;
   line-height: 26px;
-  border-radius: 0 16px 16px 0;
+  border-radius: 0 17px 17px 0;
   color: #ababab;
 }
 
-i.fa.fa-search {
-  font-size: 16px;
+i.icon.search.material-icons.md-only,
+i.icon.search.f7-icons.ios-only {
   position: absolute;
-  left: 10px;
-  top: 9px;
+  display: flex;
+  left: 8px;
+  top: 7px;
 }
 .searchButton {
   width: 40px;
   height: 36px;
   /* border: 1px solid #00B4CC; */
+  border-right: none;
   background: #fff;
   text-align: center;
-  color: #000;
+  color: #c0c0c0;
   border-radius: 17px 0 0 17px;
   cursor: pointer;
-  font-size: 20px;
+}
+
+.item-card {
+  border: solid 1px #f0f0f0;
+  margin-top: 5px;
+  border-radius: 7px;
+  /* font-size: 11px; */
 }
 
 /*Resize the wrap to see the search bar change!*/
@@ -666,7 +650,7 @@ div[class*="col-"] {
 
 img.responsive-card {
   display:block;
-  padding-top: 10px;
+  /* padding-top: 10px; */
   margin-top: 10px;
   margin-left: auto;
   margin-right: auto;

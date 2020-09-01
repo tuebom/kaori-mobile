@@ -29,7 +29,8 @@ routes = [
           },
           {
             context: {
-              banner: res.banner
+              banner: res.banner,
+              populer: res.populer
             }
           }
         );
@@ -716,7 +717,7 @@ routes = [
             bank_code: res.bank.bank_code,
             account_number: res.bank.account_number,
             account_name: res.bank.account_name,
-            amount: res.status ? res.orders[0].gtotal : ''
+            // amount: res.status ? res.orders[0].gtotal : ''
           } }
         );
       });

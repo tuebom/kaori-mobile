@@ -82,8 +82,6 @@
               <img class="article-header" src="{{../$root.endpoint}}upload/products/{{#if photo1}}{{photo1}}{{else}}noimage.jpg{{/if}}" />
               <div class="product-name-rel">{{title}}</div>
               <div class="product-price-rel">Rp{{price}}</div>
-              <!-- <div class="product-code-rel">{{barcode}}</div> -->
-              <!-- <img class="button-buy" src="img/{{#js_if 'this.saldo > 0'}}beli{{else}}pre{{/js_if}}.png" /> -->
             </div>
             {{/each}}
 
@@ -107,7 +105,7 @@
         });
       },
       buyItem: function () {
-        app.dialog.alert('Yay!', 'Buy Item');
+        // app.dialog.alert('Yay!', 'Buy Item');
         // app.router.navigate('/detail/'+code, {
         //   reloadCurrent: true,
         //   ignoreCache: true,
@@ -175,7 +173,7 @@
         if (cmp[0].swiper === undefined) {
 
           var swiper = app.swiper.create('.swiper-container.swiper-init.swiper-related', {
-              speed: 400,
+              speed: 1000,
               loop: true,
               spaceBetween: 10,
               slidesPerView: 2

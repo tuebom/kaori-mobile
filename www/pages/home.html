@@ -3,7 +3,7 @@
     <div class="page" data-name="home">
         
         <!-- Top Navbar -->
-        <div class="navbar">
+        <div class="navbar no-shadow">
           <div class="navbar-inner">
             <!-- <div class="left">
               <a href="#" class="link icon-only panel-open" data-panel="left">
@@ -30,11 +30,14 @@
                 <i class="icon material-icons md-only">more_vert</i>
               </a>
             </div>
-            <div class="subnavbar">
+            <div class="subnavbar no-shadow">
               <div class="title" style="width: 100%; font-size: 16px;">
                 <a href="/search/">
                   <div class="search">
-                    <span class="searchButton"><i class="fa fa-search"></i></span>
+                    <span class="searchButton">
+                      <i class="icon search f7-icons ios-only">search</i>
+                      <i class="icon search material-icons md-only">search</i>
+                    </span>
                     <div class="searchTerm">Cari..</div>
                   </div>
                 </a>
@@ -86,7 +89,7 @@
 
           <div class="row no-gutter">
             <div class="col-33  tablet-33">
-              <div class="card">
+              <div class="item-card">
                 <div class="card-content">
                   <a href="/opsi-belanja/" class="btn item-link">
                     <img class="responsive-card" src="img/belanja.png" />
@@ -96,7 +99,7 @@
               </div>
             </div>
             <div class="col-33  tablet-33">
-              <div class="card">
+              <div class="item-card">
                 <div class="card-content">
                   <a href="/transfer-saldo/" class="btn item-link">
                     <img class="responsive-card" src="img/transfer.png" />
@@ -106,7 +109,7 @@
               </div>
             </div>
             <div class="col-33  tablet-33">
-              <div class="card">
+              <div class="item-card">
                 <div class="card-content">
                   <a href="/opsi-topup/" class="btn item-link">
                     <img class="responsive-card" src="img/topup.png" />
@@ -119,7 +122,7 @@
   
           <div class="row no-gutter">
             <div class="col-33  tablet-33">
-              <div class="card">
+              <div class="item-card">
                 <div class="card-content">
                   <a href="/pulsa/" class="btn item-link">
                     <img class="responsive-card" src="img/pulsa.png" />
@@ -129,7 +132,7 @@
               </div>
             </div>
             <div class="col-33  tablet-33">
-              <div class="card">
+              <div class="item-card">
                 <div class="card-content">
                   <a href="/data/" class="btn item-link">
                     <img class="responsive-card" src="img/data.png" />
@@ -139,7 +142,7 @@
               </div>
             </div>
             <div class="col-33  tablet-33">
-              <div class="card">
+              <div class="item-card">
                 <div class="card-content">
                   <a href="/token/" class="btn item-link">
                     <img class="responsive-card" src="img/pln.png" />
@@ -148,11 +151,11 @@
                 </div>
               </div>
             </div>
-        </div>                 
+          </div>                 
 
         <!-- <div class="row no-gutter">
             <div class="col-33  tablet-33">
-              <div class="card">
+              <div class="item-card">
                 <div class="card-content">
                   <a href="/gopay/" class="btn item-link">
                     <img class="responsive-card" src="img/gopay.png" />
@@ -162,7 +165,7 @@
               </div>
             </div>
             <div class="col-33  tablet-33">
-              <div class="card">
+              <div class="item-card">
                 <div class="card-content">
                   <a href="/ovo/" class="btn item-link">
                     <img class="responsive-card" src="img/ovo.png" />
@@ -172,7 +175,7 @@
               </div>
             </div>
             <div class="col-33  tablet-33">
-              <div class="card">
+              <div class="item-card">
                 <div class="card-content">
                   <a href="/dana/" class="btn item-link">
                     <img class="responsive-card" src="img/dana.png" />
@@ -185,7 +188,7 @@
 
         <div class="row no-gutter">
           <div class="col-33  tablet-33">
-            <div class="card">
+            <div class="item-card">
               <div class="card-content">
                 <a href="/histori-trx/" class="btn item-link">
                   <img class="responsive-card" src="img/histori.png" />
@@ -195,7 +198,7 @@
             </div>
           </div>
           <div class="col-33  tablet-33">
-            <div class="card">
+            <div class="item-card">
               <div class="card-content">
                 <a href="/cek-harga/" class="btn item-link">
                   <img class="responsive-card" src="img/harga.png" />
@@ -205,7 +208,7 @@
             </div>
           </div>
           <div class="col-33  tablet-33">
-            <div class="card">
+            <div class="item-card">
               <div class="card-content">
                 <a href="/daftar/" class="btn item-link">
                   <img class="responsive-card" src="img/daftar.png" />
@@ -216,7 +219,25 @@
           </div>
         </div>
 
+      <!-- </div> -->
+    
+      <div class="block">
+        <div class="block-title detail">Product Terlaris</div>
+        <div data-space-between="10" data-slides-per-view="3" class="swiper-container swiper-init swiper-populer">
+          <!-- <div class="swiper-pagination"></div> -->
+          <div class="swiper-wrapper">
+            
+            {{#each populer}}
+            <div class="swiper-slide detail" @click="doOpenLink('{{barcode}}')">
+              <img class="article-populer" src="{{../$root.endpoint}}upload/products/{{#if photo1}}{{photo1}}{{else}}img/noimage.png{{/if}}" />
+              <div class="product-name-rel">{{title}}</div>
+              <div class="product-price-rel">Rp{{pricef}}</div>
+            </div>
+            {{/each}}
+
+          </div>
         </div>
+      </div>
     </div>
 </template>
 <script>
@@ -224,6 +245,14 @@
     // Component Methods
     methods: {
       
+      doOpenLink: function (code) {
+
+        app.router.navigate('/detail/'+code, {
+          // reloadCurrent: true,
+          // ignoreCache: true,
+        });
+      },
+
       /*nganu: function (e) {
         
         // @click="nganu"
@@ -297,20 +326,43 @@
         });
       },
       
+      // pageBeforeOut: function (event, page) {
+      //   var swiper = app.swiper.get('.swiper-container.swiper-init.dashboard');
+      //   swiper.autoplay.stop();
+      //   console.log(swiper.autoplay);
+      //   var swiper = app.swiper.get('.swiper-container.swiper-init.populer');
+      //   swiper.autoplay.stop();
+      //   console.log('swiper autoplay stoped!')
+      // },
+      
       pageInit: function(e, page) {
                 
         // Note: gunakan selecter secara lengkap untuk menghindari error
-        var cmp = $$('.swiper-container.swiper-init.dashboard');
+        // var cmp = $$('.swiper-container.swiper-init.dashboard');
         // console.log(cmp.swiper)
+        var swiper = app.swiper.get('.swiper-container.swiper-init.dashboard');
+        // console.log(swiper)
 
-        if (cmp.swiper === undefined) {
+        if (swiper === undefined) {
           
           var swiper = app.swiper.create('.swiper-container.swiper-init.dashboard', {
-              speed: 400,
+              speed: 3000,
               loop: true,
-              spaceBetween: 100
+              spaceBetween: 0
           });
+          swiper.autoplay.start();
+        }
 
+        var swiper = app.swiper.get('.swiper-container.swiper-init.swiper-populer');
+
+        if (swiper === undefined) {
+          // console.log('swiper-populer undefined!')
+          var swiper = app.swiper.create('.swiper-container.swiper-init.swiper-populer', {
+              speed: 1000,
+              loop: true,
+              spaceBetween: 5,
+              slidesPerView: 3
+          });
           swiper.autoplay.start();
         }
       }

@@ -4,13 +4,24 @@
 }
 
 .article-header {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: auto;
-    min-height: 156px;
-    /* margin-top: -56px; */
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: auto;
+  min-height: 156px;
+  /* margin-top: -56px; */
 }
+
+/* display barang terlaris */
+.article-populer {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: auto;
+  min-height: 105px;
+  /* margin-top: -56px; */
+}
+
 @media (min-width: 768px) {
   .article-header {
     min-height: 235px;
