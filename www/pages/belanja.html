@@ -52,105 +52,125 @@
       <div class="content-block"><a href="#" class="button button-raised button-fill larger btnKirim">Kirim</a></div>
       </form>
       </div>
+
+      {{#if $root.show_ads}}
+      <div class="banner-iklan">
+        <a href="#" @click="doOpenAds('{{ads.id}}')">
+          <img class="article-iklan" src="{{$root.endpoint}}upload/iklan/{{ads.img}}" />
+        </a>
+      </div>
+      {{/if}}
+
     </div>
   </div>
 </template>
 <script>
-    return {
-      // Page Events
-      on: {
-        pageInit: function (event, page) {
-        
-          // $$('.contact').on('click', function(e){
+return {
+    // Component Methods
+    methods: {
       
-          //   navigator.contacts.pickContact(function(contact){
-          //       var nomor = contact.phoneNumbers[0].value;
-          //       $$('#tujuan').val(nomor.replace('+62','0').replace(/-/g,'').replace(/ /g,''));
-          //       var str = $$('#tujuan').val().substring(0, 4);
-          //       updateList(str);
-          //   },function(err){
-          //       //console.log('Error: ' + err);
-          //       // alert('Error: ' + err);
-          //       $$('#tujuan').val('');
-          //   });
-          // });
-        
-          $$('.btnKirim').on('click', function(e){
-            //e.preventDefault(); 
-            
-            var mbrid = $$('#mbrid').val();
-            
-            if (mbrid == '') {
-                app.dialog.alert('Masukkan ID member penjual.', 'Belanja');
-                return;
-            } else
-            if (mbrid == app.data.mbrid) {
-              app.dialog.alert('Nomor ID penjual tidak boleh sama dengan ID pembeli.', 'Belanja');
-              return;
-            } else
-            
-            // cek saldo
-            if (app.data.saldo == 0) {
-              app.dialog.alert('Saldo anda kosong. Silahkan topup saldo anda terlebih dahulu.', 'Belanja');
-              return;
-            } else
-            if (app.data.saldo < app.data.min_blj) {
-              app.dialog.alert('Jumlah saldo anda belum mencukupi minimal belanja.', 'Belanja');
-              return;
-            }
+      doOpenAds: function (code) {
 
-            var nominal = $$('#nominal').val();
-
-            if (nominal == '') {
-                app.dialog.alert('Masukkan nominal belanja.', 'Belanja');
-                return;
-            } else
-            if (nominal < app.data.min_blj) {
-              app.dialog.alert('Jumlah minimal belanja sebesar '+app.data.min_blj+'.', 'Belanja');
-              $$('#nominal').val(app.data.min_blj);
-              return;
-            } else
-            if (nominal > app.data.saldo) {
-              app.dialog.alert('Jumlah saldo anda belum mencukupi.', 'Belanja');
-              return;
-            }
-            
-            var pin = $$('#pin').val();
-            if (pin == '') {
-              app.dialog.alert('Masukkan nomor PIN atau password anda.', 'Belanja');
-              return;
-            }
-                    
-            app.preloader.show();
-
-            var formData = app.form.convertToData('.belanja');
-            
-            app.request.post( app.data.endpoint + 'api/v1/member/belanja', formData, function (res) {
-              
-              //console.log(res);
-              app.preloader.hide();
-
-              var data = JSON.parse(res);
+        app.router.navigate('/iklan/'+code, {
+          // reloadCurrent: true,
+          // ignoreCache: true,
+        });
+      },
+    },
+    // Page Events
+    on: {
+      pageInit: function (event, page) {
+      
+        // $$('.contact').on('click', function(e){
+    
+        //   navigator.contacts.pickContact(function(contact){
+        //       var nomor = contact.phoneNumbers[0].value;
+        //       $$('#tujuan').val(nomor.replace('+62','0').replace(/-/g,'').replace(/ /g,''));
+        //       var str = $$('#tujuan').val().substring(0, 4);
+        //       updateList(str);
+        //   },function(err){
+        //       //console.log('Error: ' + err);
+        //       // alert('Error: ' + err);
+        //       $$('#tujuan').val('');
+        //   });
+        // });
+      
+        $$('.btnKirim').on('click', function(e){
+          //e.preventDefault(); 
           
-              if (data.status) {
-                
-                app.router.back();
+          var mbrid = $$('#mbrid').val();
+          
+          if (mbrid == '') {
+              app.dialog.alert('Masukkan ID member penjual.', 'Belanja');
+              return;
+          } else
+          if (mbrid == app.data.mbrid) {
+            app.dialog.alert('Nomor ID penjual tidak boleh sama dengan ID pembeli.', 'Belanja');
+            return;
+          } else
+          
+          // cek saldo
+          if (app.data.saldo == 0) {
+            app.dialog.alert('Saldo anda kosong. Silahkan topup saldo anda terlebih dahulu.', 'Belanja');
+            return;
+          } else
+          if (app.data.saldo < app.data.min_blj) {
+            app.dialog.alert('Jumlah saldo anda belum mencukupi minimal belanja.', 'Belanja');
+            return;
+          }
 
-                // ambil informasi saldo member
-                /*app.request.getJSON( app.data.endpoint + 'api/v1/member/saldo', function (res) {
-                    
-                  $$('.saldo').text(res.saldof);
-                  app.data.saldo = parseInt(res.saldo);
-                  $$('.bonus').text(res.bonusf);
-                  app.data.bonus = parseInt(res.bonus);
-                });*/
-              } else {
-                $$('#pin').val('');
-                app.dialog.alert(data.message, 'Belanja');
-              }
-            });
-          });            
-        }
+          var nominal = $$('#nominal').val();
+
+          if (nominal == '') {
+              app.dialog.alert('Masukkan nominal belanja.', 'Belanja');
+              return;
+          } else
+          if (nominal < app.data.min_blj) {
+            app.dialog.alert('Jumlah minimal belanja sebesar '+app.data.min_blj+'.', 'Belanja');
+            $$('#nominal').val(app.data.min_blj);
+            return;
+          } else
+          if (nominal > app.data.saldo) {
+            app.dialog.alert('Jumlah saldo anda belum mencukupi.', 'Belanja');
+            return;
+          }
+          
+          var pin = $$('#pin').val();
+          if (pin == '') {
+            app.dialog.alert('Masukkan nomor PIN atau password anda.', 'Belanja');
+            return;
+          }
+                  
+          app.preloader.show();
+
+          var formData = app.form.convertToData('.belanja');
+          
+          app.request.post( app.data.endpoint + 'api/v1/member/belanja', formData, function (res) {
+            
+            //console.log(res);
+            app.preloader.hide();
+
+            var data = JSON.parse(res);
+        
+            if (data.status) {
+              
+              app.router.back();
+
+              // ambil informasi saldo member
+              /*app.request.getJSON( app.data.endpoint + 'api/v1/member/saldo', function (res) {
+                  
+                $$('.saldo').text(res.saldof);
+                app.data.saldo = parseInt(res.saldo);
+                $$('.bonus').text(res.bonusf);
+                app.data.bonus = parseInt(res.bonus);
+              });*/
+            } else {
+              $$('#pin').val('');
+              app.dialog.alert(data.message, 'Belanja');
+            }
+          });
+        });            
       }
     }
+  }
 </script>

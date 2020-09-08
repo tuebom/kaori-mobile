@@ -1,96 +1,140 @@
-<div class="page">
-  <div class="navbar no-shadow">
-    <div class="navbar-inner sliding">
-      <div class="left">
-        <a href="#" class="link back">
-          <i class="icon icon-back"></i>
-          <span class="ios-only">Back</span>
+<template>
+  <div class="page">
+    <div class="navbar no-shadow">
+      <div class="navbar-inner sliding">
+        <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="ios-only">Back</span>
+          </a>
+        </div>
+        <div class="title">Topup</div>
+      </div>
+    </div>
+    <div class="page-content">
+      <div class="list">
+        <ul>
+          <li>
+              <a href="/topup-saldo/" class="item-link">
+                  <div class="item-content top-content">
+                      <div class="item-media"><img src="img/topup.png" width="32px"></div>
+                      <div class="item-inner">
+                          <div class="item-title-row">
+                              <div class="item-title">Saldo Aplikasi Kaori</div>
+                          </div>
+                      </div>
+                  </div>
+              </a>
+          </li>
+          <li>
+              <a href="/gopay/" class="item-link">
+                  <div class="item-content">
+                      <div class="item-media"><img src="img/gopay.png" width="32px"></div>
+                      <div class="item-inner">
+                          <div class="item-title-row">
+                              <div class="item-title">GOPAY</div>
+                          </div>
+                      </div>
+                  </div>
+              </a>
+          </li>
+          <li>
+            <a href="/ovo/" class="item-link">
+              <div class="item-content">
+                  <div class="item-media"><img src="img/ovo.png" width="32px"></div>
+                  <div class="item-inner">
+                      <div class="item-title-row">
+                          <div class="item-title">OVO</div>
+                      </div>
+                  </div>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/dana/" class="item-link">
+              <div class="item-content">
+                  <div class="item-media"><img src="img/dana.png" width="32px"></div>
+                  <div class="item-inner">
+                      <div class="item-title-row">
+                          <div class="item-title">DANA</div>
+                      </div>
+                  </div>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="block-title">Paket Lainnya</div>
+      <div class="list">
+        <ul>
+          <li>
+              <a href="/telpon/" class="item-link">
+                  <div class="item-content top-content">
+                      <div class="item-media"><img src="img/telpon.png" width="32px"></div>
+                      <div class="item-inner">
+                          <div class="item-title-row">
+                              <div class="item-title">Paket Nelpon</div>
+                          </div>
+                      </div>
+                  </div>
+              </a>
+          </li>
+          <li>
+              <a href="/hinet/" class="item-link">
+                  <div class="item-content">
+                      <div class="item-media"><img src="img/hinet.png" width="32px"></div>
+                      <div class="item-inner">
+                          <div class="item-title-row">
+                              <div class="item-title">Paket Internet HINET</div>
+                          </div>
+                      </div>
+                  </div>
+              </a>
+          </li>
+        </ul>
+      </div>
+
+      {{#if $root.show_ads}}
+      <div class="banner-iklan">
+        <a href="#" @click="doOpenAds('{{ads.id}}')">
+          <img class="article-iklan" src="{{$root.endpoint}}upload/iklan/{{ads.img}}" />
         </a>
       </div>
-      <div class="title">Topup</div>
+      {{/if}}
+      
     </div>
   </div>
-  <div class="page-content">
-    <div class="list">
-      <ul>
-        <li>
-            <a href="/topup-saldo/" class="item-link">
-                <div class="item-content top-content">
-                    <div class="item-media"><img src="img/topup.png" width="32px"></div>
-                    <div class="item-inner">
-                        <div class="item-title-row">
-                            <div class="item-title">Saldo Aplikasi Kaori</div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </li>
-        <li>
-            <a href="/gopay/" class="item-link">
-                <div class="item-content">
-                    <div class="item-media"><img src="img/gopay.png" width="32px"></div>
-                    <div class="item-inner">
-                        <div class="item-title-row">
-                            <div class="item-title">GOPAY</div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </li>
-        <li>
-          <a href="/ovo/" class="item-link">
-            <div class="item-content">
-                <div class="item-media"><img src="img/ovo.png" width="32px"></div>
-                <div class="item-inner">
-                    <div class="item-title-row">
-                        <div class="item-title">OVO</div>
-                    </div>
-                </div>
-            </div>
-          </a>
-        </li>
-        <li>
-          <a href="/dana/" class="item-link">
-            <div class="item-content">
-                <div class="item-media"><img src="img/dana.png" width="32px"></div>
-                <div class="item-inner">
-                    <div class="item-title-row">
-                        <div class="item-title">DANA</div>
-                    </div>
-                </div>
-            </div>
-          </a>
-        </li>
-      </ul>
-    </div>
-    <div class="block-title">Paket Lainnya</div>
-    <div class="list">
-      <ul>
-        <li>
-            <a href="/telpon/" class="item-link">
-                <div class="item-content top-content">
-                    <div class="item-media"><img src="img/telpon.png" width="32px"></div>
-                    <div class="item-inner">
-                        <div class="item-title-row">
-                            <div class="item-title">Paket Nelpon</div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </li>
-        <li>
-            <a href="/hinet/" class="item-link">
-                <div class="item-content">
-                    <div class="item-media"><img src="img/hinet.png" width="32px"></div>
-                    <div class="item-inner">
-                        <div class="item-title-row">
-                            <div class="item-title">Paket Internet HINET</div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</div>
+</template>
+<script>
+  return {
+    // Component Methods
+    methods: {
+      
+      doOpenAds: function (code) {
+
+        app.router.navigate('/iklan/'+code, {
+          // reloadCurrent: true,
+          // ignoreCache: true,
+        });
+      },
+    },
+    // Page Events
+    on: {
+      
+      pageBeforeIn: function (event, page) {
+
+        if (app.data.show_ads && page.direction == 'backward') {
+          app.request.getJSON( app.data.endpoint + 'api/v1/iklan/0', function(res) {
+            $$('.banner-iklan').html("<a href='#' data-id='"+res.data.id+"'>"+
+              "<img class='article-iklan' src='"+app.data.endpoint+"upload/iklan/"+res.data.img+"' /></a>");
+          });
+
+          $$('.banner-iklan').on('click', 'a', function (e) {
+            var id = $$(this).attr("data-id");
+            app.router.navigate('/iklan/'+id);
+          });
+        }
+      }
+    }
+  }
+</script>

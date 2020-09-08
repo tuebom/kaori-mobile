@@ -220,7 +220,21 @@
         </div>
 
       <!-- </div> -->
-    
+
+      <div class="block">
+        <div class="block-title detail">Pilihan Kategori<span style="float: right;"><a href="/belanja-online/" style="color: lightgreen">Tampilkan semua</span></a></div>
+        <div class="row no-gutter">
+          {{#each categories}}
+          <div class="col-33  tablet-33">
+            <a href="/category/{{id}}/1" class="btn item-link">
+              <img class="article-category" src="{{../$root.endpoint}}upload/products/{{photo}}" />
+              <div class="product-name-cat">{{title}}</div>
+            </a>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+  
       <div class="block">
         <div class="block-title detail">Produk Terlaris</div>
         <div data-space-between="10" data-slides-per-view="3" class="swiper-container swiper-init swiper-populer">
@@ -238,6 +252,26 @@
           </div>
         </div>
       </div>
+
+      {{#if $root.show_ads}}
+      <div class="block">
+        <div class="block-title detail">Iklan</div>
+        <div class=iklan>
+          <a href="#" @click="doOpenAds('{{app_ads.id}}')">
+            <img class="article-iklan" src="{{$root.endpoint}}upload/iklan/{{app_ads.img}}" />
+          </a>
+        </div>
+        <!-- <div data-space-between="0" data-slides-per-view="1" class="swiper-container swiper-init swiper-ads">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide detail" @click="doOpenAds('{{app_ads.id}}')">
+              <img class="article-iklan" src="{{../$root.endpoint}}upload/iklan/{{app_ads.img}}" />
+            </div>
+          </div>
+        </div> -->
+      </div>
+      {{/if}}
+
+
     </div>
 </template>
 <script>
@@ -245,6 +279,14 @@
     // Component Methods
     methods: {
       
+      doOpenAds: function (code) {
+
+        app.router.navigate('/iklan/'+code, {
+          // reloadCurrent: true,
+          // ignoreCache: true,
+        });
+      },
+            
       doOpenLink: function (code) {
 
         app.router.navigate('/detail/'+code, {
@@ -253,34 +295,6 @@
         });
       },
 
-      /*nganu: function (e) {
-        
-        // @click="nganu"
-        var db = app.data.db;
-    
-        if (db) {
-          
-          db.transaction(function(tx) {
-            
-            tx.executeSql('select count(*) as total from notifikasi where read = "N";', [], function(ignored, res) {
-
-              var total = res.rows.item(0).total;
-              if (total > 0) {
-                $$('.badge.notif').text(total);
-                $$('.badge.notif').css("display", "block");
-                app.dialog.alert('Total unread notification: ' + total);
-              } else {
-                $$('.badge.notif').css("display", "none");
-              }
-            });
-          }, function(error) {
-            app.dialog.alert('insert error: ' + error.message);
-          });
-        }
-            
-        // $$('.badge.notif').text('2');
-        // $$('.badge.notif').css("display", "block");
-      }*/
     },        
     // Page Events
     on: {
@@ -324,6 +338,17 @@
             app.data.total_items = 0;
           }
         });
+
+        if (app.data.show_ads && page.direction == 'backward') {
+          app.request.getJSON( app.data.endpoint + 'api/v1/iklan/0', function(res) {
+            $$('.iklan').html("<a href='#' data-id='"+res.data.id+"'><img class='article-iklan' src='"+app.data.endpoint+"upload/iklan/"+res.data.img+"' /></a>");
+
+            $$('.iklan').on('click', 'a', function (e) {
+            var id = $$(this).attr("data-id");
+            app.router.navigate('/iklan/'+id);
+          });
+          });
+        }
       },
       
       // pageBeforeOut: function (event, page) {
@@ -345,7 +370,7 @@
 
         if (swiper === undefined) {
           
-          var swiper = app.swiper.create('.swiper-container.swiper-init.dashboard', {
+          swiper = app.swiper.create('.swiper-container.swiper-init.dashboard', {
               speed: 3000,
               loop: true,
               spaceBetween: 0
@@ -356,17 +381,31 @@
         var swiper = app.swiper.get('.swiper-container.swiper-init.swiper-populer');
 
         if (swiper === undefined) {
-          // console.log('swiper-populer undefined!')
-          var swiper = app.swiper.create('.swiper-container.swiper-init.swiper-populer', {
+          swiper = app.swiper.create('.swiper-container.swiper-init.swiper-populer', {
               speed: 1000,
               loop: true,
               spaceBetween: 5,
               slidesPerView: 3
-              // direction: 'vertical',
-              // slidesPerColumn: 3,
           });
           swiper.autoplay.start();
         }
+
+        // cek iklan
+        // if (app.data.show_ads) {
+
+        //   var swiper = app.swiper.get('.swiper-container.swiper-init.swiper-ads');
+
+        //   if (swiper === undefined) {
+        //     swiper = app.swiper.create('.swiper-container.swiper-init.swiper-ads', {
+        //       speed: 3000,
+        //       loop: true,
+        //       spaceBetween: 0,
+        //       slidesPerView: 1
+        //     });
+        //     // swiper.autoplay.start();
+        //   }
+        // }
+
       }
     }
   }

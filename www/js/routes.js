@@ -21,7 +21,11 @@ routes = [
         app.data.min_blj   = parseFloat(res.data.min_belanja);
         app.data.min_topup = parseFloat(res.data.min_topup);
         app.data.min_withdraw = parseFloat(res.data.min_withdraw);
-      
+        
+        // opsi iklan
+        app.data.show_ads = res.data.show_ads == 1;
+        // app.data.trx_ads  = res.data.trx_ads == 1;
+
         // Resolve route to load page
         resolve(
           {
@@ -30,7 +34,9 @@ routes = [
           {
             context: {
               banner: res.banner,
-              populer: res.populer
+              categories: res.categories,
+              populer: res.populer,
+              app_ads: res.app_ads
             }
           }
         );
@@ -121,7 +127,33 @@ routes = [
   },
   {
     path: '/cek-harga/',
-    url: './pages/cek-harga.html',
+    // url: './pages/cek-harga.html',
+    async: function (routeTo, routeFrom, resolve, reject) {
+      // Router instance
+      var router = this;
+
+      // App instance
+      var app = router.app;
+
+      if (app.data.show_ads) {
+          // Show Preloader
+        app.preloader.show();
+        
+        app.request.getJSON( app.data.endpoint + 'api/v1/iklan/0', function(res) {
+          
+          app.preloader.hide();
+          
+          resolve(
+            { componentUrl: './pages/cek-harga.html' },
+            { context: { ads: res.data } }
+          );
+        });
+      } else
+        resolve(
+          { componentUrl: './pages/cek-harga.html' },
+          // { context: { ads: res.data } }
+        );
+    }
   },
   {
     path: '/cek-harga-kaori/',
@@ -146,19 +178,123 @@ routes = [
   },
   {
     path: '/cek-harga-pulsa/',
-    url: './pages/cek-harga-pulsa.html',
+    // url: './pages/cek-harga-pulsa.html',
+    async: function (routeTo, routeFrom, resolve, reject) {
+      // Router instance
+      var router = this;
+
+      // App instance
+      var app = router.app;
+
+      if (app.data.show_ads) {
+          // Show Preloader
+        app.preloader.show();
+        
+        app.request.getJSON( app.data.endpoint + 'api/v1/iklan/0', function(res) {
+          
+          app.preloader.hide();
+          
+          resolve(
+            { componentUrl: './pages/cek-harga-pulsa.html' },
+            { context: { ads: res.data } }
+          );
+        });
+      } else
+        resolve(
+          { componentUrl: './pages/cek-harga-pulsa.html' },
+          // { context: { ads: res.data } }
+        );
+    }
   },
   {
     path: '/cek-harga-data/',
-    url: './pages/cek-harga-data.html',
+    // url: './pages/cek-harga-data.html',
+    async: function (routeTo, routeFrom, resolve, reject) {
+      // Router instance
+      var router = this;
+
+      // App instance
+      var app = router.app;
+
+      if (app.data.show_ads) {
+          // Show Preloader
+        app.preloader.show();
+        
+        app.request.getJSON( app.data.endpoint + 'api/v1/iklan/0', function(res) {
+          
+          app.preloader.hide();
+          
+          resolve(
+            { componentUrl: './pages/cek-harga-data.html' },
+            { context: { ads: res.data } }
+          );
+        });
+      } else
+        resolve(
+          { componentUrl: './pages/cek-harga-data.html' },
+          // { context: { ads: res.data } }
+        );
+    }
   },
   {
     path: '/cek-harga-topup/',
-    url: './pages/cek-harga-topup.html',
+    // url: './pages/cek-harga-topup.html',
+    async: function (routeTo, routeFrom, resolve, reject) {
+      // Router instance
+      var router = this;
+
+      // App instance
+      var app = router.app;
+
+      if (app.data.show_ads) {
+          // Show Preloader
+        app.preloader.show();
+        
+        app.request.getJSON( app.data.endpoint + 'api/v1/iklan/0', function(res) {
+          
+          app.preloader.hide();
+          
+          resolve(
+            { componentUrl: './pages/cek-harga-topup.html' },
+            { context: { ads: res.data } }
+          );
+        });
+      } else
+        resolve(
+          { componentUrl: './pages/cek-harga-topup.html' },
+          // { context: { ads: res.data } }
+        );
+    }
   },
   {
     path: '/cek-harga-telpon/',
-    url: './pages/cek-harga-telpon.html',
+    // url: './pages/cek-harga-telpon.html',
+    async: function (routeTo, routeFrom, resolve, reject) {
+      // Router instance
+      var router = this;
+
+      // App instance
+      var app = router.app;
+
+      if (app.data.show_ads) {
+          // Show Preloader
+        app.preloader.show();
+        
+        app.request.getJSON( app.data.endpoint + 'api/v1/iklan/0', function(res) {
+          
+          app.preloader.hide();
+          
+          resolve(
+            { componentUrl: './pages/cek-harga-telpon.html' },
+            { context: { ads: res.data } }
+          );
+        });
+      } else
+        resolve(
+          { componentUrl: './pages/cek-harga-telpon.html' },
+          // { context: { ads: res.data } }
+        );
+    }
   },
   {
     path: '/cek-harga-brg/:id',
@@ -751,7 +887,33 @@ routes = [
   },
   {
     path: '/opsi-belanja/',
-    url: './pages/opsi-belanja.html',
+    // url: './pages/opsi-belanja.html',
+    async: function (routeTo, routeFrom, resolve, reject) {
+      // Router instance
+      var router = this;
+
+      // App instance
+      var app = router.app;
+
+      if (app.data.show_ads) {
+          // Show Preloader
+        app.preloader.show();
+        
+        app.request.getJSON( app.data.endpoint + 'api/v1/iklan/0', function(res) {
+          
+          app.preloader.hide();
+          
+          resolve(
+            { componentUrl: './pages/opsi-belanja.html' },
+            { context: { ads: res.data } }
+          );
+        });
+      } else
+        resolve(
+          { componentUrl: './pages/opsi-belanja.html' },
+          // { context: { ads: res.data } }
+        );
+    }
   },
   {
     path: '/belanja-online/',
@@ -784,14 +946,24 @@ routes = [
       // App instance
       var app = router.app;
 
-      // Show Preloader
-      app.preloader.show();
+      if (app.data.show_ads) {
+        // Show Preloader
+        app.preloader.show();
 
-      resolve(
-        { componentUrl: './pages/belanja.html' },
-        { context: { mbrid: null } }
-      );
-      app.preloader.hide();
+        app.request.getJSON( app.data.endpoint + 'api/v1/iklan/0', function(res) {
+          
+          app.preloader.hide();
+          
+          resolve(
+            { componentUrl: './pages/belanja.html' },
+            { context: { mbrid: null, ads: res.data } }
+          );
+        });
+      } else
+        resolve(
+          { componentUrl: './pages/belanja.html' },
+          { context: { mbrid: null } }
+        );
     }
   },
   {
@@ -1336,7 +1508,33 @@ routes = [
   },
   {
     path: '/opsi-topup/',
-    url: './pages/opsi-topup.html',
+    // url: './pages/opsi-topup.html',
+    async: function (routeTo, routeFrom, resolve, reject) {
+      // Router instance
+      var router = this;
+
+      // App instance
+      var app = router.app;
+
+      if (app.data.show_ads) {
+          // Show Preloader
+        app.preloader.show();
+        
+        app.request.getJSON( app.data.endpoint + 'api/v1/iklan/0', function(res) {
+          
+          app.preloader.hide();
+          
+          resolve(
+            { componentUrl: './pages/opsi-topup.html' },
+            { context: { ads: res.data } }
+          );
+        });
+      } else
+        resolve(
+          { componentUrl: './pages/opsi-topup.html' },
+          // { context: { ads: res.data } }
+        );
+    }
   },
   {
     path: '/gopay/',
@@ -1777,6 +1975,34 @@ routes = [
 
         resolve(
           { componentUrl: './pages/detail.html' },
+          { context: { data: res.data } }
+        );
+      });
+    },
+  },
+  {
+    path: '/iklan/:id',
+    async: function (routeTo, routeFrom, resolve, reject) {
+      // Router instance
+      var router = this;
+
+      // App instance
+      var app = router.app;
+
+      // Show Preloader
+      app.preloader.show();
+
+      // kode item/
+      var id = routeTo.params.id;
+      
+      app.request.getJSON( app.data.endpoint + 'api/v1/iklan/'+id, function(res) {
+        
+        app.preloader.hide();
+
+        app.data.bSetAddress = false;
+
+        resolve(
+          { componentUrl: './pages/iklan.html' },
           { context: { data: res.data } }
         );
       });

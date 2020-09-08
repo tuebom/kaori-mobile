@@ -3,8 +3,6 @@ var $$ = Dom7;
 // localStorage.setItem('mbrid', '');
 // localStorage.setItem('nohp', '');
 
-// var items = [];
-
 // var bBackPressed = false;
 
 var destinationType = null;
@@ -32,7 +30,6 @@ var app  = new Framework7({
       bSetAddress: false,
       bLogedIn: false,
       mbrid: null,
-      // pin: null,
       gtotal: 0,      // grand total
       promo: null,
       kurir: null,
@@ -46,6 +43,8 @@ var app  = new Framework7({
       min_blj: 5000,
       min_topup: 50000,
       min_withdraw: 50000,
+
+      show_ads: false,
 
       push: null,
     };
@@ -62,7 +61,7 @@ var app  = new Framework7({
       }
 
       return str.join(" ");
-    }  
+    },
   },
   on: {
 

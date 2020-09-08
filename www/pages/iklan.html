@@ -10,19 +10,14 @@
         </div>
         <div class="title">{{data.title}}</div>
         <div class="right">
-          <a href="/cart/" data-view=".view-main" class="link icon-only panel-close ac-more1">
-            <i class="icon f7-icons ios-only">shopping_cart<span class="badge cart color-red"></span></i>
-            <i class="icon material-icons md-only">shopping_cart<span class="badge cart color-red"></span></i>
-          </a>
         </div>
       </div>
     </div>
 
     <div class="page-content">
         
-      <!-- <div class="block header"> -->
-      <div class="header-container">
-        <img class="article-header" src="{{$root.endpoint}}upload/products/{{#if data.photo1}}{{data.photo1}}{{else}}noimage.jpg{{/if}}">
+      <!-- <div class="header-container">
+        <img class="article-header" src="{{$root.endpoint}}upload/iklan/{{#if data.photo1}}{{data.photo1}}{{else}}noimage.jpg{{/if}}">
         <div class="fab buy">
           <a href="#" @click="buyItem">
             <i class="icon f7-icons ios-only">shopping_basket</i>
@@ -35,15 +30,22 @@
             <i class="icon material-icons md-only">shopping_cart</i>
           </a>
         </div>
+      </div> -->
+
+      <div class="block header">
+        <div data-pagination='{"el": ".swiper-pagination"}' class="swiper-container swiper-init swiper-detail">
+          <div class="swiper-pagination detail"></div>
+          <div class="swiper-wrapper">
+            <div class="swiper-slide"><img class="article-header" src="{{$root.endpoint}}upload/iklan/{{data.photo1}}" /></div>
+            <div class="swiper-slide"><img class="article-header" src="{{$root.endpoint}}upload/iklan/{{#if data.photo2}}{{data.photo2}}{{else}}{{data.photo}}{{/if}}" /></div>
+            <div class="swiper-slide"><img class="article-header" src="{{$root.endpoint}}upload/iklan/{{#if data.photo3}}{{data.photo3}}{{else}}{{data.photo}}{{/if}}" /></div>
+            <div class="swiper-slide"><img class="article-header" src="{{$root.endpoint}}upload/iklan/{{#if data.photo4}}{{data.photo4}}{{else}}{{data.photo}}{{/if}}" /></div>
+            <div class="swiper-slide"><img class="article-header" src="{{$root.endpoint}}upload/iklan/{{#if data.photo5}}{{data.photo5}}{{else}}{{data.photo}}{{/if}}" /></div>
+          </div>
+        </div>
       </div>
       
-      <div class="card item-detail">
-        <input type="hidden" class="item-code"    value="{{data.barcode}}" />
-        <input type="hidden" class="item-name"    value="{{data.title}}" />
-        <input type="hidden" class="item-price"   value="{{data.price}}" />
-        <input type="hidden" class="item-picture" value="{{data.img}}" />
-        <input type="hidden" class="last-value"   value="{{data.stock}}" />
-        
+      <div class="card item-detail iklan">
         <input type="hidden" id="maxqty" value="{{data.stock}}">
 
         <div class="card-footer product">
@@ -53,17 +55,6 @@
           <div class="product-price detail">Rp{{data.pricef}}</div>
         </div>
         <!-- <div class="product-code2">{{data.barcode}}</div> -->
-        {{#js_if "this.data.stock"}}
-        <div class="card-footer">
-          <div class="stepper stepper-fill stepper-init" data-wraps="false" data-autorepeat="true" data-autorepeat-dynamic="true" data-decimal-point="2" data-manual-input-mode="true">
-            <div class="stepper-button-minus"></div>
-            <div class="stepper-input-wrap">
-              <input class="item-qty" type="text" value="{{#js_if 'this.data.minimum > 0'}}{{data.minimum}}{{else}}1{{/js_if}}" min="{{#js_if 'this.data.minimum > 0'}}{{data.minimum}}{{else}}1{{/js_if}}" max="{{#js_if 'this.data.stok > 0'}}{{data.stok}}{{else}}100{{/js_if}}" step="1">
-            </div>
-            <div class="stepper-button-plus"></div>
-          </div>
-        </div>
-        {{/js_if}}
       </div>
 
       {{#if data.content}}
@@ -73,23 +64,25 @@
       </div>
       {{/if}}
 
+      {{#if data.related}}
       <div class="block">
-        <div class="block-title detail">Produk Terkait</div>
+        <div class="block-title detail">Iklan Terkait</div>
         <div data-space-between="10" data-slides-per-view="3" class="swiper-container swiper-init swiper-related">
           <!-- <div class="swiper-pagination"></div> -->
           <div class="swiper-wrapper">
             
             {{#each data.related}}
-            <div class="swiper-slide detail" @click="doOpenLink('{{barcode}}')">
-              <img class="article-populer" src="{{../$root.endpoint}}upload/products/{{#if photo1}}{{photo1}}{{else}}noimage.jpg{{/if}}" />
+            <div class="swiper-slide detail" @click="doOpenAds('{{id}}')">
+              <img class="article-populer" src="{{../$root.endpoint}}upload/iklan/{{photo1}}" />
               <div class="product-name-rel">{{title}}</div>
-              <div class="product-price-rel">Rp{{price}}</div>
+              <div class="product-price-rel">Rp{{pricef}}</div>
             </div>
             {{/each}}
 
           </div>
         </div>
       </div>
+      {{/if}}
 
     </div>
   </div>
@@ -99,52 +92,13 @@
     // Component Methods
     methods: {
       
-      doOpenLink: function (code) {
+      doOpenAds: function (code) {
 
-        app.router.navigate('/detail/'+code, {
+        app.router.navigate('/iklan/'+code, {
           reloadCurrent: true,
           ignoreCache: true,
         });
       },
-      buyItem: function () {
-        // app.dialog.alert('Yay!', 'Buy Item');
-        // app.router.navigate('/detail/'+code, {
-        //   reloadCurrent: true,
-        //   ignoreCache: true,
-        // });
-      },
-      addToCart: function () {
-          
-        var maxVal  = parseInt($$('#maxqty').val());
-
-        if (maxVal == 0)
-          return false;
-
-        var page  = $$('.page-current'); // get current page
-        // var card  = $$('.item-detail');
-        var kode  = page.find('.item-code').val();
-        var qty   = page.find('.item-qty').val();
-          
-        var formData = {};
-
-        formData.kode  = kode;
-        formData.qty   = qty;
-
-        app.request.post( app.data.endpoint + 'api/v1/cart/add', formData, function(res) {
-              
-          var data = JSON.parse(res);
-
-          if (data.totqty > 0)
-          {
-            app.data.total_items = data.totqty;
-            $$('.badge.cart').text(data.totqty);
-            $$('.badge.cart').css("display", "block");
-          } else {
-            $$('.badge.cart').css("display", "none");
-            app.data.total_items = 0;
-          }
-        });
-      }
     },
         
     // Page Events
@@ -170,11 +124,11 @@
       
       pageInit: function(e, page) {
 
-        var cmp = $$('.swiper-container.swiper-init.swiper-related');
+        var swiper = $$('.swiper-container.swiper-init.swiper-related');
 
-        if (cmp[0].swiper === undefined) {
+        if (swiper === undefined) {
 
-          var swiper = app.swiper.create('.swiper-container.swiper-init.swiper-related', {
+          swiper = app.swiper.create('.swiper-container.swiper-init.swiper-related', {
               speed: 1000,
               loop: true,
               spaceBetween: 10,

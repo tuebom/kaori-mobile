@@ -1,43 +1,86 @@
-<div class="page">
-  <div class="navbar no-shadow">
-    <div class="navbar-inner sliding">
-      <div class="left">
-        <a href="#" class="link back">
-          <i class="icon icon-back"></i>
-          <span class="ios-only">Back</span>
+<template>
+  <div class="page">
+    <div class="navbar no-shadow">
+      <div class="navbar-inner sliding">
+        <div class="left">
+          <a href="#" class="link back">
+            <i class="icon icon-back"></i>
+            <span class="ios-only">Back</span>
+          </a>
+        </div>
+        <div class="title">Cek Harga Paket Nelpon</div>
+      </div>
+    </div>
+    <div class="page-content">
+      <div class="list">
+        <ul>
+          <li>
+            <a href="/harga-telpon/S/TELKOMSEL" class="item-link">
+              <div class="item-content top-content">
+                  <div class="item-media"><img src="img/tsel.png" width="32px"></div>
+                  <div class="item-inner">
+                      <div class="item-title-row">
+                          <div class="item-title">TELKOMSEL</div>
+                      </div>
+                  </div>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="/harga-telpon/XL/XL" class="item-link">
+              <div class="item-content">
+                  <div class="item-media"><img src="img/xl.png" width="32px"></div>
+                  <div class="item-inner">
+                      <div class="item-title-row">
+                          <div class="item-title">XL</div>
+                      </div>
+                  </div>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      {{#if $root.show_ads}}
+      <div class="banner-iklan">
+        <a href="#" @click="doOpenAds('{{ads.id}}')">
+          <img class="article-iklan" src="{{$root.endpoint}}upload/iklan/{{ads.img}}" />
         </a>
       </div>
-      <div class="title">Cek Harga Paket Nelpon</div>
+      {{/if}}
+
     </div>
   </div>
-  <div class="page-content">
-    <div class="list">
-      <ul>
-        <li>
-          <a href="/harga-telpon/S/TELKOMSEL" class="item-link">
-            <div class="item-content top-content">
-                <div class="item-media"><img src="img/tsel.png" width="32px"></div>
-                <div class="item-inner">
-                    <div class="item-title-row">
-                        <div class="item-title">TELKOMSEL</div>
-                    </div>
-                </div>
-            </div>
-          </a>
-        </li>
-        <li>
-          <a href="/harga-telpon/XL/XL" class="item-link">
-            <div class="item-content">
-                <div class="item-media"><img src="img/xl.png" width="32px"></div>
-                <div class="item-inner">
-                    <div class="item-title-row">
-                        <div class="item-title">XL</div>
-                    </div>
-                </div>
-            </div>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</div>
+</template>
+<script>
+  return {
+    // Component Methods
+    methods: {
+      
+      doOpenAds: function (code) {
+
+        app.router.navigate('/iklan/'+code, {
+          // reloadCurrent: true,
+          // ignoreCache: true,
+        });
+      },
+    },
+    // Page Events
+    on: {
+      
+      pageBeforeIn: function (event, page) {
+
+        if (app.data.show_ads && page.direction == 'backward') {
+          app.request.getJSON( app.data.endpoint + 'api/v1/iklan/0', function(res) {
+            $$('.banner-iklan').html("<a href='#' data-id='"+res.data.id+"'><img class='article-iklan' src='"+app.data.endpoint+"upload/iklan/"+res.data.img+"' /></a>");
+          });
+
+          $$('.banner-iklan').on('click', 'a', function (e) {
+            var id = $$(this).attr("data-id");
+            app.router.navigate('/iklan/'+id);
+          });
+        }
+      }
+    }
+  }
+</script>
