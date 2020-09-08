@@ -94,6 +94,9 @@
       
       doOpenAds: function (code) {
 
+        var formData = {};
+        formData.id   = code;
+        app.request.post( app.data.endpoint + 'api/v1/iklan', formData, function(res) {});
         app.router.navigate('/iklan/'+code, {
           reloadCurrent: true,
           ignoreCache: true,

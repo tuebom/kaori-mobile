@@ -59,6 +59,9 @@
       
       doOpenAds: function (code) {
 
+        var formData = {};
+        formData.id   = code;
+        app.request.post( app.data.endpoint + 'api/v1/iklan', formData, function(res) {});
         app.router.navigate('/iklan/'+code, {
           // reloadCurrent: true,
           // ignoreCache: true,
@@ -77,6 +80,11 @@
 
           $$('.banner-iklan').on('click', 'a', function (e) {
             var id = $$(this).attr("data-id");
+              
+            var formData = {};
+            formData.id  = id;
+            app.request.post( app.data.endpoint + 'api/v1/iklan', formData, function(res) {});
+              
             app.router.navigate('/iklan/'+id);
           });
         }

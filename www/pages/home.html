@@ -221,8 +221,19 @@
 
       <!-- </div> -->
 
+      {{#if $root.show_ads}}
       <div class="block">
-        <div class="block-title detail">Pilihan Kategori<span style="float: right;"><a href="/belanja-online/" style="color: lightgreen">Tampilkan semua</span></a></div>
+        <div class="block-title detail">Iklan</div>
+        <div class=iklan>
+          <a href="#" @click="doOpenAds('{{app_ads.id}}')">
+            <img class="article-iklan" src="{{$root.endpoint}}upload/iklan/{{app_ads.img}}" />
+          </a>
+        </div>
+      </div>
+      {{/if}}
+
+      <div class="block">
+        <div class="block-title detail">Pilihan Kategori<span style="float: right;"><a href="/belanja-online/" style="color: #318057">Tampilkan semua</span></a></div>
         <div class="row no-gutter">
           {{#each categories}}
           <div class="col-33  tablet-33">
@@ -253,24 +264,6 @@
         </div>
       </div>
 
-      {{#if $root.show_ads}}
-      <div class="block">
-        <div class="block-title detail">Iklan</div>
-        <div class=iklan>
-          <a href="#" @click="doOpenAds('{{app_ads.id}}')">
-            <img class="article-iklan" src="{{$root.endpoint}}upload/iklan/{{app_ads.img}}" />
-          </a>
-        </div>
-        <!-- <div data-space-between="0" data-slides-per-view="1" class="swiper-container swiper-init swiper-ads">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide detail" @click="doOpenAds('{{app_ads.id}}')">
-              <img class="article-iklan" src="{{../$root.endpoint}}upload/iklan/{{app_ads.img}}" />
-            </div>
-          </div>
-        </div> -->
-      </div>
-      {{/if}}
-
 
     </div>
 </template>
@@ -281,6 +274,9 @@
       
       doOpenAds: function (code) {
 
+        var formData = {};
+        formData.id   = code;
+        app.request.post( app.data.endpoint + 'api/v1/iklan', formData, function(res) {});
         app.router.navigate('/iklan/'+code, {
           // reloadCurrent: true,
           // ignoreCache: true,
@@ -344,9 +340,14 @@
             $$('.iklan').html("<a href='#' data-id='"+res.data.id+"'><img class='article-iklan' src='"+app.data.endpoint+"upload/iklan/"+res.data.img+"' /></a>");
 
             $$('.iklan').on('click', 'a', function (e) {
-            var id = $$(this).attr("data-id");
-            app.router.navigate('/iklan/'+id);
-          });
+              var id = $$(this).attr("data-id");
+              
+              var formData = {};
+              formData.id  = id;
+              app.request.post( app.data.endpoint + 'api/v1/iklan', formData, function(res) {});
+              
+              app.router.navigate('/iklan/'+id);
+            });
           });
         }
       },
@@ -389,22 +390,6 @@
           });
           swiper.autoplay.start();
         }
-
-        // cek iklan
-        // if (app.data.show_ads) {
-
-        //   var swiper = app.swiper.get('.swiper-container.swiper-init.swiper-ads');
-
-        //   if (swiper === undefined) {
-        //     swiper = app.swiper.create('.swiper-container.swiper-init.swiper-ads', {
-        //       speed: 3000,
-        //       loop: true,
-        //       spaceBetween: 0,
-        //       slidesPerView: 1
-        //     });
-        //     // swiper.autoplay.start();
-        //   }
-        // }
 
       }
     }
